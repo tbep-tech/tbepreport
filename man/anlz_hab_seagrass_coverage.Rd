@@ -15,9 +15,10 @@ defaults to the last year \code{sgsegest} actually has an estimate for
 (\code{max(sgsegest$year)})}
 }
 \value{
-A data.frame with columns \code{bay_segment}, \code{yr},
-\code{acres} (carried forward in non-survey years), and \code{outcome}
-(0 or 1, 1 = best, also carried forward in non-survey years)
+A data.frame with columns \code{bay_segment} (abbreviated, e.g.
+\code{"OTB"}), \code{yr}, \code{acres} (carried forward in non-survey
+years), and \code{outcome} (0 or 1, 1 = best, also carried forward in
+non-survey years)
 }
 \description{
 Seagrass coverage outcome by bay segment and year

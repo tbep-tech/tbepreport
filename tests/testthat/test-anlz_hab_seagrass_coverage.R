@@ -51,9 +51,9 @@ test_that("anlz_hab_seagrass_coverage matches targets by segment name, not posit
 
   result <- anlz_hab_seagrass_coverage(sgsegest)
 
-  # Manatee River target is 449 (500 >= 449 -> 1), Old Tampa Bay target is
-  # 11100 (500 < 11100 -> 0)
-  expect_equal(result$outcome[result$bay_segment == 'Manatee River'], 1)
-  expect_equal(result$outcome[result$bay_segment == 'Old Tampa Bay'], 0)
+  # Manatee River (MR) target is 449 (500 >= 449 -> 1), Old Tampa Bay (OTB)
+  # target is 11100 (500 < 11100 -> 0)
+  expect_equal(result$outcome[result$bay_segment == 'MR'], 1)
+  expect_equal(result$outcome[result$bay_segment == 'OTB'], 0)
 
 })

@@ -20,6 +20,6 @@ library(tbepreport)
 
 This article is a placeholder for the `tbepreport` package walkthrough - a
 shortened version of the working prototype in the
-[Exploratory Analysis](exploratory.html) article. It will be filled in as
+[Report Card Scoring](scoring.html) article. It will be filled in as
 the indicator functions listed in the package's development plan are
 ported.

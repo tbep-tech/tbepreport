@@ -15,7 +15,7 @@ articles:
 - title: Articles
   navbar: ~
   contents:
-  - exploratory
+  - scoring
 
 reference:
 - title: Analyze data

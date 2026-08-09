@@ -33,9 +33,10 @@
 #' 40,000-acre seagrass coverage target apportioned across segments in
 #' proportion to each segment's share of total bay area.
 #'
-#' @returns A data.frame with columns \code{bay_segment}, \code{yr},
-#' \code{acres} (carried forward in non-survey years), and \code{outcome}
-#' (0 or 1, 1 = best, also carried forward in non-survey years)
+#' @returns A data.frame with columns \code{bay_segment} (abbreviated, e.g.
+#' \code{"OTB"}), \code{yr}, \code{acres} (carried forward in non-survey
+#' years), and \code{outcome} (0 or 1, 1 = best, also carried forward in
+#' non-survey years)
 #'
 #' @export
 #'
@@ -52,12 +53,22 @@ anlz_hab_seagrass_coverage <- function(sgsegest, yr_max = max(sgsegest$year)) {
     'Terra Ceia Bay'   = 1100,
     'Manatee River'    = 449
   )
+  segabbr <- c(
+    'Old Tampa Bay'    = 'OTB',
+    'Hillsborough Bay' = 'HB',
+    'Middle Tampa Bay' = 'MTB',
+    'Lower Tampa Bay'  = 'LTB',
+    'Boca Ciega Bay'   = 'BCB',
+    'Terra Ceia Bay'   = 'TCB',
+    'Manatee River'    = 'MR'
+  )
 
   out <- sgsegest |>
     dplyr::mutate(
       bay_segment = as.character(.data$segment),
       trgs = segtrgs[.data$bay_segment],
-      outcome = util_outcome(.data$acres, type = 'threshold', thresh = .data$trgs, op = '>=')
+      outcome = util_outcome(.data$acres, type = 'threshold', thresh = .data$trgs, op = '>='),
+      bay_segment = segabbr[.data$bay_segment]
     ) |>
     dplyr::rename(yr = dplyr::all_of('year')) |>
     dplyr::select(dplyr::all_of(c('bay_segment', 'yr', 'acres', 'outcome'))) |>
