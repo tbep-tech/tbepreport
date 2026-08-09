@@ -31,8 +31,11 @@ default is a plain unweighted mean.}
 }
 \value{
 A data.frame with columns \code{bay_segment}, \code{yr},
-\code{outcome} (0-1, 1 = best), and \code{n_indicator} (number of
-indicators averaged for that segment/year)
+\code{outcome} (0-1, 1 = best), \code{n_indicator} (number of indicators
+averaged for that segment/year), and one additional column per indicator
+(named from \code{...} or \code{\link{anlz_indicators}}'s \code{indicator}
+column) holding that indicator's own outcome, \code{NA} where a
+segment/year has no data for it
 }
 \description{
 Combine indicators into a single score by bay segment and year

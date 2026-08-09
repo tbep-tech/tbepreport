@@ -42,3 +42,28 @@ test_that("anlz_category is unweighted by default and weights indicators when wt
   expect_equal(weighted$outcome, stats::weighted.mean(c(1, 0), w = c(3, 1)))
 
 })
+
+test_that("anlz_category adds a wide column per indicator, NA where missing", {
+
+  wq_attain <- data.frame(
+    bay_segment = c('OTB', 'HB', 'OTB'),
+    yr          = c(2020, 2020, 2020),
+    outcome     = c(1, 0.2, 1)
+  )
+  fib <- data.frame(bay_segment = 'OTB', yr = 2020, outcome = 0.5)
+
+  result <- anlz_category(wq_attain = wq_attain, fib = fib)
+
+  expect_setequal(names(result), c('bay_segment', 'yr', 'outcome', 'n_indicator', 'wq_attain', 'fib'))
+
+  otb <- result[result$bay_segment == 'OTB', ]
+  hb  <- result[result$bay_segment == 'HB', ]
+
+  # duplicate OTB wq_attain rows average into the wide column too
+  expect_equal(otb$wq_attain, mean(c(1, 1)))
+  expect_equal(otb$fib, 0.5)
+  # HB has no fib data - NA, not dropped
+  expect_true(is.na(hb$fib))
+  expect_equal(hb$wq_attain, 0.2)
+
+})

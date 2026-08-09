@@ -26,3 +26,20 @@ test_that("anlz_score weights categories when wt is supplied", {
   expect_equal(result$outcome, stats::weighted.mean(c(1, 0, 0, 0), w = c(3, 1, 1, 1)))
 
 })
+
+test_that("anlz_score adds a wide column per category", {
+
+  wqoverall <- data.frame(bay_segment = 'OTB', yr = 2020, outcome = 0.8)
+  sedoverall <- data.frame(bay_segment = 'OTB', yr = 2020, outcome = 0.6)
+  fwoverall <- data.frame(bay_segment = 'OTB', yr = 2020, outcome = 0.7)
+  haboverall <- data.frame(bay_segment = 'OTB', yr = 2020, outcome = 0.5)
+
+  result <- anlz_score(wqoverall, sedoverall, fwoverall, haboverall)
+
+  expect_setequal(names(result), c('bay_segment', 'yr', 'outcome', 'n_indicator', 'wq', 'sed', 'fw', 'hab'))
+  expect_equal(result$wq, 0.8)
+  expect_equal(result$sed, 0.6)
+  expect_equal(result$fw, 0.7)
+  expect_equal(result$hab, 0.5)
+
+})

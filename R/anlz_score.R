@@ -18,9 +18,11 @@
 #' that combines individual indicators into a category score.
 #'
 #' @returns A data.frame with columns \code{bay_segment}, \code{yr},
-#' \code{outcome} (0-1, 1 = best - the overall Bay Segment Score), and
+#' \code{outcome} (0-1, 1 = best - the overall Bay Segment Score),
 #' \code{n_indicator} (number of categories with a score for that
-#' segment/year)
+#' segment/year), and one additional column per category (\code{wq},
+#' \code{sed}, \code{fw}, \code{hab}) holding that category's own score,
+#' \code{NA} where a segment/year has no score for it
 #'
 #' @export
 #'

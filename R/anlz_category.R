@@ -23,8 +23,11 @@
 #' \code{\link{anlz_score}}) - the two are mechanically identical.
 #'
 #' @returns A data.frame with columns \code{bay_segment}, \code{yr},
-#' \code{outcome} (0-1, 1 = best), and \code{n_indicator} (number of
-#' indicators averaged for that segment/year)
+#' \code{outcome} (0-1, 1 = best), \code{n_indicator} (number of indicators
+#' averaged for that segment/year), and one additional column per indicator
+#' (named from \code{...} or \code{\link{anlz_indicators}}'s \code{indicator}
+#' column) holding that indicator's own outcome, \code{NA} where a
+#' segment/year has no data for it
 #'
 #' @export
 #'
@@ -44,14 +47,22 @@ anlz_category <- function(..., bay_segments = c('OTB', 'HB', 'MTB', 'LTB'),
     indicators$wt[matched] <- unname(wt[indicators$indicator[matched]])
   }
 
-  out <- indicators |>
-    dplyr::filter(.data$yr >= yr_min) |>
+  indicators <- indicators |>
+    dplyr::filter(.data$yr >= yr_min)
+
+  smmry <- indicators |>
     dplyr::group_by(.data$bay_segment, .data$yr) |>
     dplyr::summarise(
       outcome = stats::weighted.mean(.data$outcome, w = .data$wt, na.rm = TRUE),
       n_indicator = dplyr::n(),
       .groups = 'drop'
     )
+
+  wide <- indicators |>
+    dplyr::select(dplyr::all_of(c('bay_segment', 'yr', 'indicator', 'outcome'))) |>
+    tidyr::pivot_wider(names_from = 'indicator', values_from = 'outcome', values_fn = mean)
+
+  out <- dplyr::left_join(smmry, wide, by = c('bay_segment', 'yr'))
 
   return(out)
 
