@@ -53,6 +53,12 @@ Supporting datasets used by the other functions.
   : Area of interest boundary for non-native species occurrence data
 - [`bayseg_shp`](https://tbep-tech.github.io/tbepreport/reference/bayseg_shp.md)
   : Bay segment boundaries for non-native species occurrence data
+- [`plot_category()`](https://tbep-tech.github.io/tbepreport/reference/plot_category.md)
+  : Sunburst plot of indicator outcomes for one category, bay segment,
+  and year
+- [`plot_score()`](https://tbep-tech.github.io/tbepreport/reference/plot_score.md)
+  : Sunburst plot of indicator, category, and overall outcomes for one
+  bay segment and year
 - [`sgsegest`](https://tbep-tech.github.io/tbepreport/reference/sgsegest.md)
   : Seagrass coverage estimates by bay segment and year
 
