@@ -7,5 +7,5 @@
 
 ### Articles
 
-- [Exploratory Analysis for TB Report
-  Card](https://tbep-tech.github.io/tbepreport/articles/exploratory.md):
+- [Report Card
+  Scoring](https://tbep-tech.github.io/tbepreport/articles/scoring.md):

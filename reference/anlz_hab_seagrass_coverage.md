@@ -24,9 +24,9 @@ anlz_hab_seagrass_coverage(sgsegest, yr_max = max(sgsegest$year))
 
 ## Value
 
-A data.frame with columns `bay_segment`, `yr`, `acres` (carried forward
-in non-survey years), and `outcome` (0 or 1, 1 = best, also carried
-forward in non-survey years)
+A data.frame with columns `bay_segment` (abbreviated, e.g. `"OTB"`),
+`yr`, `acres` (carried forward in non-survey years), and `outcome` (0 or
+1, 1 = best, also carried forward in non-survey years)
 
 ## Details
 
@@ -88,17 +88,17 @@ Coverage is compared against a fixed per-segment acreage target with
 ``` r
 anlz_hab_seagrass_coverage(sgsegest)
 #> # A tibble: 259 × 4
-#>    bay_segment       yr acres outcome
-#>    <chr>          <dbl> <dbl>   <dbl>
-#>  1 Boca Ciega Bay  1988 6259.       0
-#>  2 Boca Ciega Bay  1989 6259.       0
-#>  3 Boca Ciega Bay  1990 6805.       0
-#>  4 Boca Ciega Bay  1991 6805.       0
-#>  5 Boca Ciega Bay  1992 6952.       0
-#>  6 Boca Ciega Bay  1993 6952.       0
-#>  7 Boca Ciega Bay  1994 7129.       0
-#>  8 Boca Ciega Bay  1995 7129.       0
-#>  9 Boca Ciega Bay  1996 7716.       0
-#> 10 Boca Ciega Bay  1997 7716.       0
+#>    bay_segment    yr acres outcome
+#>    <chr>       <dbl> <dbl>   <dbl>
+#>  1 BCB          1988 6259.       0
+#>  2 BCB          1989 6259.       0
+#>  3 BCB          1990 6805.       0
+#>  4 BCB          1991 6805.       0
+#>  5 BCB          1992 6952.       0
+#>  6 BCB          1993 6952.       0
+#>  7 BCB          1994 7129.       0
+#>  8 BCB          1995 7129.       0
+#>  9 BCB          1996 7716.       0
+#> 10 BCB          1997 7716.       0
 #> # ℹ 249 more rows
 ```

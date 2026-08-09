@@ -19,7 +19,7 @@
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/exploratory.html">Exploratory Analysis for TB Report Card</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/scoring.html">Report Card Scoring</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -63,9 +63,10 @@ defaults to the last year <code>sgsegest</code> actually has an estimate for
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A data.frame with columns <code>bay_segment</code>, <code>yr</code>,
-<code>acres</code> (carried forward in non-survey years), and <code>outcome</code>
-(0 or 1, 1 = best, also carried forward in non-survey years)</p>
+    <p>A data.frame with columns <code>bay_segment</code> (abbreviated, e.g.
+<code>"OTB"</code>), <code>yr</code>, <code>acres</code> (carried forward in non-survey
+years), and <code>outcome</code> (0 or 1, 1 = best, also carried forward in
+non-survey years)</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -111,18 +112,18 @@ proportion to each segment's share of total bay area.</p></li>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">anlz_hab_seagrass_coverage</span><span class="op">(</span><span class="va">sgsegest</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 259 × 4</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    bay_segment       yr acres outcome</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> Boca Ciega Bay  <span style="text-decoration: underline;">1</span>988 <span style="text-decoration: underline;">6</span>259.       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> Boca Ciega Bay  <span style="text-decoration: underline;">1</span>989 <span style="text-decoration: underline;">6</span>259.       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> Boca Ciega Bay  <span style="text-decoration: underline;">1</span>990 <span style="text-decoration: underline;">6</span>805.       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> Boca Ciega Bay  <span style="text-decoration: underline;">1</span>991 <span style="text-decoration: underline;">6</span>805.       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> Boca Ciega Bay  <span style="text-decoration: underline;">1</span>992 <span style="text-decoration: underline;">6</span>952.       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Boca Ciega Bay  <span style="text-decoration: underline;">1</span>993 <span style="text-decoration: underline;">6</span>952.       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Boca Ciega Bay  <span style="text-decoration: underline;">1</span>994 <span style="text-decoration: underline;">7</span>129.       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> Boca Ciega Bay  <span style="text-decoration: underline;">1</span>995 <span style="text-decoration: underline;">7</span>129.       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Boca Ciega Bay  <span style="text-decoration: underline;">1</span>996 <span style="text-decoration: underline;">7</span>716.       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Boca Ciega Bay  <span style="text-decoration: underline;">1</span>997 <span style="text-decoration: underline;">7</span>716.       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    bay_segment    yr acres outcome</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> BCB          <span style="text-decoration: underline;">1</span>988 <span style="text-decoration: underline;">6</span>259.       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> BCB          <span style="text-decoration: underline;">1</span>989 <span style="text-decoration: underline;">6</span>259.       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> BCB          <span style="text-decoration: underline;">1</span>990 <span style="text-decoration: underline;">6</span>805.       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> BCB          <span style="text-decoration: underline;">1</span>991 <span style="text-decoration: underline;">6</span>805.       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> BCB          <span style="text-decoration: underline;">1</span>992 <span style="text-decoration: underline;">6</span>952.       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> BCB          <span style="text-decoration: underline;">1</span>993 <span style="text-decoration: underline;">6</span>952.       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> BCB          <span style="text-decoration: underline;">1</span>994 <span style="text-decoration: underline;">7</span>129.       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> BCB          <span style="text-decoration: underline;">1</span>995 <span style="text-decoration: underline;">7</span>129.       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> BCB          <span style="text-decoration: underline;">1</span>996 <span style="text-decoration: underline;">7</span>716.       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> BCB          <span style="text-decoration: underline;">1</span>997 <span style="text-decoration: underline;">7</span>716.       0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 249 more rows</span></span>
 </code></pre></div>
     </div>
