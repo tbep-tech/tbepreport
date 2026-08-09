@@ -5,6 +5,8 @@
 Functions for converting raw data to indicator outcomes, and for
 combining indicators into bay segment scores.
 
+- [`anlz_category()`](https://tbep-tech.github.io/tbepreport/reference/anlz_category.md)
+  : Combine indicators into a single score by bay segment and year
 - [`anlz_fw_nonnative_abundance()`](https://tbep-tech.github.io/tbepreport/reference/anlz_fw_nonnative_abundance.md)
   : Non-native species abundance outcome by bay segment and year
 - [`anlz_fw_nonnative_obs()`](https://tbep-tech.github.io/tbepreport/reference/anlz_fw_nonnative_obs.md)
@@ -19,6 +21,10 @@ combining indicators into bay segment scores.
 - [`anlz_hab_seagrass_transect()`](https://tbep-tech.github.io/tbepreport/reference/anlz_hab_seagrass_transect.md)
   : Seagrass transect frequency of occurrence outcome by bay segment and
   year
+- [`anlz_indicators()`](https://tbep-tech.github.io/tbepreport/reference/anlz_indicators.md)
+  : Stack indicator outcomes into one long-format table
+- [`anlz_score()`](https://tbep-tech.github.io/tbepreport/reference/anlz_score.md)
+  : Overall bay segment score across all four indicator categories
 - [`anlz_sed_peltel()`](https://tbep-tech.github.io/tbepreport/reference/anlz_sed_peltel.md)
   : Sediment quality (PEL/TEL) outcome by bay segment and year
 - [`anlz_sed_tbbi()`](https://tbep-tech.github.io/tbepreport/reference/anlz_sed_tbbi.md)
@@ -27,12 +33,8 @@ combining indicators into bay segment scores.
   : Water quality attainment outcome by bay segment and year
 - [`anlz_wq_fib()`](https://tbep-tech.github.io/tbepreport/reference/anlz_wq_fib.md)
   : Fecal indicator bacteria (FIB) outcome by bay segment and year
-- [`anlz_wq_indicators()`](https://tbep-tech.github.io/tbepreport/reference/anlz_wq_indicators.md)
-  : Combine water quality indicators into a single long-format table
 - [`anlz_wq_load()`](https://tbep-tech.github.io/tbepreport/reference/anlz_wq_load.md)
   : Nutrient loading outcome by bay segment, year, and indicator
-- [`anlz_wq_overall()`](https://tbep-tech.github.io/tbepreport/reference/anlz_wq_overall.md)
-  : Overall water quality outcome by bay segment and year
 - [`anlz_wq_thresh()`](https://tbep-tech.github.io/tbepreport/reference/anlz_wq_thresh.md)
   : Water quality threshold attainment outcome by bay segment, year, and
   variable

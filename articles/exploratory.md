@@ -22,12 +22,14 @@ wqfib <- anlz_wq_fib(enterodata)
 
 ``` r
 
-wqindic <- anlz_wq_indicators(wqattain, wqthresh, wqload, wqtidalcreeks, wqfib)
-```
-
-``` r
-
-wqoverall <- anlz_wq_overall(wqindic)
+wqindic <- anlz_indicators(
+  wq_attain    = wqattain,
+  thresh       = wqthresh,
+  load         = wqload,
+  tidal_creeks = wqtidalcreeks,
+  fib          = wqfib
+)
+wqoverall <- anlz_category(wq = wqindic)
 ```
 
 ``` r
@@ -176,6 +178,8 @@ fig |>
 
 peltel <- anlz_sed_peltel(sedimentdata, yrs = 1993:2024)
 tbbi <- anlz_sed_tbbi(benthicdata)
+
+sedoverall <- anlz_category(sed_peltel = peltel, sed_tbbi = tbbi)
 ```
 
 ## Fish/Wildlife
@@ -200,6 +204,12 @@ data frames, `nonnative_abundance` and `nonnative_richness`.
 nonnative_obs <- anlz_fw_nonnative_obs()
 nonnative_abundance <- anlz_fw_nonnative_abundance(nonnative_obs)
 nonnative_richness  <- anlz_fw_nonnative_richness(nonnative_obs)
+
+fwoverall <- anlz_category(
+  tbni                 = tbni,
+  nonnative_abundance  = nonnative_abundance,
+  nonnative_richness   = nonnative_richness
+)
 ```
 
 ## Habitat
@@ -208,6 +218,30 @@ nonnative_richness  <- anlz_fw_nonnative_richness(nonnative_obs)
 
 trnsct <- anlz_hab_seagrass_transect(transect)
 cov <- anlz_hab_seagrass_coverage(sgsegest)
+
+# anlz_hab_seagrass_coverage() reports full segment names - map to the same
+# abbreviations every other category uses before combining
+segabbr <- c(
+  'Old Tampa Bay'    = 'OTB',
+  'Hillsborough Bay' = 'HB',
+  'Middle Tampa Bay' = 'MTB',
+  'Lower Tampa Bay'  = 'LTB',
+  'Boca Ciega Bay'   = 'BCB',
+  'Terra Ceia Bay'   = 'TCB',
+  'Manatee River'    = 'MR'
+)
+
+haboverall <- anlz_category(
+  seagrass_transect = trnsct,
+  seagrass_coverage = cov |> mutate(bay_segment = segabbr[bay_segment])
+)
+```
+
+## Overall
+
+``` r
+
+score <- anlz_score(wqoverall, sedoverall, fwoverall, haboverall)
 ```
 
 ## Notes

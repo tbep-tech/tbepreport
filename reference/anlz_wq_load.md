@@ -41,7 +41,7 @@ with `type = "threshold"` - a value below its target gives an outcome of
   `totanndat` is not used here.
 
 Returned in long format with one row per indicator, ready to stack into
-[`anlz_wq_indicators`](https://tbep-tech.github.io/tbepreport/reference/anlz_wq_indicators.md).
+[`anlz_indicators`](https://tbep-tech.github.io/tbepreport/reference/anlz_indicators.md).
 
 ## Examples
 
