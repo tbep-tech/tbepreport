@@ -23,16 +23,16 @@ reference:
     Functions for converting raw data to indicator outcomes, and for
     combining indicators into bay segment scores.
   contents: starts_with('anlz')
-- title: Show results
+- title: Plot results
   desc: |
     Functions to visualize indicator scores.
-  contents: starts_with('show')
+  contents: starts_with('plot')
 - title: Internal datasets
   desc: |
     Supporting datasets used by the other functions.
   contents:
   - -starts_with('anlz')
-  - -starts_with('show')
+  - -starts_with('plot')
   - -starts_with('util')
 - title: Utility functions
   desc: |
