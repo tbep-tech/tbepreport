@@ -46,8 +46,10 @@ anlz_score(wqoverall, sedoverall, fwoverall, haboverall, wt = NULL)
 ## Value
 
 A data.frame with columns `bay_segment`, `yr`, `outcome` (0-1, 1 =
-best - the overall Bay Segment Score), and `n_indicator` (number of
-categories with a score for that segment/year)
+best - the overall Bay Segment Score), `n_indicator` (number of
+categories with a score for that segment/year), and one additional
+column per category (`wq`, `sed`, `fw`, `hab`) holding that category's
+own score, `NA` where a segment/year has no score for it
 
 ## Details
 
@@ -68,8 +70,8 @@ sedoverall <- data.frame(bay_segment = 'OTB', yr = 2020, outcome = 0.6)
 fwoverall <- data.frame(bay_segment = 'OTB', yr = 2020, outcome = 0.7)
 haboverall <- data.frame(bay_segment = 'OTB', yr = 2020, outcome = 0.5)
 anlz_score(wqoverall, sedoverall, fwoverall, haboverall)
-#> # A tibble: 1 × 4
-#>   bay_segment    yr outcome n_indicator
-#>   <chr>       <int>   <dbl>       <int>
-#> 1 OTB          2020    0.65           4
+#> # A tibble: 1 × 8
+#>   bay_segment    yr outcome n_indicator    wq   sed    fw   hab
+#>   <chr>       <int>   <dbl>       <int> <dbl> <dbl> <dbl> <dbl>
+#> 1 OTB          2020    0.65           4   0.8   0.6   0.7   0.5
 ```

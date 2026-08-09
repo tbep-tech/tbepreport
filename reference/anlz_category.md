@@ -46,8 +46,12 @@ anlz_category(
 ## Value
 
 A data.frame with columns `bay_segment`, `yr`, `outcome` (0-1, 1 =
-best), and `n_indicator` (number of indicators averaged for that
-segment/year)
+best), `n_indicator` (number of indicators averaged for that
+segment/year), and one additional column per indicator (named from `...`
+or
+[`anlz_indicators`](https://tbep-tech.github.io/tbepreport/reference/anlz_indicators.md)'s
+`indicator` column) holding that indicator's own outcome, `NA` where a
+segment/year has no data for it
 
 ## Details
 
@@ -68,8 +72,8 @@ anlz_category(
   wq_attain = data.frame(bay_segment = 'OTB', yr = 2020, outcome = 0.8),
   fib = data.frame(bay_segment = 'OTB', yr = 2020, outcome = 0.4)
 )
-#> # A tibble: 1 × 4
-#>   bay_segment    yr outcome n_indicator
-#>   <chr>       <int>   <dbl>       <int>
-#> 1 OTB          2020     0.6           2
+#> # A tibble: 1 × 6
+#>   bay_segment    yr outcome n_indicator wq_attain   fib
+#>   <chr>       <int>   <dbl>       <int>     <dbl> <dbl>
+#> 1 OTB          2020     0.6           2       0.8   0.4
 ```
