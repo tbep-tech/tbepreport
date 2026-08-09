@@ -30,6 +30,7 @@ Imports:
   stats,
   tibble,
   tidyr,
+  tools,
   utils
 LazyData: true
 LazyDataCompression: xz
