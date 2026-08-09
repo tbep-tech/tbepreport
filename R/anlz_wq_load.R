@@ -18,7 +18,7 @@
 #'     column in \code{totanndat} is not used here.
 #' }
 #' Returned in long format with one row per indicator, ready to stack into
-#' \code{\link{anlz_wq_indicators}}.
+#' \code{\link{anlz_indicators}}.
 #'
 #' @returns A data.frame with columns \code{bay_segment} (abbreviated, e.g.
 #' \code{"OTB"}), \code{yr}, \code{indicator} (\code{"tn_load"} or

@@ -35,7 +35,7 @@ hydrologic (freshwater inflow) load itself. The raw \code{hy_load}
 column in \code{totanndat} is not used here.
 }
 Returned in long format with one row per indicator, ready to stack into
-\code{\link{anlz_wq_indicators}}.
+\code{\link{anlz_indicators}}.
 }
 \examples{
 \dontrun{

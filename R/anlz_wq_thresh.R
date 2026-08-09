@@ -12,8 +12,9 @@
 #' returns, \code{mean_sdm}).
 #'
 #' @returns A data.frame with columns \code{bay_segment}, \code{yr},
-#' \code{var} (\code{"mean_chla"} or \code{"mean_la"}), and \code{outcome}
-#' (0 or 1, 1 = best)
+#' \code{indicator} (\code{"chla_thresh"} or \code{"la_thresh"}), and
+#' \code{outcome} (0 or 1, 1 = best) - ready to stack into
+#' \code{\link{anlz_indicators}}
 #'
 #' @export
 #'
@@ -28,9 +29,10 @@ anlz_wq_thresh <- function(epcdata) {
     dplyr::left_join(tbeptools::targets, by = 'bay_segment') |>
     dplyr::mutate(
       thresh = ifelse(.data$var == 'mean_chla', .data$chla_thresh, .data$la_thresh),
-      outcome = util_outcome(.data$val, type = 'threshold', thresh = .data$thresh, op = '<')
+      outcome = util_outcome(.data$val, type = 'threshold', thresh = .data$thresh, op = '<'),
+      indicator = dplyr::recode(.data$var, mean_chla = 'chla_thresh', mean_la = 'la_thresh')
     ) |>
-    dplyr::select(dplyr::all_of(c('yr', 'bay_segment', 'var', 'outcome')))
+    dplyr::select(dplyr::all_of(c('yr', 'bay_segment', 'indicator', 'outcome')))
 
   return(out)
 

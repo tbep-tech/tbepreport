@@ -12,8 +12,9 @@ anlz_wq_thresh(epcdata)
 }
 \value{
 A data.frame with columns \code{bay_segment}, \code{yr},
-\code{var} (\code{"mean_chla"} or \code{"mean_la"}), and \code{outcome}
-(0 or 1, 1 = best)
+\code{indicator} (\code{"chla_thresh"} or \code{"la_thresh"}), and
+\code{outcome} (0 or 1, 1 = best) - ready to stack into
+\code{\link{anlz_indicators}}
 }
 \description{
 Water quality threshold attainment outcome by bay segment, year, and variable
