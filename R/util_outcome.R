@@ -37,7 +37,11 @@
 #' function that calls it.
 #'
 #' \strong{continuous}: \code{x} is linearly rescaled from \code{from} to
-#' \code{c(0, 1)} with \code{\link[scales]{rescale}}.
+#' \code{c(0, 1)} with \code{\link[scales]{rescale}}, then clamped to
+#' \code{c(0, 1)} - values of \code{x} outside \code{from} are pinned to
+#' \code{0} or \code{1} rather than extrapolated. This lets \code{from} act
+#' as a transition window narrower than the full range of \code{x} (e.g.
+#' TBNI's 32-46 breakpoints within its 0-100 score).
 #'
 #' \strong{threshold}: by default, \code{x} is compared to \code{thresh}
 #' using \code{op} and converted to a hard \code{0}/\code{1}. Setting
@@ -60,6 +64,10 @@
 #' # continuous, e.g. TBNI scores from 0-100
 #' util_outcome(c(20, 46, 90), type = 'continuous', from = c(0, 100))
 #'
+#' # continuous with a narrower transition window, e.g. TBNI's 32-46
+#' # breakpoints - values outside the window are clamped to 0/1
+#' util_outcome(c(20, 32, 39, 46, 60), type = 'continuous', from = c(32, 46))
+#'
 #' # threshold, e.g. chlorophyll attainment (lower is better)
 #' util_outcome(c(5, 15), type = 'threshold', thresh = 10, op = '<')
 #'
@@ -81,6 +89,7 @@ util_outcome <- function(x, type = c('continuous', 'threshold', 'category'), fro
       from <- range(x, na.rm = TRUE)
 
     out <- scales::rescale(x, to = c(0, 1), from = from)
+    out <- pmin(pmax(out, 0), 1)
 
   }
 

@@ -23,10 +23,10 @@ Tampa Bay Nekton Index (TBNI) outcome by bay segment and year
 Uses \code{\link[tbeptools]{anlz_tbniscr}} and
 \code{\link[tbeptools]{anlz_tbniave}} to score each bay segment/year 0-100,
 then converts to a 0-1 outcome with \code{\link{util_outcome}}
-(\code{type = "continuous"}, \code{from = c(0, 100)}). \strong{Caveat}:
-this is a plain linear rescale - it does not yet account for TBNI's actual
+(\code{type = "continuous"}, \code{from = c(32, 46)}), matching TBNI's own
 grade breakpoints (On Alert below 32, Caution from 32 to 46, Stay the
-Course above 46), which is a known simplification to revisit.
+Course above 46): scores below 32 give an outcome of 0, scores above 46
+give an outcome of 1, and scores in between are linearly rescaled.
 }
 \examples{
 anlz_fw_tbni(tbeptools::fimdata)

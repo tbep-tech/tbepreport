@@ -22,6 +22,14 @@ test_that("util_outcome continuous respects reverse", {
 
 })
 
+test_that("util_outcome continuous clamps values outside from to 0/1", {
+
+  result <- util_outcome(c(20, 32, 39, 46, 60), type = 'continuous', from = c(32, 46))
+
+  expect_equal(result, c(0, 0, 0.5, 1, 1))
+
+})
+
 test_that("util_outcome threshold hard cutoff respects op", {
 
   expect_equal(util_outcome(c(5, 15), type = 'threshold', thresh = 10, op = '<'), c(1, 0))
