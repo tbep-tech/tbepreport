@@ -86,7 +86,11 @@ or a hard threshold to a smooth one) without needing to change every
 `anlz_*` function that calls it.
 
 **continuous**: `x` is linearly rescaled from `from` to `c(0, 1)` with
-[`rescale`](https://scales.r-lib.org/reference/rescale.html).
+[`rescale`](https://scales.r-lib.org/reference/rescale.html), then
+clamped to `c(0, 1)` - values of `x` outside `from` are pinned to `0` or
+`1` rather than extrapolated. This lets `from` act as a transition
+window narrower than the full range of `x` (e.g. TBNI's 32-46
+breakpoints within its 0-100 score).
 
 **threshold**: by default, `x` is compared to `thresh` using `op` and
 converted to a hard `0`/`1`. Setting `smooth = TRUE` instead applies a
@@ -106,6 +110,11 @@ In all cases, `reverse = TRUE` flips the result so a higher raw value in
 # continuous, e.g. TBNI scores from 0-100
 util_outcome(c(20, 46, 90), type = 'continuous', from = c(0, 100))
 #> [1] 0.20 0.46 0.90
+
+# continuous with a narrower transition window, e.g. TBNI's 32-46
+# breakpoints - values outside the window are clamped to 0/1
+util_outcome(c(20, 32, 39, 46, 60), type = 'continuous', from = c(32, 46))
+#> [1] 0.0 0.0 0.5 1.0 1.0
 
 # threshold, e.g. chlorophyll attainment (lower is better)
 util_outcome(c(5, 15), type = 'threshold', thresh = 10, op = '<')

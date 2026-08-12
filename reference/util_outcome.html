@@ -128,7 +128,11 @@ indicator to use its underlying continuous value instead, or a hard
 threshold to a smooth one) without needing to change every <code>anlz_*</code>
 function that calls it.</p>
 <p><strong>continuous</strong>: <code>x</code> is linearly rescaled from <code>from</code> to
-<code>c(0, 1)</code> with <code><a href="https://scales.r-lib.org/reference/rescale.html" class="external-link">rescale</a></code>.</p>
+<code>c(0, 1)</code> with <code><a href="https://scales.r-lib.org/reference/rescale.html" class="external-link">rescale</a></code>, then clamped to
+<code>c(0, 1)</code> - values of <code>x</code> outside <code>from</code> are pinned to
+<code>0</code> or <code>1</code> rather than extrapolated. This lets <code>from</code> act
+as a transition window narrower than the full range of <code>x</code> (e.g.
+TBNI's 32-46 breakpoints within its 0-100 score).</p>
 <p><strong>threshold</strong>: by default, <code>x</code> is compared to <code>thresh</code>
 using <code>op</code> and converted to a hard <code>0</code>/<code>1</code>. Setting
 <code>smooth = TRUE</code> instead applies a logistic function centered at
@@ -145,6 +149,11 @@ in <code>x</code> corresponds to a lower (worse) outcome.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># continuous, e.g. TBNI scores from 0-100</span></span></span>
 <span class="r-in"><span><span class="fu">util_outcome</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">46</span>, <span class="fl">90</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">'continuous'</span>, from <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.20 0.46 0.90</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># continuous with a narrower transition window, e.g. TBNI's 32-46</span></span></span>
+<span class="r-in"><span><span class="co"># breakpoints - values outside the window are clamped to 0/1</span></span></span>
+<span class="r-in"><span><span class="fu">util_outcome</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">32</span>, <span class="fl">39</span>, <span class="fl">46</span>, <span class="fl">60</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">'continuous'</span>, from <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">32</span>, <span class="fl">46</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.0 0.0 0.5 1.0 1.0</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># threshold, e.g. chlorophyll attainment (lower is better)</span></span></span>
 <span class="r-in"><span><span class="fu">util_outcome</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">'threshold'</span>, thresh <span class="op">=</span> <span class="fl">10</span>, op <span class="op">=</span> <span class="st">'&lt;'</span><span class="op">)</span></span></span>

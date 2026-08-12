@@ -43,7 +43,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">anlz_fw_tbni</span><span class="op">(</span><span class="va">fimdata</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">anlz_fw_tbni</span><span class="op">(</span><span class="va">fimdata</span>, from <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">32</span>, <span class="fl">46</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -53,6 +53,14 @@
 <dl><dt id="arg-fimdata">fimdata<a class="anchor" aria-label="anchor" href="#arg-fimdata"></a></dt>
 <dd><p>data.frame of raw fisheries independent monitoring data,
 e.g. <code><a href="https://rdrr.io/pkg/tbeptools/man/fimdata.html" class="external-link">tbeptools::fimdata</a></code></p></dd>
+
+
+<dt id="arg-from">from<a class="anchor" aria-label="anchor" href="#arg-from"></a></dt>
+<dd><p>numeric vector of length 2, the <code>c(min, max)</code> range of
+<code>Segment_TBNI</code> passed to <code><a href="util_outcome.html">util_outcome</a></code> as its
+<code>from</code> argument. Defaults to <code>c(32, 46)</code>, TBNI's own grade
+breakpoints. Pass <code>c(0, 100)</code> to revert to a plain linear rescale
+over the full score range with no clamping.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -67,29 +75,30 @@ action category from <code><a href="https://rdrr.io/pkg/tbeptools/man/anlz_tbnia
     <p>Uses <code><a href="https://rdrr.io/pkg/tbeptools/man/anlz_tbniscr.html" class="external-link">anlz_tbniscr</a></code> and
 <code><a href="https://rdrr.io/pkg/tbeptools/man/anlz_tbniave.html" class="external-link">anlz_tbniave</a></code> to score each bay segment/year 0-100,
 then converts to a 0-1 outcome with <code><a href="util_outcome.html">util_outcome</a></code>
-(<code>type = "continuous"</code>, <code>from = c(0, 100)</code>). <strong>Caveat</strong>:
-this is a plain linear rescale - it does not yet account for TBNI's actual
-grade breakpoints (On Alert below 32, Caution from 32 to 46, Stay the
-Course above 46), which is a known simplification to revisit.</p>
+(<code>type = "continuous"</code>). With the default <code>from = c(32, 46)</code>,
+matching TBNI's own grade breakpoints (On Alert below 32, Caution from 32
+to 46, Stay the Course above 46), scores below 32 give an outcome of 0,
+scores above 46 give an outcome of 1, and scores in between are linearly
+rescaled.</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">anlz_fw_tbni</span><span class="op">(</span><span class="fu">tbeptools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/tbeptools/man/fimdata.html" class="external-link">fimdata</a></span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 108 × 5</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 112 × 5</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    bay_segment    yr Segment_TBNI Action          outcome</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> HB           <span style="text-decoration: underline;">1</span>998           47 Stay the Course    0.47</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> HB           <span style="text-decoration: underline;">1</span>999           47 Stay the Course    0.47</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> HB           <span style="text-decoration: underline;">2</span>000           44 Caution            0.44</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> HB           <span style="text-decoration: underline;">2</span>001           44 Caution            0.44</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> HB           <span style="text-decoration: underline;">2</span>002           39 Caution            0.39</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> HB           <span style="text-decoration: underline;">2</span>003           41 Caution            0.41</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> HB           <span style="text-decoration: underline;">2</span>004           41 Caution            0.41</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> HB           <span style="text-decoration: underline;">2</span>005           32 Caution            0.32</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> HB           <span style="text-decoration: underline;">2</span>006           41 Caution            0.41</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> HB           <span style="text-decoration: underline;">2</span>007           42 Caution            0.42</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 98 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> HB           <span style="text-decoration: underline;">1</span>998           47 Stay the Course   1    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> HB           <span style="text-decoration: underline;">1</span>999           47 Stay the Course   1    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> HB           <span style="text-decoration: underline;">2</span>000           44 Caution           0.857</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> HB           <span style="text-decoration: underline;">2</span>001           44 Caution           0.857</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> HB           <span style="text-decoration: underline;">2</span>002           39 Caution           0.5  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> HB           <span style="text-decoration: underline;">2</span>003           41 Caution           0.643</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> HB           <span style="text-decoration: underline;">2</span>004           41 Caution           0.643</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> HB           <span style="text-decoration: underline;">2</span>005           32 Caution           0    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> HB           <span style="text-decoration: underline;">2</span>006           41 Caution           0.643</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> HB           <span style="text-decoration: underline;">2</span>007           42 Caution           0.714</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 102 more rows</span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

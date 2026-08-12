@@ -95,10 +95,10 @@ tbbi <- anlz_sed_tbbi(benthicdata)
 ### Nekton Index
 
 Scores each bay segment/year 0-100 with the Tampa Bay Nekton Index
-(TBNI), then linearly rescales to an outcome. This is a plain linear
-rescale. Future improvements could account for TBNI’s own grade
-breakpoints (On Alert below 32, Caution from 32 to 46, Stay the Course
-above 46).
+(TBNI), then rescales to an outcome using TBNI’s own grade breakpoints
+(On Alert below 32, Caution from 32 to 46, Stay the Course above 46):
+scores below 32 give an outcome of 0, scores above 46 give an outcome of
+1, and scores in between are linearly rescaled.
 
 ``` r
 
@@ -161,8 +161,10 @@ function that uses it.
 supports three types:
 
 - **Continuous** - a raw value is linearly rescaled to 0-1 over a known
-  range (e.g. the Nekton Index’s 0-100 score, or seagrass transect
-  frequency of occurrence).
+  range, clamped so values outside that range are pinned to 0 or 1
+  rather than extrapolated (e.g. seagrass transect frequency of
+  occurrence over its full 0-100 range, or the Nekton Index’s 0-100
+  score rescaled over just its 32-46 breakpoint window).
 - **Category** - a discrete grade or condition category is mapped to a
   fixed outcome (e.g. FIB bacteria grades A-E, sediment PEL/TEL grades
   A-F, tidal creek condition categories, TBBI Poor/Fair/Good).
@@ -313,8 +315,6 @@ plot_score(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB', yr
 
 - Indices that use categories from a continuous scale, revert to
   continuous data to get outcome
-- For TBNI, the scores range from 0-100 but the categories have breaks
-  at 32 and 46, take this into consideration.
 - For outcomes that are binary based on threshold, maybe use a sigmoidal
   conversion
 - Lots of redundancy in the water quality indicators
