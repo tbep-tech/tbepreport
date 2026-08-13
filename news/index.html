@@ -46,6 +46,9 @@
 <code><a href="../reference/anlz_wq_thresh.html">anlz_wq_thresh()</a></code>, <code><a href="../reference/anlz_wq_load.html">anlz_wq_load()</a></code>, and <code><a href="../reference/anlz_hab_seagrass_coverage.html">anlz_hab_seagrass_coverage()</a></code> gain <code>smooth</code>/<code>pct</code> arguments for a logistic (rather than hard cutoff) threshold outcome; <code><a href="../reference/util_outcome.html">util_outcome()</a></code>’s threshold steepness is now a tunable <code>pct</code> of the threshold (default <code>0.1</code>) rather than a hardcoded 10%</li>
 <li>
 <strong>Breaking</strong>: <code>smooth</code> now defaults to <code>TRUE</code> for <code>util_outcome(type = "threshold")</code> and for <code><a href="../reference/anlz_wq_thresh.html">anlz_wq_thresh()</a></code>, <code><a href="../reference/anlz_wq_load.html">anlz_wq_load()</a></code>, and <code><a href="../reference/anlz_hab_seagrass_coverage.html">anlz_hab_seagrass_coverage()</a></code>, so these threshold-based outcomes are smooth logistic transitions by default instead of a hard 0/1 cutoff. Pass <code>smooth = FALSE</code> to restore the previous hard-cutoff behavior</li>
+<li>Add <code><a href="../reference/plot_trend.html">plot_trend()</a></code>, a new faceted ggplot2 trend plot: an “Overall” facet (bay segment score with one line per category) followed by one facet per category (that category’s score with one line per indicator), each score drawn as a bold dark line with its components as thinner colored lines, labeled directly rather than via a shared legend. Adds <code>ggplot2</code> and <code>ggrepel</code> as new package dependencies</li>
+<li>
+<code><a href="../reference/plot_trend.html">plot_trend()</a></code> gains a <code>yr_range</code> argument (<code>c(min, max)</code>) to restrict the plotted years, defaulting to <code>NULL</code> (all available years)</li>
 </ul></div>
   </main></div>
 

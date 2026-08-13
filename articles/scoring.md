@@ -400,6 +400,24 @@ categories, then the overall score - for a chosen bay segment and year:
 plot_score(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB', yr = 2024)
 ```
 
+Unlike the sunburst plots above, which show one bay segment/year at a
+time,
+[`plot_trend()`](https://tbep-tech.github.io/tbepreport/reference/plot_trend.md)
+shows every year at once for a chosen bay segment: five stacked facets,
+an “Overall” facet with the bay segment score and one line per category,
+followed by one facet per category with that category’s own score and
+one line per indicator. In every facet the score itself is a bold dark
+line, and its components are thinner colored lines labeled directly at
+their right-most point (rather than a single shared legend, which would
+otherwise have to list every category and indicator name at once):
+
+``` r
+
+plot_trend(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB')
+```
+
+![](scoring_files/figure-html/unnamed-chunk-28-1.png)
+
 ## Notes
 
 - Indices that use categories from a continuous scale, revert to

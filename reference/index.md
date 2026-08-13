@@ -51,6 +51,9 @@ Functions to visualize indicator scores.
 - [`plot_score()`](https://tbep-tech.github.io/tbepreport/reference/plot_score.md)
   : Sunburst plot of indicator, category, and overall outcomes for one
   bay segment and year
+- [`plot_trend()`](https://tbep-tech.github.io/tbepreport/reference/plot_trend.md)
+  : Faceted trend plot of indicator, category, and overall outcomes over
+  time
 
 ## Internal datasets
 
