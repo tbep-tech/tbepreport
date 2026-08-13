@@ -209,6 +209,18 @@ util_outcome(8, type = 'threshold', thresh = 10, op = '<', smooth = FALSE)
 
 ### Continuous Example
 
+The plot below compares how the Nekton Index’s 0-100 score is rescaled
+to an outcome under the current default (`from = c(32, 46)`, TBNI’s own
+grade breakpoints - clamped so anything below 32 is 0 and above 46 is 1)
+versus how it was previously scored (`from = c(0, 100)`, a plain linear
+rescale over the full range, with no clamping needed since no score
+falls outside 0-100). Each bay segment/year’s actual TBNI score (from
+`tbni`, computed earlier) is overlaid on the current curve - most
+observed scores fall inside or above the 32-46 breakpoint window, where
+the two methods diverge most.
+
+![](scoring_files/figure-html/unnamed-chunk-13-1.png)
+
 ### Smooth vs. Hard Threshold Example
 
 The plot below compares the hard cutoff to the smooth logistic outcome
@@ -216,7 +228,7 @@ at a few `pct` values, for an arbitrary threshold of 10: all three
 smooth curves cross 0.5 exactly at the threshold, and a larger `pct`
 widens the transition around it.
 
-![](scoring_files/figure-html/unnamed-chunk-13-1.png)
+![](scoring_files/figure-html/unnamed-chunk-14-1.png)
 
 Applying this to Old Tampa Bay’s chlorophyll threshold (9.3 ug/L)
 demonstrates how many observed annual means actually fall within the
@@ -227,7 +239,14 @@ this, the default smooth scoring meaningfully changes scoring for a
 majority of years, not just a few borderline ones (compared to
 `smooth = FALSE`):
 
-![](scoring_files/figure-html/unnamed-chunk-14-1.png)
+![](scoring_files/figure-html/unnamed-chunk-15-1.png)
+
+For comparison, here is the same OTB chlorophyll data scored with
+`smooth = FALSE` - a hard binary cutoff instead of the logistic
+transition above. Every point lands on exactly 0 or 1, regardless of how
+close its value is to the 9.3 ug/L threshold:
+
+![](scoring_files/figure-html/unnamed-chunk-16-1.png)
 
 ## Combining Scores
 
