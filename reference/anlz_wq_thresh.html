@@ -43,7 +43,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">anlz_wq_thresh</span><span class="op">(</span><span class="va">epcdata</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">anlz_wq_thresh</span><span class="op">(</span><span class="va">epcdata</span>, smooth <span class="op">=</span> <span class="cn">TRUE</span>, pct <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -54,41 +54,55 @@
 <dd><p>data.frame of raw water quality data, e.g.
 <code><a href="https://rdrr.io/pkg/tbeptools/man/epcdata.html" class="external-link">tbeptools::epcdata</a></code></p></dd>
 
+
+<dt id="arg-smooth">smooth<a class="anchor" aria-label="anchor" href="#arg-smooth"></a></dt>
+<dd><p>logical, passed to <code><a href="util_outcome.html">util_outcome</a></code> - if
+<code>TRUE</code> (the default), use a smooth logistic transition centered at
+each bay-segment's threshold instead of a hard 0/1 cutoff.</p></dd>
+
+
+<dt id="arg-pct">pct<a class="anchor" aria-label="anchor" href="#arg-pct"></a></dt>
+<dd><p>numeric, passed to <code><a href="util_outcome.html">util_outcome</a></code> as the fraction
+of each threshold used for the logistic transition's steepness when
+<code>smooth = TRUE</code>. Defaults to <code>0.1</code> (10% of the threshold).</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A data.frame with columns <code>bay_segment</code>, <code>yr</code>,
 <code>indicator</code> (<code>"chla_thresh"</code> or <code>"la_thresh"</code>), and
-<code>outcome</code> (0 or 1, 1 = best) - ready to stack into
-<code><a href="anlz_indicators.html">anlz_indicators</a></code></p>
+<code>outcome</code> (0-1, 1 = best; exactly 0 or 1 only if <code>smooth =
+FALSE</code>) - ready to stack into <code><a href="anlz_indicators.html">anlz_indicators</a></code></p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>Compares annual mean chlorophyll and light attenuation values
 against the bay-segment-specific thresholds in <code><a href="https://rdrr.io/pkg/tbeptools/man/targets.html" class="external-link">targets</a></code>,
-using <code><a href="util_outcome.html">util_outcome</a></code> with <code>type = "threshold"</code> - a value
-below its threshold gives an outcome of 1, at or above gives 0. Only
-<code>mean_chla</code> and <code>mean_la</code> are scored (<code><a href="https://rdrr.io/pkg/tbeptools/man/targets.html" class="external-link">tbeptools::targets</a></code>
-has no threshold for the third variable <code><a href="https://rdrr.io/pkg/tbeptools/man/anlz_avedat.html" class="external-link">anlz_avedat</a></code>
-returns, <code>mean_sdm</code>).</p>
+using <code><a href="util_outcome.html">util_outcome</a></code> with <code>type = "threshold"</code> - by
+default (<code>smooth = TRUE</code>) a value below its threshold approaches an
+outcome of 1 and at or above approaches 0, with a smooth logistic
+transition between them; <code>smooth = FALSE</code> instead gives a hard 0/1
+cutoff. Only <code>mean_chla</code> and <code>mean_la</code> are scored
+(<code><a href="https://rdrr.io/pkg/tbeptools/man/targets.html" class="external-link">tbeptools::targets</a></code> has no threshold for the third variable
+<code><a href="https://rdrr.io/pkg/tbeptools/man/anlz_avedat.html" class="external-link">anlz_avedat</a></code> returns, <code>mean_sdm</code>).</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">anlz_wq_thresh</span><span class="op">(</span><span class="fu">tbeptools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/tbeptools/man/epcdata.html" class="external-link">epcdata</a></span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 420 × 4</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       yr bay_segment indicator   outcome</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>  <span style="text-decoration: underline;">1</span>974 HB          chla_thresh       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>  <span style="text-decoration: underline;">1</span>974 LTB         chla_thresh       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>  <span style="text-decoration: underline;">1</span>974 MTB         chla_thresh       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>  <span style="text-decoration: underline;">1</span>974 OTB         chla_thresh       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>  <span style="text-decoration: underline;">1</span>975 HB          chla_thresh       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>  <span style="text-decoration: underline;">1</span>975 LTB         chla_thresh       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>  <span style="text-decoration: underline;">1</span>975 MTB         chla_thresh       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>  <span style="text-decoration: underline;">1</span>975 OTB         chla_thresh       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>  <span style="text-decoration: underline;">1</span>976 HB          chla_thresh       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>  <span style="text-decoration: underline;">1</span>976 LTB         chla_thresh       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       yr bay_segment indicator     outcome</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>  <span style="text-decoration: underline;">1</span>974 HB          chla_thresh 0.007<span style="text-decoration: underline;">13</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>  <span style="text-decoration: underline;">1</span>974 LTB         chla_thresh 0.844    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>  <span style="text-decoration: underline;">1</span>974 MTB         chla_thresh 0.204    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>  <span style="text-decoration: underline;">1</span>974 OTB         chla_thresh 0.267    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>  <span style="text-decoration: underline;">1</span>975 HB          chla_thresh 0.000<span style="text-decoration: underline;">180</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>  <span style="text-decoration: underline;">1</span>975 LTB         chla_thresh 0.580    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>  <span style="text-decoration: underline;">1</span>975 MTB         chla_thresh 0.031<span style="text-decoration: underline;">4</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>  <span style="text-decoration: underline;">1</span>975 OTB         chla_thresh 0.014<span style="text-decoration: underline;">7</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>  <span style="text-decoration: underline;">1</span>976 HB          chla_thresh 0.000<span style="text-decoration: underline;">065</span>5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>  <span style="text-decoration: underline;">1</span>976 LTB         chla_thresh 0.509    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 410 more rows</span></span>
 </code></pre></div>
     </div>

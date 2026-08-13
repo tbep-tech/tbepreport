@@ -50,8 +50,9 @@
 <span>  reverse <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  thresh <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  op <span class="op">=</span> <span class="st">"&lt;"</span>,</span>
-<span>  smooth <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  smooth <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  scl <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  pct <span class="op">=</span> <span class="fl">0.1</span>,</span>
 <span>  levels <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -96,15 +97,25 @@ attains an outcome of 1 when <code>type = "threshold"</code></p></dd>
 
 
 <dt id="arg-smooth">smooth<a class="anchor" aria-label="anchor" href="#arg-smooth"></a></dt>
-<dd><p>logical, if <code>TRUE</code> and <code>type = "threshold"</code>, use a
-smooth logistic transition centered at <code>thresh</code> (in the direction
-given by <code>op</code>) instead of a hard cutoff (see Details)</p></dd>
+<dd><p>logical, if <code>TRUE</code> (the default) and <code>type =
+  "threshold"</code>, use a smooth logistic transition centered at <code>thresh</code>
+(in the direction given by <code>op</code>) instead of a hard cutoff. Set to
+<code>FALSE</code> for a hard <code>0</code>/<code>1</code> cutoff instead (see Details)</p></dd>
 
 
 <dt id="arg-scl">scl<a class="anchor" aria-label="anchor" href="#arg-scl"></a></dt>
 <dd><p>numeric, controls the steepness of the logistic transition when
 <code>smooth = TRUE</code> - smaller values are a sharper transition. Defaults
-to 10% of <code>abs(thresh)</code> (or <code>1</code> if <code>thresh = 0</code>).</p></dd>
+to <code>pct * abs(thresh)</code> (or <code>1</code> if <code>thresh = 0</code>). Set this
+directly to use an absolute steepness instead of one relative to
+<code>thresh</code>.</p></dd>
+
+
+<dt id="arg-pct">pct<a class="anchor" aria-label="anchor" href="#arg-pct"></a></dt>
+<dd><p>numeric, the fraction of <code>abs(thresh)</code> used to compute the
+default <code>scl</code> when <code>smooth = TRUE</code> and <code>scl</code> is not
+supplied directly. Defaults to <code>0.1</code> (10% of <code>thresh</code>).
+Ignored if <code>scl</code> is provided.</p></dd>
 
 
 <dt id="arg-levels">levels<a class="anchor" aria-label="anchor" href="#arg-levels"></a></dt>
@@ -133,12 +144,17 @@ function that calls it.</p>
 <code>0</code> or <code>1</code> rather than extrapolated. This lets <code>from</code> act
 as a transition window narrower than the full range of <code>x</code> (e.g.
 TBNI's 32-46 breakpoints within its 0-100 score).</p>
-<p><strong>threshold</strong>: by default, <code>x</code> is compared to <code>thresh</code>
-using <code>op</code> and converted to a hard <code>0</code>/<code>1</code>. Setting
-<code>smooth = TRUE</code> instead applies a logistic function centered at
-<code>thresh</code>, so outcomes near the threshold transition gradually rather
-than jumping discretely, in the same direction <code>op</code> would have used
-(e.g. <code>op = "&lt;"</code> still means lower <code>x</code> is better).</p>
+<p><strong>threshold</strong>: by default (<code>smooth = TRUE</code>), <code>x</code> is
+compared to <code>thresh</code> using <code>op</code> and converted to a smooth
+logistic outcome centered at <code>thresh</code>, so outcomes near the
+threshold transition gradually rather than jumping discretely, in the
+same direction <code>op</code> would have used (e.g. <code>op = "&lt;"</code> still
+means lower <code>x</code> is better). The steepness of that transition
+(<code>scl</code>) defaults to a percentage (<code>pct</code>) of <code>thresh</code>
+rather than a fixed absolute value, so it stays meaningful across
+indicators/thresholds with very different units and magnitudes (e.g. a
+threshold of 1 vs. a threshold in the hundreds). Set <code>smooth =
+FALSE</code> for a hard <code>0</code>/<code>1</code> cutoff instead.</p>
 <p><strong>category</strong>: <code>x</code> is mapped to an outcome via <code>levels</code>.</p>
 <p>In all cases, <code>reverse = TRUE</code> flips the result so a higher raw value
 in <code>x</code> corresponds to a lower (worse) outcome.</p>
@@ -155,13 +171,20 @@ in <code>x</code> corresponds to a lower (worse) outcome.</p>
 <span class="r-in"><span><span class="fu">util_outcome</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">32</span>, <span class="fl">39</span>, <span class="fl">46</span>, <span class="fl">60</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">'continuous'</span>, from <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">32</span>, <span class="fl">46</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.0 0.0 0.5 1.0 1.0</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># threshold, e.g. chlorophyll attainment (lower is better)</span></span></span>
-<span class="r-in"><span><span class="fu">util_outcome</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">'threshold'</span>, thresh <span class="op">=</span> <span class="fl">10</span>, op <span class="op">=</span> <span class="st">'&lt;'</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1 0</span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># threshold with a smooth transition instead of a hard cutoff</span></span></span>
-<span class="r-in"><span><span class="fu">util_outcome</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">10</span>, <span class="fl">15</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">'threshold'</span>, thresh <span class="op">=</span> <span class="fl">10</span>, smooth <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># threshold, e.g. chlorophyll attainment (lower is better) - smooth by</span></span></span>
+<span class="r-in"><span><span class="co"># default, a logistic transition rather than a hard cutoff</span></span></span>
+<span class="r-in"><span><span class="fu">util_outcome</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">10</span>, <span class="fl">15</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">'threshold'</span>, thresh <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.993307149 0.500000000 0.006692851</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># a larger pct widens the transition (steepness relative to thresh)</span></span></span>
+<span class="r-in"><span><span class="fu">util_outcome</span><span class="op">(</span><span class="fl">12</span>, type <span class="op">=</span> <span class="st">'threshold'</span>, thresh <span class="op">=</span> <span class="fl">10</span>, pct <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.1192029</span>
+<span class="r-in"><span><span class="fu">util_outcome</span><span class="op">(</span><span class="fl">12</span>, type <span class="op">=</span> <span class="st">'threshold'</span>, thresh <span class="op">=</span> <span class="fl">10</span>, pct <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.2689414</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># smooth = FALSE instead gives a hard 0/1 cutoff</span></span></span>
+<span class="r-in"><span><span class="fu">util_outcome</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">15</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">'threshold'</span>, thresh <span class="op">=</span> <span class="fl">10</span>, op <span class="op">=</span> <span class="st">'&lt;'</span>, smooth <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1 0</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># category, e.g. FIB grades</span></span></span>
 <span class="r-in"><span><span class="fu">util_outcome</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'A'</span>, <span class="st">'C'</span>, <span class="st">'E'</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">'category'</span>,</span></span>

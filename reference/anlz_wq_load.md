@@ -5,7 +5,7 @@ Nutrient loading outcome by bay segment, year, and indicator
 ## Usage
 
 ``` r
-anlz_wq_load(totanndat)
+anlz_wq_load(totanndat, smooth = TRUE, pct = 0.1)
 ```
 
 ## Arguments
@@ -19,18 +19,35 @@ anlz_wq_load(totanndat)
   on the [load-estimates](https://github.com/tbep-tech/load-estimates)
   data
 
+- smooth:
+
+  logical, passed to
+  [`util_outcome`](https://tbep-tech.github.io/tbepreport/reference/util_outcome.md) -
+  if `TRUE` (the default), use a smooth logistic transition centered at
+  each target instead of a hard 0/1 cutoff.
+
+- pct:
+
+  numeric, passed to
+  [`util_outcome`](https://tbep-tech.github.io/tbepreport/reference/util_outcome.md)
+  as the fraction of each target used for the logistic transition's
+  steepness when `smooth = TRUE`. Defaults to `0.1` (10% of the target).
+
 ## Value
 
 A data.frame with columns `bay_segment` (abbreviated, e.g. `"OTB"`),
 `yr`, `indicator` (`"tn_load"` or `"tnhy_load"` - see Details for what
-`"tnhy_load"` measures), and `outcome` (0 or 1, 1 = best)
+`"tnhy_load"` measures), and `outcome` (0-1, 1 = best; exactly 0 or 1
+only if `smooth = FALSE`)
 
 ## Details
 
 Compares two loading measures against fixed bay-segment targets, using
 [`util_outcome`](https://tbep-tech.github.io/tbepreport/reference/util_outcome.md)
-with `type = "threshold"` - a value below its target gives an outcome of
-1, at or above gives 0:
+with `type = "threshold"` - by default (`smooth = TRUE`) a value below
+its target approaches an outcome of 1 and at or above approaches 0, with
+a smooth logistic transition between them; `smooth = FALSE` instead
+gives a hard 0/1 cutoff:
 
 - `tn_load`: total nitrogen load
 

@@ -12,8 +12,9 @@ util_outcome(
   reverse = FALSE,
   thresh = NULL,
   op = "<",
-  smooth = FALSE,
+  smooth = TRUE,
   scl = NULL,
+  pct = 0.1,
   levels = NULL
 )
 ```
@@ -54,15 +55,23 @@ util_outcome(
 
 - smooth:
 
-  logical, if `TRUE` and `type = "threshold"`, use a smooth logistic
-  transition centered at `thresh` (in the direction given by `op`)
-  instead of a hard cutoff (see Details)
+  logical, if `TRUE` (the default) and `type = "threshold"`, use a
+  smooth logistic transition centered at `thresh` (in the direction
+  given by `op`) instead of a hard cutoff. Set to `FALSE` for a hard
+  `0`/`1` cutoff instead (see Details)
 
 - scl:
 
   numeric, controls the steepness of the logistic transition when
   `smooth = TRUE` - smaller values are a sharper transition. Defaults to
-  10% of `abs(thresh)` (or `1` if `thresh = 0`).
+  `pct * abs(thresh)` (or `1` if `thresh = 0`). Set this directly to use
+  an absolute steepness instead of one relative to `thresh`.
+
+- pct:
+
+  numeric, the fraction of `abs(thresh)` used to compute the default
+  `scl` when `smooth = TRUE` and `scl` is not supplied directly.
+  Defaults to `0.1` (10% of `thresh`). Ignored if `scl` is provided.
 
 - levels:
 
@@ -92,12 +101,16 @@ clamped to `c(0, 1)` - values of `x` outside `from` are pinned to `0` or
 window narrower than the full range of `x` (e.g. TBNI's 32-46
 breakpoints within its 0-100 score).
 
-**threshold**: by default, `x` is compared to `thresh` using `op` and
-converted to a hard `0`/`1`. Setting `smooth = TRUE` instead applies a
-logistic function centered at `thresh`, so outcomes near the threshold
-transition gradually rather than jumping discretely, in the same
-direction `op` would have used (e.g. `op = "<"` still means lower `x` is
-better).
+**threshold**: by default (`smooth = TRUE`), `x` is compared to `thresh`
+using `op` and converted to a smooth logistic outcome centered at
+`thresh`, so outcomes near the threshold transition gradually rather
+than jumping discretely, in the same direction `op` would have used
+(e.g. `op = "<"` still means lower `x` is better). The steepness of that
+transition (`scl`) defaults to a percentage (`pct`) of `thresh` rather
+than a fixed absolute value, so it stays meaningful across
+indicators/thresholds with very different units and magnitudes (e.g. a
+threshold of 1 vs. a threshold in the hundreds). Set `smooth = FALSE`
+for a hard `0`/`1` cutoff instead.
 
 **category**: `x` is mapped to an outcome via `levels`.
 
@@ -116,13 +129,20 @@ util_outcome(c(20, 46, 90), type = 'continuous', from = c(0, 100))
 util_outcome(c(20, 32, 39, 46, 60), type = 'continuous', from = c(32, 46))
 #> [1] 0.0 0.0 0.5 1.0 1.0
 
-# threshold, e.g. chlorophyll attainment (lower is better)
-util_outcome(c(5, 15), type = 'threshold', thresh = 10, op = '<')
-#> [1] 1 0
-
-# threshold with a smooth transition instead of a hard cutoff
-util_outcome(c(5, 10, 15), type = 'threshold', thresh = 10, smooth = TRUE)
+# threshold, e.g. chlorophyll attainment (lower is better) - smooth by
+# default, a logistic transition rather than a hard cutoff
+util_outcome(c(5, 10, 15), type = 'threshold', thresh = 10)
 #> [1] 0.993307149 0.500000000 0.006692851
+
+# a larger pct widens the transition (steepness relative to thresh)
+util_outcome(12, type = 'threshold', thresh = 10, pct = 0.1)
+#> [1] 0.1192029
+util_outcome(12, type = 'threshold', thresh = 10, pct = 0.2)
+#> [1] 0.2689414
+
+# smooth = FALSE instead gives a hard 0/1 cutoff
+util_outcome(c(5, 15), type = 'threshold', thresh = 10, op = '<', smooth = FALSE)
+#> [1] 1 0
 
 # category, e.g. FIB grades
 util_outcome(c('A', 'C', 'E'), type = 'category',

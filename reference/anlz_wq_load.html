@@ -43,7 +43,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">anlz_wq_load</span><span class="op">(</span><span class="va">totanndat</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">anlz_wq_load</span><span class="op">(</span><span class="va">totanndat</span>, smooth <span class="op">=</span> <span class="cn">TRUE</span>, pct <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -57,19 +57,35 @@ columns <code>year</code>, <code>bay_segment</code> (full segment names, e.g.
 returned by <code><a href="util_rdataload.html">util_rdataload()</a></code> on the
 <a href="https://github.com/tbep-tech/load-estimates" class="external-link">load-estimates</a> data</p></dd>
 
+
+<dt id="arg-smooth">smooth<a class="anchor" aria-label="anchor" href="#arg-smooth"></a></dt>
+<dd><p>logical, passed to <code><a href="util_outcome.html">util_outcome</a></code> - if
+<code>TRUE</code> (the default), use a smooth logistic transition centered at
+each target instead of a hard 0/1 cutoff.</p></dd>
+
+
+<dt id="arg-pct">pct<a class="anchor" aria-label="anchor" href="#arg-pct"></a></dt>
+<dd><p>numeric, passed to <code><a href="util_outcome.html">util_outcome</a></code> as the fraction
+of each target used for the logistic transition's steepness when
+<code>smooth = TRUE</code>. Defaults to <code>0.1</code> (10% of the target).</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A data.frame with columns <code>bay_segment</code> (abbreviated, e.g.
 <code>"OTB"</code>), <code>yr</code>, <code>indicator</code> (<code>"tn_load"</code> or
 <code>"tnhy_load"</code> - see Details for what <code>"tnhy_load"</code> measures),
-and <code>outcome</code> (0 or 1, 1 = best)</p>
+and <code>outcome</code> (0-1, 1 = best; exactly 0 or 1 only if <code>smooth =
+FALSE</code>)</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>Compares two loading measures against fixed bay-segment targets,
-using <code><a href="util_outcome.html">util_outcome</a></code> with <code>type = "threshold"</code> - a value
-below its target gives an outcome of 1, at or above gives 0:</p><ul><li><p><code>tn_load</code>: total nitrogen load</p></li>
+using <code><a href="util_outcome.html">util_outcome</a></code> with <code>type = "threshold"</code> - by
+default (<code>smooth = TRUE</code>) a value below its target approaches an
+outcome of 1 and at or above approaches 0, with a smooth logistic
+transition between them; <code>smooth = FALSE</code> instead gives a hard 0/1
+cutoff:</p><ul><li><p><code>tn_load</code>: total nitrogen load</p></li>
 <li><p><code>tnhy_load</code>: <code>tnhy</code>, the total nitrogen load normalized
 by hydrologic load (i.e. TN load per unit of hydrologic load, a
 hydrologically-normalized loading rate) - <strong>not</strong> the raw

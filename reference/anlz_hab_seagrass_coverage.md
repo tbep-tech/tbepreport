@@ -5,7 +5,12 @@ Seagrass coverage outcome by bay segment and year
 ## Usage
 
 ``` r
-anlz_hab_seagrass_coverage(sgsegest, yr_max = max(sgsegest$year))
+anlz_hab_seagrass_coverage(
+  sgsegest,
+  yr_max = max(sgsegest$year),
+  smooth = TRUE,
+  pct = 0.1
+)
 ```
 
 ## Arguments
@@ -22,11 +27,27 @@ anlz_hab_seagrass_coverage(sgsegest, yr_max = max(sgsegest$year))
   last year `sgsegest` actually has an estimate for
   (`max(sgsegest$year)`)
 
+- smooth:
+
+  logical, passed to
+  [`util_outcome`](https://tbep-tech.github.io/tbepreport/reference/util_outcome.md) -
+  if `TRUE` (the default), use a smooth logistic transition centered at
+  each segment's acreage target instead of a hard 0/1 cutoff.
+
+- pct:
+
+  numeric, passed to
+  [`util_outcome`](https://tbep-tech.github.io/tbepreport/reference/util_outcome.md)
+  as the fraction of each acreage target used for the logistic
+  transition's steepness when `smooth = TRUE`. Defaults to `0.1` (10% of
+  the target).
+
 ## Value
 
 A data.frame with columns `bay_segment` (abbreviated, e.g. `"OTB"`),
-`yr`, `acres` (carried forward in non-survey years), and `outcome` (0 or
-1, 1 = best, also carried forward in non-survey years)
+`yr`, `acres` (carried forward in non-survey years), and `outcome` (0-1,
+1 = best, also carried forward in non-survey years; exactly 0 or 1 only
+if `smooth = FALSE`)
 
 ## Details
 
@@ -48,8 +69,10 @@ Coverage is compared against a fixed per-segment acreage target with
 [`util_outcome`](https://tbep-tech.github.io/tbepreport/reference/util_outcome.md)
 (`type = "threshold"`, `op = ">="`)
 
-- meeting or exceeding the target gives an outcome of 1. Targets
-  (acres):
+- by default (`smooth = TRUE`) this is a smooth logistic transition
+  centered at the target; `smooth = FALSE` instead gives a hard 0/1
+  cutoff (meeting or exceeding the target gives an outcome of 1).
+  Targets (acres):
 
   - Old Tampa Bay:
 
@@ -90,15 +113,15 @@ anlz_hab_seagrass_coverage(sgsegest)
 #> # A tibble: 259 × 4
 #>    bay_segment    yr acres outcome
 #>    <chr>       <dbl> <dbl>   <dbl>
-#>  1 BCB          1988 6259.       0
-#>  2 BCB          1989 6259.       0
-#>  3 BCB          1990 6805.       0
-#>  4 BCB          1991 6805.       0
-#>  5 BCB          1992 6952.       0
-#>  6 BCB          1993 6952.       0
-#>  7 BCB          1994 7129.       0
-#>  8 BCB          1995 7129.       0
-#>  9 BCB          1996 7716.       0
-#> 10 BCB          1997 7716.       0
+#>  1 BCB          1988 6259.  0.0528
+#>  2 BCB          1989 6259.  0.0528
+#>  3 BCB          1990 6805.  0.0939
+#>  4 BCB          1991 6805.  0.0939
+#>  5 BCB          1992 6952.  0.109 
+#>  6 BCB          1993 6952.  0.109 
+#>  7 BCB          1994 7129.  0.130 
+#>  8 BCB          1995 7129.  0.130 
+#>  9 BCB          1996 7716.  0.226 
+#> 10 BCB          1997 7716.  0.226 
 #> # ℹ 249 more rows
 ```
