@@ -202,8 +202,34 @@ util_outcome(8, type = 'threshold', thresh = 10, op = '<')
 util_outcome(8, type = 'threshold', thresh = 10, op = '<', smooth = FALSE)
 ```
 
-### Continuous Example 
+### Continuous Example
 
+The plot below compares how the Nekton Index's 0-100 score is rescaled to
+an outcome under the current default (`from = c(32, 46)`, TBNI's own
+grade breakpoints - clamped so anything below 32 is 0 and above 46 is 1)
+versus how it was previously scored (`from = c(0, 100)`, a plain linear
+rescale over the full range, with no clamping needed since no score falls
+outside 0-100). Each bay segment/year's actual TBNI score (from `tbni`,
+computed earlier) is overlaid on the current curve - most observed scores
+fall inside or above the 32-46 breakpoint window, where the two methods
+diverge most.
+
+```{r}
+#| echo: false
+xvals <- seq(0, 100, by = 0.5)
+new_outcome <- util_outcome(xvals, type = 'continuous', from = c(32, 46))
+old_outcome <- util_outcome(xvals, type = 'continuous', from = c(0, 100))
+
+plot(xvals, new_outcome, type = 'l', lwd = 2, col = 'steelblue', ylim = c(0, 1),
+     xlab = 'TBNI score (0-100)', ylab = 'Outcome',
+     main = 'TBNI scoring: 32-46 breakpoint vs. plain 0-100 rescale')
+lines(xvals, old_outcome, lwd = 2, lty = 2, col = 'grey40')
+abline(v = c(32, 46), lty = 3, col = 'grey70')
+points(tbni$Segment_TBNI, tbni$outcome, pch = 16, col = 'darkorange')
+legend('bottomright',
+       legend = c('32-46 breakpoint (current default)', 'plain 0-100 rescale', 'hypothetical segment/year scores'),
+       col = c('steelblue', 'grey40', 'darkorange'), lwd = c(2, 2, NA), lty = c(1, 2, NA), pch = c(NA, NA, 16), bty = 'n')
+```
 
 ### Smooth vs. Hard Threshold Example
 
@@ -252,6 +278,21 @@ points(otb_chla$val, util_outcome(otb_chla$val, type = 'threshold', thresh = otb
        pch = 16, col = 'darkorange')
 legend('topright', legend = c('smooth threshold curve', 'observed annual means'),
        col = c('steelblue', 'darkorange'), lwd = c(2, NA), pch = c(NA, 16), bty = 'n')
+```
+
+For comparison, here is the same OTB chlorophyll data scored with `smooth = FALSE` - a hard binary cutoff instead of the logistic transition above. Every point lands on exactly 0 or 1, regardless of how close its value is to the 9.3 ug/L threshold:
+
+```{r}
+#| echo: false
+plot(xvals, util_outcome(xvals, type = 'threshold', thresh = otb_thresh, op = '<', smooth = FALSE),
+     type = 's', lwd = 2, col = 'grey40',
+     xlab = 'Mean chlorophyll (ug/L)', ylab = 'Outcome',
+     main = 'OTB chlorophyll: hard cutoff vs. observed values')
+abline(v = otb_thresh, lty = 2, col = 'grey70')
+points(otb_chla$val, util_outcome(otb_chla$val, type = 'threshold', thresh = otb_thresh, op = '<', smooth = FALSE),
+       pch = 16, col = 'darkorange')
+legend('right', legend = c('hard cutoff', 'observed annual means'),
+       col = c('grey40', 'darkorange'), lwd = c(2, NA), pch = c(NA, 16), bty = 'n')
 ```
 
 ## Combining Scores
