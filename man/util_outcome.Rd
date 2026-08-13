@@ -11,8 +11,9 @@ util_outcome(
   reverse = FALSE,
   thresh = NULL,
   op = "<",
-  smooth = FALSE,
+  smooth = TRUE,
   scl = NULL,
+  pct = 0.1,
   levels = NULL
 )
 }
@@ -40,13 +41,21 @@ outcome. Applies to \code{type = "continuous"} and
 \code{">="} - the comparison defining the condition under which \code{x}
 attains an outcome of 1 when \code{type = "threshold"}}
 
-\item{smooth}{logical, if \code{TRUE} and \code{type = "threshold"}, use a
-smooth logistic transition centered at \code{thresh} (in the direction
-given by \code{op}) instead of a hard cutoff (see Details)}
+\item{smooth}{logical, if \code{TRUE} (the default) and \code{type =
+  "threshold"}, use a smooth logistic transition centered at \code{thresh}
+(in the direction given by \code{op}) instead of a hard cutoff. Set to
+\code{FALSE} for a hard \code{0}/\code{1} cutoff instead (see Details)}
 
 \item{scl}{numeric, controls the steepness of the logistic transition when
 \code{smooth = TRUE} - smaller values are a sharper transition. Defaults
-to 10\% of \code{abs(thresh)} (or \code{1} if \code{thresh = 0}).}
+to \code{pct * abs(thresh)} (or \code{1} if \code{thresh = 0}). Set this
+directly to use an absolute steepness instead of one relative to
+\code{thresh}.}
+
+\item{pct}{numeric, the fraction of \code{abs(thresh)} used to compute the
+default \code{scl} when \code{smooth = TRUE} and \code{scl} is not
+supplied directly. Defaults to \code{0.1} (10\% of \code{thresh}).
+Ignored if \code{scl} is provided.}
 
 \item{levels}{named numeric vector mapping each category value in \code{x}
 to a fixed outcome when \code{type = "category"}, e.g.
@@ -75,12 +84,17 @@ function that calls it.
 as a transition window narrower than the full range of \code{x} (e.g.
 TBNI's 32-46 breakpoints within its 0-100 score).
 
-\strong{threshold}: by default, \code{x} is compared to \code{thresh}
-using \code{op} and converted to a hard \code{0}/\code{1}. Setting
-\code{smooth = TRUE} instead applies a logistic function centered at
-\code{thresh}, so outcomes near the threshold transition gradually rather
-than jumping discretely, in the same direction \code{op} would have used
-(e.g. \code{op = "<"} still means lower \code{x} is better).
+\strong{threshold}: by default (\code{smooth = TRUE}), \code{x} is
+compared to \code{thresh} using \code{op} and converted to a smooth
+logistic outcome centered at \code{thresh}, so outcomes near the
+threshold transition gradually rather than jumping discretely, in the
+same direction \code{op} would have used (e.g. \code{op = "<"} still
+means lower \code{x} is better). The steepness of that transition
+(\code{scl}) defaults to a percentage (\code{pct}) of \code{thresh}
+rather than a fixed absolute value, so it stays meaningful across
+indicators/thresholds with very different units and magnitudes (e.g. a
+threshold of 1 vs. a threshold in the hundreds). Set \code{smooth =
+FALSE} for a hard \code{0}/\code{1} cutoff instead.
 
 \strong{category}: \code{x} is mapped to an outcome via \code{levels}.
 
@@ -95,11 +109,16 @@ util_outcome(c(20, 46, 90), type = 'continuous', from = c(0, 100))
 # breakpoints - values outside the window are clamped to 0/1
 util_outcome(c(20, 32, 39, 46, 60), type = 'continuous', from = c(32, 46))
 
-# threshold, e.g. chlorophyll attainment (lower is better)
-util_outcome(c(5, 15), type = 'threshold', thresh = 10, op = '<')
+# threshold, e.g. chlorophyll attainment (lower is better) - smooth by
+# default, a logistic transition rather than a hard cutoff
+util_outcome(c(5, 10, 15), type = 'threshold', thresh = 10)
 
-# threshold with a smooth transition instead of a hard cutoff
-util_outcome(c(5, 10, 15), type = 'threshold', thresh = 10, smooth = TRUE)
+# a larger pct widens the transition (steepness relative to thresh)
+util_outcome(12, type = 'threshold', thresh = 10, pct = 0.1)
+util_outcome(12, type = 'threshold', thresh = 10, pct = 0.2)
+
+# smooth = FALSE instead gives a hard 0/1 cutoff
+util_outcome(c(5, 15), type = 'threshold', thresh = 10, op = '<', smooth = FALSE)
 
 # category, e.g. FIB grades
 util_outcome(c('A', 'C', 'E'), type = 'category',

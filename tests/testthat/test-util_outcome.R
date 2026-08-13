@@ -30,11 +30,21 @@ test_that("util_outcome continuous clamps values outside from to 0/1", {
 
 })
 
-test_that("util_outcome threshold hard cutoff respects op", {
+test_that("util_outcome threshold hard cutoff respects op when smooth = FALSE", {
 
-  expect_equal(util_outcome(c(5, 15), type = 'threshold', thresh = 10, op = '<'), c(1, 0))
-  expect_equal(util_outcome(c(5, 15), type = 'threshold', thresh = 10, op = '>'), c(0, 1))
-  expect_equal(util_outcome(c(10, 15), type = 'threshold', thresh = 10, op = '<='), c(1, 0))
+  expect_equal(util_outcome(c(5, 15), type = 'threshold', thresh = 10, op = '<', smooth = FALSE), c(1, 0))
+  expect_equal(util_outcome(c(5, 15), type = 'threshold', thresh = 10, op = '>', smooth = FALSE), c(0, 1))
+  expect_equal(util_outcome(c(10, 15), type = 'threshold', thresh = 10, op = '<=', smooth = FALSE), c(1, 0))
+
+})
+
+test_that("util_outcome threshold defaults to smooth = TRUE", {
+
+  result <- util_outcome(c(5, 10, 15), type = 'threshold', thresh = 10)
+  expected <- util_outcome(c(5, 10, 15), type = 'threshold', thresh = 10, smooth = TRUE)
+
+  expect_equal(result, expected)
+  expect_true(any(result > 0 & result < 1))
 
 })
 
@@ -58,6 +68,28 @@ test_that("util_outcome threshold smooth is near 0.5 at the threshold and respec
   higher_op_gt <- util_outcome(20, type = 'threshold', thresh = 10, smooth = TRUE, op = '>')
   expect_lt(lower_op_gt, 0.1)
   expect_gt(higher_op_gt, 0.9)
+
+})
+
+test_that("util_outcome threshold pct controls steepness relative to thresh", {
+
+  # pct = 0.2 on thresh = 10 gives scl = 2, so x = 12 is exactly 1 scl above
+  # thresh -> outcome = 1 / (1 + exp(1))
+  result <- util_outcome(12, type = 'threshold', thresh = 10, smooth = TRUE, pct = 0.2)
+  expect_equal(result, 1 / (1 + exp(1)))
+
+  # a smaller pct sharpens the transition, so the same x sits further out
+  # along the curve and is closer to the hard-cutoff outcome of 0
+  tight <- util_outcome(12, type = 'threshold', thresh = 10, smooth = TRUE, pct = 0.05)
+  wide  <- util_outcome(12, type = 'threshold', thresh = 10, smooth = TRUE, pct = 0.2)
+  expect_lt(tight, wide)
+
+})
+
+test_that("util_outcome threshold scl overrides pct", {
+
+  result <- util_outcome(12, type = 'threshold', thresh = 10, smooth = TRUE, scl = 2, pct = 0.5)
+  expect_equal(result, 1 / (1 + exp(1)))
 
 })
 

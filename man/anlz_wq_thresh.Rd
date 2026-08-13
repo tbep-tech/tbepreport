@@ -4,17 +4,25 @@
 \alias{anlz_wq_thresh}
 \title{Water quality threshold attainment outcome by bay segment, year, and variable}
 \usage{
-anlz_wq_thresh(epcdata)
+anlz_wq_thresh(epcdata, smooth = TRUE, pct = 0.1)
 }
 \arguments{
 \item{epcdata}{data.frame of raw water quality data, e.g.
 \code{tbeptools::epcdata}}
+
+\item{smooth}{logical, passed to \code{\link{util_outcome}} - if
+\code{TRUE} (the default), use a smooth logistic transition centered at
+each bay-segment's threshold instead of a hard 0/1 cutoff.}
+
+\item{pct}{numeric, passed to \code{\link{util_outcome}} as the fraction
+of each threshold used for the logistic transition's steepness when
+\code{smooth = TRUE}. Defaults to \code{0.1} (10\% of the threshold).}
 }
 \value{
 A data.frame with columns \code{bay_segment}, \code{yr},
 \code{indicator} (\code{"chla_thresh"} or \code{"la_thresh"}), and
-\code{outcome} (0 or 1, 1 = best) - ready to stack into
-\code{\link{anlz_indicators}}
+\code{outcome} (0-1, 1 = best; exactly 0 or 1 only if \code{smooth =
+FALSE}) - ready to stack into \code{\link{anlz_indicators}}
 }
 \description{
 Water quality threshold attainment outcome by bay segment, year, and variable
@@ -22,11 +30,13 @@ Water quality threshold attainment outcome by bay segment, year, and variable
 \details{
 Compares annual mean chlorophyll and light attenuation values
 against the bay-segment-specific thresholds in \code{\link[tbeptools]{targets}},
-using \code{\link{util_outcome}} with \code{type = "threshold"} - a value
-below its threshold gives an outcome of 1, at or above gives 0. Only
-\code{mean_chla} and \code{mean_la} are scored (\code{tbeptools::targets}
-has no threshold for the third variable \code{\link[tbeptools]{anlz_avedat}}
-returns, \code{mean_sdm}).
+using \code{\link{util_outcome}} with \code{type = "threshold"} - by
+default (\code{smooth = TRUE}) a value below its threshold approaches an
+outcome of 1 and at or above approaches 0, with a smooth logistic
+transition between them; \code{smooth = FALSE} instead gives a hard 0/1
+cutoff. Only \code{mean_chla} and \code{mean_la} are scored
+(\code{tbeptools::targets} has no threshold for the third variable
+\code{\link[tbeptools]{anlz_avedat}} returns, \code{mean_sdm}).
 }
 \examples{
 anlz_wq_thresh(tbeptools::epcdata)

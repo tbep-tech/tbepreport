@@ -5,6 +5,12 @@
 #' @param yr_max integer, the last year to carry estimates forward to,
 #'   defaults to the last year \code{sgsegest} actually has an estimate for
 #'   (\code{max(sgsegest$year)})
+#' @param smooth logical, passed to \code{\link{util_outcome}} - if
+#'   \code{TRUE} (the default), use a smooth logistic transition centered at
+#'   each segment's acreage target instead of a hard 0/1 cutoff.
+#' @param pct numeric, passed to \code{\link{util_outcome}} as the fraction
+#'   of each acreage target used for the logistic transition's steepness
+#'   when \code{smooth = TRUE}. Defaults to \code{0.1} (10% of the target).
 #'
 #' @details Seagrass coverage maps are not produced every year - they're
 #' flown approximately biennially (\code{\link{sgsegest}} has estimates for
@@ -19,7 +25,10 @@
 #'
 #' Coverage is compared against a fixed per-segment acreage target with
 #' \code{\link{util_outcome}} (\code{type = "threshold"}, \code{op = ">="})
-#' - meeting or exceeding the target gives an outcome of 1. Targets (acres):
+#' - by default (\code{smooth = TRUE}) this is a smooth logistic transition
+#' centered at the target; \code{smooth = FALSE} instead gives a hard 0/1
+#' cutoff (meeting or exceeding the target gives an outcome of 1). Targets
+#' (acres):
 #' \describe{
 #'   \item{Old Tampa Bay}{11,100}
 #'   \item{Hillsborough Bay}{1,751}
@@ -35,14 +44,14 @@
 #'
 #' @returns A data.frame with columns \code{bay_segment} (abbreviated, e.g.
 #' \code{"OTB"}), \code{yr}, \code{acres} (carried forward in non-survey
-#' years), and \code{outcome} (0 or 1, 1 = best, also carried forward in
-#' non-survey years)
+#' years), and \code{outcome} (0-1, 1 = best, also carried forward in
+#' non-survey years; exactly 0 or 1 only if \code{smooth = FALSE})
 #'
 #' @export
 #'
 #' @examples
 #' anlz_hab_seagrass_coverage(sgsegest)
-anlz_hab_seagrass_coverage <- function(sgsegest, yr_max = max(sgsegest$year)) {
+anlz_hab_seagrass_coverage <- function(sgsegest, yr_max = max(sgsegest$year), smooth = TRUE, pct = 0.1) {
 
   segtrgs <- c(
     'Old Tampa Bay'    = 11100,
@@ -67,7 +76,8 @@ anlz_hab_seagrass_coverage <- function(sgsegest, yr_max = max(sgsegest$year)) {
     dplyr::mutate(
       bay_segment = as.character(.data$segment),
       trgs = segtrgs[.data$bay_segment],
-      outcome = util_outcome(.data$acres, type = 'threshold', thresh = .data$trgs, op = '>='),
+      outcome = util_outcome(.data$acres, type = 'threshold', thresh = .data$trgs, op = '>=',
+                              smooth = smooth, pct = pct),
       bay_segment = segabbr[.data$bay_segment]
     ) |>
     dplyr::rename(yr = dplyr::all_of('year')) |>

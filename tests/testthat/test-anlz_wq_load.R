@@ -8,7 +8,7 @@ test_that("anlz_wq_load scores tn_load/tnhy_load against fixed segment targets",
     tnhy = c(1.0, 1.7, 1.2, 0.9)
   )
 
-  result <- anlz_wq_load(totanndat)
+  result <- anlz_wq_load(totanndat, smooth = FALSE)
 
   expect_named(result, c('bay_segment', 'yr', 'indicator', 'outcome'))
   expect_setequal(unique(result$indicator), c('tn_load', 'tnhy_load'))
@@ -27,6 +27,21 @@ test_that("anlz_wq_load scores tn_load/tnhy_load against fixed segment targets",
   expect_equal(hy$outcome[hy$bay_segment == 'HB'], 0)
   expect_equal(hy$outcome[hy$bay_segment == 'MTB'], 1)
   expect_equal(hy$outcome[hy$bay_segment == 'LTB'], 1)
+
+})
+
+test_that("anlz_wq_load smooth defaults to TRUE, giving a logistic transition", {
+
+  totanndat <- data.frame(
+    year = c(2020, 2020, 2020, 2020),
+    bay_segment = c('Old Tampa Bay', 'Hillsborough Bay', 'Middle Tampa Bay', 'Lower Tampa Bay'),
+    tn_load = c(480, 1460, 700, 300),
+    tnhy = c(1.07, 1.63, 1.2, 0.9)
+  )
+
+  result <- anlz_wq_load(totanndat)
+
+  expect_true(any(result$outcome > 0 & result$outcome < 1))
 
 })
 

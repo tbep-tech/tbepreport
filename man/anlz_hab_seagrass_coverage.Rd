@@ -4,7 +4,12 @@
 \alias{anlz_hab_seagrass_coverage}
 \title{Seagrass coverage outcome by bay segment and year}
 \usage{
-anlz_hab_seagrass_coverage(sgsegest, yr_max = max(sgsegest$year))
+anlz_hab_seagrass_coverage(
+  sgsegest,
+  yr_max = max(sgsegest$year),
+  smooth = TRUE,
+  pct = 0.1
+)
 }
 \arguments{
 \item{sgsegest}{data.frame of seagrass coverage estimates by bay segment
@@ -13,12 +18,20 @@ and year, e.g. \code{\link{sgsegest}}}
 \item{yr_max}{integer, the last year to carry estimates forward to,
 defaults to the last year \code{sgsegest} actually has an estimate for
 (\code{max(sgsegest$year)})}
+
+\item{smooth}{logical, passed to \code{\link{util_outcome}} - if
+\code{TRUE} (the default), use a smooth logistic transition centered at
+each segment's acreage target instead of a hard 0/1 cutoff.}
+
+\item{pct}{numeric, passed to \code{\link{util_outcome}} as the fraction
+of each acreage target used for the logistic transition's steepness
+when \code{smooth = TRUE}. Defaults to \code{0.1} (10\% of the target).}
 }
 \value{
 A data.frame with columns \code{bay_segment} (abbreviated, e.g.
 \code{"OTB"}), \code{yr}, \code{acres} (carried forward in non-survey
-years), and \code{outcome} (0 or 1, 1 = best, also carried forward in
-non-survey years)
+years), and \code{outcome} (0-1, 1 = best, also carried forward in
+non-survey years; exactly 0 or 1 only if \code{smooth = FALSE})
 }
 \description{
 Seagrass coverage outcome by bay segment and year
@@ -38,7 +51,10 @@ year are not a new estimate, just a repeat of the last known one.
 Coverage is compared against a fixed per-segment acreage target with
 \code{\link{util_outcome}} (\code{type = "threshold"}, \code{op = ">="})
 \itemize{
-\item meeting or exceeding the target gives an outcome of 1. Targets (acres):
+\item by default (\code{smooth = TRUE}) this is a smooth logistic transition
+centered at the target; \code{smooth = FALSE} instead gives a hard 0/1
+cutoff (meeting or exceeding the target gives an outcome of 1). Targets
+(acres):
 \describe{
 \item{Old Tampa Bay}{11,100}
 \item{Hillsborough Bay}{1,751}

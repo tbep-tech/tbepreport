@@ -20,7 +20,7 @@ knitr:
 library(tbepreport)
 ```
 
-This article walks through the full report card pipeline: computing each
+This article describes the full workflow for creating the bay segment annual report card. This includes descriptions of computing each
 individual indicator, converting raw indicator values to a common 0-1
 outcome scale, combining indicators into category scores and an overall
 bay segment score, and visualizing the results. The four categories -
@@ -45,7 +45,9 @@ wqattain <- anlz_wq_attain(epcdata)
 
 Compares annual mean chlorophyll and light attenuation values directly
 against bay-segment-specific thresholds, independent of the combined
-attainment score above.  Each gives its own binary (threshold) outcome.
+attainment score above.  Each gives its own threshold outcome as a smooth
+logistic transition by default or a hard binary 0/1 with `smooth = FALSE` 
+(see [Scoring](#scoring)).
 
 ```{r}
 wqthresh <- anlz_wq_thresh(epcdata)
@@ -54,8 +56,9 @@ wqthresh <- anlz_wq_thresh(epcdata)
 ### Nutrient and Hydrologic Loading
 
 Compares total nitrogen load and a hydrologically-normalized loading
-against fixed bay-segment thresholds, each as its own binary (threshold)
-outcome.
+against fixed bay-segment thresholds, each as its own threshold outcome -
+a smooth logistic transition by default, or a hard binary 0/1 with
+`smooth = FALSE` - see [Scoring](#scoring).
 
 ```{r}
 totanndat <- util_rdataload("https://github.com/tbep-tech/load-estimates/raw/main/data/totanndat.RData")
@@ -145,12 +148,13 @@ trnsct <- anlz_hab_seagrass_transect(transect)
 
 ### Seagrass Coverage
 
-Compares mapped seagrass acreage against a fixed per-segment target
-(a binary/threshold outcome), where the targets are the baywide 40,000-acre
-seagrass coverage target apportioned across segments by each segment's
-share of total bay area. Coverage maps are flown only every couple of
-years, so non-survey years carry forward the most recent actual estimate
-and outcome.
+Compares mapped seagrass acreage against a fixed per-segment target (a
+threshold outcome - a smooth logistic transition by default, or a hard
+binary 0/1 with `smooth = FALSE` - see [Scoring](#scoring)), where the
+targets are the baywide 40,000-acre seagrass coverage target apportioned
+across segments by each segment's share of total bay area. Coverage maps
+are flown only every couple of years, so non-survey years carry forward
+the most recent actual estimate and outcome.
 
 ```{r}
 cov <- anlz_hab_seagrass_coverage(sgsegest)
@@ -164,18 +168,25 @@ That conversion happens in one place, `util_outcome()`, so how an
 indicator is scored can change without touching the `anlz_*` function that
 uses it. `util_outcome()` supports three types:
 
-* **Continuous** - a raw value is linearly rescaled to 0-1 over a known
+* **Continuous** - a raw value is linearly rescaled to 0-1 over a specified
   range, clamped so values outside that range are pinned to 0 or 1 rather
-  than extrapolated (e.g. seagrass transect frequency of occurrence over
-  its full 0-100 range, or the Nekton Index's 0-100 score rescaled over
-  just its 32-46 breakpoint window).
+  than extrapolated.  This can occur for the full range of raw values 
+  (e.g., seagrass transect frequency of occurrence over
+  its full 0-100 range) or within a subset range of the raw values (e.g., the Nekton Index's 0-100 score rescaled over just its 32-46 breakpoint window).
 * **Category** - a discrete grade or condition category is mapped to a
   fixed outcome (e.g. FIB bacteria grades A-E, sediment PEL/TEL grades A-F,
   tidal creek condition categories, TBBI Poor/Fair/Good).
-* **Binary (threshold)** - a raw value is compared against a cutoff, giving
-  a hard 0 or 1 (e.g. nutrient loading against a bay-segment target,
-  chlorophyll/light attenuation against their thresholds, seagrass
-  coverage against an acreage target).
+* **Threshold** - a raw value is compared against a cutoff (e.g. nutrient
+  loading against a bay-segment target, chlorophyll/light attenuation
+  against their thresholds, seagrass coverage against an acreage target).
+  By default this gives a smooth logistic outcome: exactly 0.5 at the
+  threshold, moving quickly toward 0 or 1 (depending on direction) as a
+  value moves away from it, so values close to the threshold are
+  penalized less harshly than a hard cutoff would. The steepness of that
+  transition is set by `pct`, a fraction of the threshold itself (default
+  10%) rather than a fixed absolute value, so it stays meaningful across
+  indicators/segments with very different thresholds. Setting
+  `smooth = FALSE` instead gives a hard binary 0 or 1.
 
 ```{r}
 # continuous: linearly rescale a raw value between known bounds
@@ -184,14 +195,64 @@ util_outcome(75, type = 'continuous', from = c(0, 100))
 # category: map a discrete grade to a fixed outcome
 util_outcome('B', type = 'category', levels = c(A = 1, B = 0.75, C = 0.5, D = 0.25, F = 0))
 
-# binary (threshold): compare against a cutoff
+# threshold: smooth by default, a logistic transition centered on the cutoff
 util_outcome(8, type = 'threshold', thresh = 10, op = '<')
+
+# threshold, smooth = FALSE: a hard binary cutoff instead
+util_outcome(8, type = 'threshold', thresh = 10, op = '<', smooth = FALSE)
 ```
 
-The non-native abundance and richness indicators are the one exception -
-rather than `util_outcome()`, they convert a percentile (via
-`util_percentile()`) directly to an outcome (`1 - percentile / 100`), since
-there's no fixed range, grade, or threshold to compare against.
+### Continuous Example 
+
+
+### Smooth vs. Hard Threshold Example
+
+The plot below compares the hard cutoff to the smooth logistic outcome at
+a few `pct` values, for an arbitrary threshold of 10: all three smooth
+curves cross 0.5 exactly at the threshold, and a larger `pct` widens the
+transition around it.
+
+```{r}
+#| echo: false
+xvals <- seq(0, 20, by = 0.1)
+thresh <- 10
+
+plot(xvals, as.numeric(xvals < thresh), type = 's', lwd = 2, col = 'grey40',
+     xlab = 'Raw value', ylab = 'Outcome', main = 'Hard cutoff vs. smooth threshold (thresh = 10)')
+lines(xvals, util_outcome(xvals, type = 'threshold', thresh = thresh, smooth = TRUE, pct = 0.05), col = 'steelblue', lwd = 2)
+lines(xvals, util_outcome(xvals, type = 'threshold', thresh = thresh, smooth = TRUE, pct = 0.1), col = 'darkorange', lwd = 2)
+lines(xvals, util_outcome(xvals, type = 'threshold', thresh = thresh, smooth = TRUE, pct = 0.2), col = 'firebrick', lwd = 2)
+abline(v = thresh, lty = 2, col = 'grey70')
+legend('right', legend = c('hard cutoff', 'pct = 0.05', 'pct = 0.1', 'pct = 0.2'),
+       col = c('grey40', 'steelblue', 'darkorange', 'firebrick'), lwd = 2, bty = 'n')
+```
+
+Applying this to Old Tampa Bay's chlorophyll threshold
+(9.3 ug/L) demonstrates how many observed annual means actually fall
+within the default 10% transition band: about two-thirds of OTB's 52
+years of data land between outcomes of 0.1 and 0.9, since a value tracked
+against a management target tends to hover close to it. For an indicator
+like this, the default smooth scoring meaningfully changes scoring for a
+majority of years, not just a few borderline ones (compared to
+`smooth = FALSE`):
+
+```{r}
+#| echo: false
+otb_chla <- tbeptools::anlz_avedat(epcdata)$ann |>
+  dplyr::filter(bay_segment == 'OTB', var == 'mean_chla')
+otb_thresh <- tbeptools::targets$chla_thresh[tbeptools::targets$bay_segment == 'OTB']
+
+xvals <- seq(0, 20, by = 0.1)
+plot(xvals, util_outcome(xvals, type = 'threshold', thresh = otb_thresh, op = '<', smooth = TRUE),
+     type = 'l', lwd = 2, col = 'steelblue',
+     xlab = 'Mean chlorophyll (ug/L)', ylab = 'Outcome',
+     main = 'OTB chlorophyll: smooth threshold vs. observed values')
+abline(v = otb_thresh, lty = 2, col = 'grey70')
+points(otb_chla$val, util_outcome(otb_chla$val, type = 'threshold', thresh = otb_thresh, op = '<', smooth = TRUE),
+       pch = 16, col = 'darkorange')
+legend('topright', legend = c('smooth threshold curve', 'observed annual means'),
+       col = c('steelblue', 'darkorange'), lwd = c(2, NA), pch = c(NA, 16), bty = 'n')
+```
 
 ## Combining Scores
 
@@ -288,6 +349,5 @@ plot_score(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB', yr
 ## Notes
 
 * Indices that use categories from a continuous scale, revert to continuous data to get outcome
-* For outcomes that are binary based on threshold, maybe use a sigmoidal conversion
 * Lots of redundancy in the water quality indicators
 * How to incorporate land use change by bay segment? Is this even appropriate?
