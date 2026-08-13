@@ -298,7 +298,43 @@ legend('right', legend = c('hard cutoff', 'observed annual means'),
 ## Combining Scores
 
 Once every indicator has a 0-1 outcome, three functions combine them into
-increasingly aggregated scores:
+increasingly aggregated scores. The diagram below shows the full
+hierarchy for a single bay segment/year: each category's indicators
+(named as they're passed into `anlz_indicators()`/`anlz_category()` below)
+funnel into that category's score, and the four category scores funnel
+into the single overall score.
+
+```{mermaid}
+flowchart TD
+    A1["wq_attain"] --> WQ["Water Quality"]
+    A2["thresh"] --> WQ
+    A3["load"] --> WQ
+    A4["tidal_creeks"] --> WQ
+    A5["fib"] --> WQ
+
+    B1["sed_peltel"] --> SED["Sediment"]
+    B2["sed_tbbi"] --> SED
+
+    C1["tbni"] --> FW["Fish and Wildlife"]
+    C2["nonnative_abundance"] --> FW
+    C3["nonnative_richness"] --> FW
+
+    D1["seagrass_transect"] --> HAB["Habitat"]
+    D2["seagrass_coverage"] --> HAB
+
+    WQ --> SCORE["Bay Segment / Year Score"]
+    SED --> SCORE
+    FW --> SCORE
+    HAB --> SCORE
+
+    classDef indicator fill:#eef2f7,stroke:#8aa1b1,color:#1c1c1c;
+    classDef category fill:#ffe8b3,stroke:#c98a12,color:#1c1c1c;
+    classDef score fill:#c8e6c9,stroke:#2e7d32,color:#1c1c1c;
+
+    class A1,A2,A3,A4,A5,B1,B2,C1,C2,C3,D1,D2 indicator;
+    class WQ,SED,FW,HAB category;
+    class SCORE score;
+```
 
 * `anlz_indicators()` stacks any number of named indicator data.frames into
   one long table (`bay_segment`, `yr`, `indicator`, `outcome`), without
