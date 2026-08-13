@@ -305,6 +305,7 @@ funnel into that category's score, and the four category scores funnel
 into the single overall score.
 
 ```{mermaid}
+%%| fig-width: 8.5
 flowchart TD
     A1["wq_attain"] --> WQ["Water Quality"]
     A2["thresh"] --> WQ
@@ -421,6 +422,21 @@ categories, then the overall score - for a chosen bay segment and year:
 
 ```{r}
 plot_score(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB', yr = 2024)
+```
+
+Unlike the sunburst plots above, which show one bay segment/year at a time,
+`plot_trend()` shows every year at once for a chosen bay segment: five
+stacked facets, an "Overall" facet with the bay segment score and one line
+per category, followed by one facet per category with that category's own
+score and one line per indicator. In every facet the score itself is a
+bold dark line, and its components are thinner colored lines labeled
+directly at their right-most point (rather than a single shared legend,
+which would otherwise have to list every category and indicator name at
+once):
+
+```{r}
+#| fig-height: 12
+plot_trend(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB')
 ```
 
 ## Notes

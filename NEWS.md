@@ -18,3 +18,11 @@
   `anlz_hab_seagrass_coverage()`, so these threshold-based outcomes are
   smooth logistic transitions by default instead of a hard 0/1 cutoff.
   Pass `smooth = FALSE` to restore the previous hard-cutoff behavior
+* Add `plot_trend()`, a new faceted ggplot2 trend plot: an "Overall" facet
+  (bay segment score with one line per category) followed by one facet per
+  category (that category's score with one line per indicator), each
+  score drawn as a bold dark line with its components as thinner colored
+  lines, labeled directly rather than via a shared legend. Adds `ggplot2`
+  and `ggrepel` as new package dependencies
+* `plot_trend()` gains a `yr_range` argument (`c(min, max)`) to restrict
+  the plotted years, defaulting to `NULL` (all available years)

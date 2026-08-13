@@ -20,6 +20,8 @@ Depends:
   tbeptools
 Imports:
   dplyr,
+  ggplot2,
+  ggrepel,
   here,
   jsonlite,
   plotly,
