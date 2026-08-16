@@ -306,7 +306,7 @@ into the single overall score.
 
 ```{mermaid}
 %%| fig-width: 8.5
-flowchart TD
+flowchart LR
     A1["wq_attain"] --> WQ["Water Quality"]
     A2["thresh"] --> WQ
     A3["load"] --> WQ
@@ -349,18 +349,20 @@ flowchart TD
   average, giving the overall bay segment score.
 
 ```{r}
-wqindic <- anlz_indicators(
-  wq_attain    = wqattain,
-  thresh       = wqthresh,
-  load         = wqload,
-  tidal_creeks = wqtidalcreeks,
-  fib          = wqfib
+wqoverall <- anlz_category(
+  wq_attain = wqattain, 
+  thresh = wqthresh, 
+  load = wqload, 
+  tidal_creeks = wqtidalcreeks, 
+  fib = wqfib
 )
-wqoverall <- anlz_category(wq = wqindic)
 ```
 
 ```{r}
-sedoverall <- anlz_category(sed_peltel = peltel, sed_tbbi = tbbi)
+sedoverall <- anlz_category(
+  sed_peltel = peltel, 
+  sed_tbbi = tbbi
+)
 ```
 
 ```{r}
@@ -392,7 +394,14 @@ data.frames as `anlz_category()` (and calls it internally) to plot one
 category's indicators around its score, for a chosen bay segment and year:
 
 ```{r}
-plot_category(wq = wqindic, bay_segment = 'OTB', yr = 2024)
+plot_category(
+  wq_attain    = wqattain,
+  thresh       = wqthresh,
+  load         = wqload,
+  tidal_creeks = wqtidalcreeks,
+  fib          = wqfib,
+  bay_segment = 'OTB', yr = 2024
+)
 ```
 
 ```{r}
@@ -436,7 +445,8 @@ once):
 
 ```{r}
 #| fig-height: 12
-plot_trend(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB')
+plot_trend(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB', 
+  yr_range = c(2000, 2024))
 ```
 
 ## Notes
