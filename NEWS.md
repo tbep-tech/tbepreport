@@ -26,3 +26,10 @@
   and `ggrepel` as new package dependencies
 * `plot_trend()` gains a `yr_range` argument (`c(min, max)`) to restrict
   the plotted years, defaulting to `NULL` (all available years)
+* **Breaking**: `anlz_wq_fib()` now scores FIB using `exceed_rate`
+  (`tbeptools::anlz_fibmatrix()`'s continuous, one-sided 90% upper
+  confidence estimate of the true exceedance rate) instead of the A-E
+  letter grade (`cat`), giving a continuous outcome (`1 - exceed_rate`)
+  rather than one of 5 fixed values. Requires a `tbeptools` version with
+  the `exceed_rate` column (not yet on CRAN/the published GitHub branch
+  as of this change)

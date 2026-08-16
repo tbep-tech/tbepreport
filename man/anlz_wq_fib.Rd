@@ -18,9 +18,15 @@ A data.frame with columns \code{bay_segment}, \code{yr}, and
 Fecal indicator bacteria (FIB) outcome by bay segment and year
 }
 \details{
-Uses \code{\link[tbeptools]{anlz_fibmatrix}} to grade each bay
-segment/year A-E, then converts the grade to a 0-1 outcome with
-\code{\link{util_outcome}} (\code{type = "category"}).
+Uses \code{\link[tbeptools]{anlz_fibmatrix}} to get, for each bay
+segment/year, \code{exceed_rate} - a continuous, one-sided 90\\% upper
+confidence estimate of the true exceedance rate (0-1, lower is better) -
+and converts it to a 0-1 outcome with \code{\link{util_outcome}}
+(\code{type = "continuous"}, \code{from = c(0, 1)}, \code{reverse = TRUE}),
+i.e. \code{outcome = 1 - exceed_rate}. This is a continuous analog of the
+A-E letter grade \code{anlz_fibmatrix()} also returns (\code{cat}), which
+is itself a discretized version of \code{exceed_rate} - see
+\code{\link[tbeptools]{anlz_fibmatrix}} for details.
 }
 \examples{
 anlz_wq_fib(tbeptools::enterodata)
