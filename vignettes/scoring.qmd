@@ -236,18 +236,35 @@ diverge most.
 ```{r}
 #| echo: false
 xvals <- seq(0, 100, by = 0.5)
-new_outcome <- util_outcome(xvals, type = 'continuous', from = c(32, 46))
-old_outcome <- util_outcome(xvals, type = 'continuous', from = c(0, 100))
+method_ord <- c('32-46 breakpoint (current default)', 'plain 0-100 rescale', 'hypothetical segment/year scores')
+method_cols <- c('steelblue', 'grey40', 'darkorange')
+names(method_cols) <- method_ord
 
-plot(xvals, new_outcome, type = 'l', lwd = 2, col = 'steelblue', ylim = c(0, 1),
-     xlab = 'TBNI score (0-100)', ylab = 'Outcome',
-     main = 'TBNI scoring: 32-46 breakpoint vs. plain 0-100 rescale')
-lines(xvals, old_outcome, lwd = 2, lty = 2, col = 'grey40')
-abline(v = c(32, 46), lty = 3, col = 'grey70')
-points(tbni$Segment_TBNI, tbni$outcome, pch = 16, col = 'darkorange')
-legend('bottomright',
-       legend = c('32-46 breakpoint (current default)', 'plain 0-100 rescale', 'hypothetical segment/year scores'),
-       col = c('steelblue', 'grey40', 'darkorange'), lwd = c(2, 2, NA), lty = c(1, 2, NA), pch = c(NA, NA, 16), bty = 'n')
+curve_df <- data.frame(
+  xvals = rep(xvals, 2),
+  outcome = c(
+    util_outcome(xvals, type = 'continuous', from = c(32, 46)),
+    util_outcome(xvals, type = 'continuous', from = c(0, 100))
+  ),
+  method = factor(rep(method_ord[1:2], each = length(xvals)), levels = method_ord)
+)
+
+ggplot(curve_df, aes(x = xvals, y = outcome, color = method)) +
+  geom_line(aes(linetype = method), linewidth = 0.8) +
+  geom_vline(xintercept = c(32, 46), linetype = 3, color = 'grey70') +
+  geom_point(data = tbni, aes(x = Segment_TBNI, y = outcome, color = method_ord[3]),
+             inherit.aes = FALSE, shape = 16) +
+  scale_color_manual(name = NULL, values = method_cols, breaks = method_ord) +
+  scale_linetype_manual(values = c('solid', 'dashed'), guide = 'none') +
+  guides(color = guide_legend(override.aes = list(
+    linetype = c('solid', 'dashed', 'blank'),
+    shape = c(NA, NA, 16)
+  ))) +
+  scale_y_continuous(limits = c(0, 1)) +
+  labs(title = 'TBNI scoring: 32-46 breakpoint vs. plain 0-100 rescale',
+       x = 'TBNI score (0-100)', y = 'Outcome') +
+  theme_minimal() +
+  theme(legend.position = c(0.98, 0.02), legend.justification = c(1, 0), legend.title = element_blank())
 ```
 
 ### Sediment Contaminants Example
@@ -331,15 +348,30 @@ transition around it.
 #| echo: false
 xvals <- seq(0, 20, by = 0.1)
 thresh <- 10
+thresh_ord <- c('hard cutoff', 'pct = 0.05', 'pct = 0.1', 'pct = 0.2')
+thresh_cols <- c('grey40', 'steelblue', 'darkorange', 'firebrick')
+names(thresh_cols) <- thresh_ord
 
-plot(xvals, as.numeric(xvals < thresh), type = 's', lwd = 2, col = 'grey40',
-     xlab = 'Raw value', ylab = 'Outcome', main = 'Hard cutoff vs. smooth threshold (thresh = 10)')
-lines(xvals, util_outcome(xvals, type = 'threshold', thresh = thresh, smooth = TRUE, pct = 0.05), col = 'steelblue', lwd = 2)
-lines(xvals, util_outcome(xvals, type = 'threshold', thresh = thresh, smooth = TRUE, pct = 0.1), col = 'darkorange', lwd = 2)
-lines(xvals, util_outcome(xvals, type = 'threshold', thresh = thresh, smooth = TRUE, pct = 0.2), col = 'firebrick', lwd = 2)
-abline(v = thresh, lty = 2, col = 'grey70')
-legend('right', legend = c('hard cutoff', 'pct = 0.05', 'pct = 0.1', 'pct = 0.2'),
-       col = c('grey40', 'steelblue', 'darkorange', 'firebrick'), lwd = 2, bty = 'n')
+thresh_df <- data.frame(
+  xvals = rep(xvals, 4),
+  outcome = c(
+    as.numeric(xvals < thresh),
+    util_outcome(xvals, type = 'threshold', thresh = thresh, smooth = TRUE, pct = 0.05),
+    util_outcome(xvals, type = 'threshold', thresh = thresh, smooth = TRUE, pct = 0.1),
+    util_outcome(xvals, type = 'threshold', thresh = thresh, smooth = TRUE, pct = 0.2)
+  ),
+  method = factor(rep(thresh_ord, each = length(xvals)), levels = thresh_ord)
+)
+
+ggplot(thresh_df, aes(x = xvals, y = outcome, color = method)) +
+  geom_step(data = subset(thresh_df, method == 'hard cutoff'), linewidth = 0.8) +
+  geom_line(data = subset(thresh_df, method != 'hard cutoff'), linewidth = 0.8) +
+  geom_vline(xintercept = thresh, linetype = 2, color = 'grey70') +
+  scale_color_manual(name = NULL, values = thresh_cols, breaks = thresh_ord) +
+  scale_y_continuous(limits = c(0, 1)) +
+  labs(title = 'Hard cutoff vs. smooth threshold (thresh = 10)', x = 'Raw value', y = 'Outcome') +
+  theme_minimal() +
+  theme(legend.position = c(0.98, 0.5), legend.justification = c(1, 0.5), legend.title = element_blank())
 ```
 
 Applying this to Old Tampa Bay's chlorophyll threshold
@@ -358,30 +390,46 @@ otb_chla <- tbeptools::anlz_avedat(epcdata)$ann |>
 otb_thresh <- tbeptools::targets$chla_thresh[tbeptools::targets$bay_segment == 'OTB']
 
 xvals <- seq(0, 20, by = 0.1)
-plot(xvals, util_outcome(xvals, type = 'threshold', thresh = otb_thresh, op = '<', smooth = TRUE),
-     type = 'l', lwd = 2, col = 'steelblue',
-     xlab = 'Mean chlorophyll (ug/L)', ylab = 'Outcome',
-     main = 'OTB chlorophyll: smooth threshold vs. observed values')
-abline(v = otb_thresh, lty = 2, col = 'grey70')
-points(otb_chla$val, util_outcome(otb_chla$val, type = 'threshold', thresh = otb_thresh, op = '<', smooth = TRUE),
-       pch = 16, col = 'darkorange')
-legend('topright', legend = c('smooth threshold curve', 'observed annual means'),
-       col = c('steelblue', 'darkorange'), lwd = c(2, NA), pch = c(NA, 16), bty = 'n')
+curve_df <- data.frame(xvals = xvals,
+                        outcome = util_outcome(xvals, type = 'threshold', thresh = otb_thresh, op = '<', smooth = TRUE))
+
+ggplot(curve_df, aes(x = xvals, y = outcome)) +
+  geom_line(aes(color = 'smooth threshold curve'), linewidth = 0.8) +
+  geom_vline(xintercept = otb_thresh, linetype = 2, color = 'grey70') +
+  geom_point(data = otb_chla, aes(x = val,
+                                   y = util_outcome(val, type = 'threshold', thresh = otb_thresh, op = '<', smooth = TRUE),
+                                   color = 'observed annual means'),
+             shape = 16) +
+  scale_color_manual(name = NULL, values = c('smooth threshold curve' = 'steelblue', 'observed annual means' = 'darkorange'),
+                      breaks = c('smooth threshold curve', 'observed annual means')) +
+  guides(color = guide_legend(override.aes = list(linetype = c('solid', 'blank'), shape = c(NA, 16)))) +
+  labs(title = 'OTB chlorophyll: smooth threshold vs. observed values',
+       x = 'Mean chlorophyll (ug/L)', y = 'Outcome') +
+  theme_minimal() +
+  theme(legend.position = c(0.98, 0.98), legend.justification = c(1, 1), legend.title = element_blank())
 ```
 
 For comparison, here is the same OTB chlorophyll data scored with `smooth = FALSE` - a hard binary cutoff instead of the logistic transition above. Every point lands on exactly 0 or 1, regardless of how close its value is to the 9.3 ug/L threshold:
 
 ```{r}
 #| echo: false
-plot(xvals, util_outcome(xvals, type = 'threshold', thresh = otb_thresh, op = '<', smooth = FALSE),
-     type = 's', lwd = 2, col = 'grey40',
-     xlab = 'Mean chlorophyll (ug/L)', ylab = 'Outcome',
-     main = 'OTB chlorophyll: hard cutoff vs. observed values')
-abline(v = otb_thresh, lty = 2, col = 'grey70')
-points(otb_chla$val, util_outcome(otb_chla$val, type = 'threshold', thresh = otb_thresh, op = '<', smooth = FALSE),
-       pch = 16, col = 'darkorange')
-legend('right', legend = c('hard cutoff', 'observed annual means'),
-       col = c('grey40', 'darkorange'), lwd = c(2, NA), pch = c(NA, 16), bty = 'n')
+curve_df <- data.frame(xvals = xvals,
+                        outcome = util_outcome(xvals, type = 'threshold', thresh = otb_thresh, op = '<', smooth = FALSE))
+
+ggplot(curve_df, aes(x = xvals, y = outcome)) +
+  geom_step(aes(color = 'hard cutoff'), linewidth = 0.8) +
+  geom_vline(xintercept = otb_thresh, linetype = 2, color = 'grey70') +
+  geom_point(data = otb_chla, aes(x = val,
+                                   y = util_outcome(val, type = 'threshold', thresh = otb_thresh, op = '<', smooth = FALSE),
+                                   color = 'observed annual means'),
+             shape = 16) +
+  scale_color_manual(name = NULL, values = c('hard cutoff' = 'grey40', 'observed annual means' = 'darkorange'),
+                      breaks = c('hard cutoff', 'observed annual means')) +
+  guides(color = guide_legend(override.aes = list(linetype = c('solid', 'blank'), shape = c(NA, 16)))) +
+  labs(title = 'OTB chlorophyll: hard cutoff vs. observed values',
+       x = 'Mean chlorophyll (ug/L)', y = 'Outcome') +
+  theme_minimal() +
+  theme(legend.position = c(0.98, 0.5), legend.justification = c(1, 0.5), legend.title = element_blank())
 ```
 
 ## Combining Scores
