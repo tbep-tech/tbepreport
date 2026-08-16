@@ -64,8 +64,12 @@ wqtidalcreeks <- anlz_wq_tidalcreeks(tidalcreeks, iwrraw, yrs = 1975:2024)
 
 ### Fecal Indicator Bacteria
 
-Grades each bay segment/year A-E from enterococcus monitoring data, then
-converts the letter grade to an outcome.
+Scores each bay segment/year from enterococcus monitoring data using
+`exceed_rate`, a continuous, one-sided 90% upper confidence estimate of
+the true exceedance rate (0-1, lower is better), rescaled to an outcome
+as `1 - exceed_rate`. This is a continuous analog of the A-E letter
+grade the same underlying calculation also produces (`cat`), which is
+itself a discretized version of `exceed_rate`.
 
 ``` r
 
@@ -171,10 +175,11 @@ supports three types:
   raw values (e.g., seagrass transect frequency of occurrence over its
   full 0-100 range) or within a subset range of the raw values (e.g.,
   the Nekton Index’s 0-100 score rescaled over just its 32-46 breakpoint
-  window).
+  window). FIB’s `exceed_rate` is also scored this way, reversed since
+  lower is better (`from = c(0, 1)`, `reverse = TRUE`).
 - **Category** - a discrete grade or condition category is mapped to a
-  fixed outcome (e.g. FIB bacteria grades A-E, sediment PEL/TEL grades
-  A-F, tidal creek condition categories, TBBI Poor/Fair/Good).
+  fixed outcome (e.g. sediment PEL/TEL grades A-F, tidal creek condition
+  categories, TBBI Poor/Fair/Good).
 - **Threshold** - a raw value is compared against a cutoff
   (e.g. nutrient loading against a bay-segment target, chlorophyll/light
   attenuation against their thresholds, seagrass coverage against an

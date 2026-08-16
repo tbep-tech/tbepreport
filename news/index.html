@@ -49,6 +49,8 @@
 <li>Add <code><a href="../reference/plot_trend.html">plot_trend()</a></code>, a new faceted ggplot2 trend plot: an “Overall” facet (bay segment score with one line per category) followed by one facet per category (that category’s score with one line per indicator), each score drawn as a bold dark line with its components as thinner colored lines, labeled directly rather than via a shared legend. Adds <code>ggplot2</code> and <code>ggrepel</code> as new package dependencies</li>
 <li>
 <code><a href="../reference/plot_trend.html">plot_trend()</a></code> gains a <code>yr_range</code> argument (<code>c(min, max)</code>) to restrict the plotted years, defaulting to <code>NULL</code> (all available years)</li>
+<li>
+<strong>Breaking</strong>: <code><a href="../reference/anlz_wq_fib.html">anlz_wq_fib()</a></code> now scores FIB using <code>exceed_rate</code> (<code><a href="https://rdrr.io/pkg/tbeptools/man/anlz_fibmatrix.html" class="external-link">tbeptools::anlz_fibmatrix()</a></code>’s continuous, one-sided 90% upper confidence estimate of the true exceedance rate) instead of the A-E letter grade (<code>cat</code>), giving a continuous outcome (<code>1 - exceed_rate</code>) rather than one of 5 fixed values. Requires a <code>tbeptools</code> version with the <code>exceed_rate</code> column (not yet on CRAN/the published GitHub branch as of this change)</li>
 </ul></div>
   </main></div>
 

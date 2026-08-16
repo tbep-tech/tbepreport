@@ -75,9 +75,7 @@ category's own score and one colored line per indicator column of
 `wqoverall`, `sedoverall`, `fwoverall`, `haboverall`. In every facet,
 the score itself is drawn as a thick dark "Score" line and each
 component (category or indicator) is a thinner colored line, labeled
-directly at its right-most non-missing point rather than in a shared
-legend (which would otherwise have to list every category and indicator
-name across all five facets at once).
+directly at its right-most value.
 
 ## Examples
 
