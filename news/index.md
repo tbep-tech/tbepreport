@@ -50,3 +50,19 @@
   continuous outcome (`1 - exceed_rate`) rather than one of 5 fixed
   values. Requires a `tbeptools` version with the `exceed_rate` column
   (not yet on CRAN/the published GitHub branch as of this change)
+- **Breaking**:
+  [`anlz_sed_peltel()`](https://tbep-tech.github.io/tbepreport/reference/anlz_sed_peltel.md)
+  now scores sediment contaminants directly from the continuous PEL/TEL
+  average (`ave`), log-transformed and rescaled between the A/B and D/F
+  grade breakpoints, instead of from the A-F letter grade (`grd`, still
+  returned for reference but no longer used to compute `outcome`)
+- **Breaking**:
+  [`anlz_sed_tbbi()`](https://tbep-tech.github.io/tbepreport/reference/anlz_sed_tbbi.md)
+  now scores the Benthic Index from the median of station-level TBBI
+  scores, rescaled continuously over TBBI’s 73/87 grade breakpoints,
+  instead of from the official Poor/Fair/Good bay segment grade (which
+  is based on the proportion of stations in each condition category, not
+  a single continuous statistic - see
+  [`?anlz_sed_tbbi`](https://tbep-tech.github.io/tbepreport/reference/anlz_sed_tbbi.md)
+  for how the two can disagree in edge cases). Output column `TBBICat`
+  is replaced with `TBBI` (the median score)

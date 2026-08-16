@@ -80,8 +80,12 @@ wqfib <- anlz_wq_fib(enterodata)
 
 ### Contaminants
 
-Grades each bay segment/year A-F from its average sediment contamination
-score (PEL/TEL), then converts the letter grade to an outcome.
+Scores each bay segment/year directly from its average sediment
+contamination score (PEL/TEL, `ave`), log-transformed since its A-F
+grade breakpoints are geometrically spaced, and rescaled continuously
+between the A/B and D/F breakpoints (below/above which the outcome
+clamps to 1/0). The A-F letter grade is still returned for reference,
+but no longer used to compute the outcome.
 
 ``` r
 
@@ -90,8 +94,13 @@ peltel <- anlz_sed_peltel(sedimentdata, yrs = 1993:2024)
 
 ### Benthic Index
 
-Grades each bay segment/year Poor/Fair/Good from the Tampa Bay Benthic
-Index (TBBI), then converts the grade to an outcome.
+Scores each bay segment/year from the median of its station-level Tampa
+Bay Benthic Index (TBBI) scores (0-100), rescaled continuously over
+TBBI’s own grade breakpoints (Degraded below 73, Intermediate 73-87,
+Healthy above 87) - the same breakpoint-window treatment used for the
+Nekton Index. This bypasses the official Poor/Fair/Good bay segment
+grade, which instead comes from the *proportion* of stations in each
+condition category rather than a single continuous statistic.
 
 ``` r
 
@@ -175,11 +184,14 @@ supports three types:
   raw values (e.g., seagrass transect frequency of occurrence over its
   full 0-100 range) or within a subset range of the raw values (e.g.,
   the Nekton Index’s 0-100 score rescaled over just its 32-46 breakpoint
-  window). FIB’s `exceed_rate` is also scored this way, reversed since
-  lower is better (`from = c(0, 1)`, `reverse = TRUE`).
+  window, or the Benthic Index’s median station score over its 73-87
+  breakpoint window). FIB’s `exceed_rate` is also scored this way,
+  reversed since lower is better (`from = c(0, 1)`, `reverse = TRUE`),
+  as is sediment PEL/TEL’s average contamination score - log-transformed
+  first since its grade breakpoints are geometrically spaced, rather
+  than linear.
 - **Category** - a discrete grade or condition category is mapped to a
-  fixed outcome (e.g. sediment PEL/TEL grades A-F, tidal creek condition
-  categories, TBBI Poor/Fair/Good).
+  fixed outcome (e.g. tidal creek condition categories).
 - **Threshold** - a raw value is compared against a cutoff
   (e.g. nutrient loading against a bay-segment target, chlorophyll/light
   attenuation against their thresholds, seagrass coverage against an
@@ -226,6 +238,33 @@ the two methods diverge most.
 
 ![](scoring_files/figure-html/unnamed-chunk-13-1.png)
 
+### Sediment Contaminants Example
+
+The plot below shows each bay segment/year’s average PEL/TEL score
+(`ave`) against its continuous outcome, colored by the A-F grade (`grd`)
+that same `ave` value would have received (kept for reference, but no
+longer used to compute the outcome). The grey curve is the theoretical
+relationship - linear in `log(ave)`, clamped to 1 below the A/B
+breakpoint and to 0 above the D/F breakpoint - that every point falls
+exactly on, since `outcome` is computed directly from `ave`:
+
+![](scoring_files/figure-html/unnamed-chunk-14-1.png)
+
+### Benthic Index Example
+
+[`anlz_sed_tbbi()`](https://tbep-tech.github.io/tbepreport/reference/anlz_sed_tbbi.md)
+no longer returns a bay segment category (it bypasses
+[`anlz_tbbimed()`](https://rdrr.io/pkg/tbeptools/man/anlz_tbbimed.html)’s
+Poor/Fair/Good grade entirely - see [Benthic Index](#benthic-index)), so
+the plot below instead bins the same median station score (`TBBI`) it
+scores continuously into Degraded/ Intermediate/Healthy using TBBI’s own
+73/87 breakpoints, purely to show how that category relates to the
+continuous outcome. As with PEL/TEL, the two outer categories sit at the
+clamped boundaries (Degraded always 0, Healthy always 1), with
+Intermediate spanning the continuous range between them:
+
+![](scoring_files/figure-html/unnamed-chunk-15-1.png)
+
 ### Smooth vs. Hard Threshold Example
 
 The plot below compares the hard cutoff to the smooth logistic outcome
@@ -233,7 +272,7 @@ at a few `pct` values, for an arbitrary threshold of 10: all three
 smooth curves cross 0.5 exactly at the threshold, and a larger `pct`
 widens the transition around it.
 
-![](scoring_files/figure-html/unnamed-chunk-14-1.png)
+![](scoring_files/figure-html/unnamed-chunk-16-1.png)
 
 Applying this to Old Tampa Bay’s chlorophyll threshold (9.3 ug/L)
 demonstrates how many observed annual means actually fall within the
@@ -244,14 +283,14 @@ this, the default smooth scoring meaningfully changes scoring for a
 majority of years, not just a few borderline ones (compared to
 `smooth = FALSE`):
 
-![](scoring_files/figure-html/unnamed-chunk-15-1.png)
+![](scoring_files/figure-html/unnamed-chunk-17-1.png)
 
 For comparison, here is the same OTB chlorophyll data scored with
 `smooth = FALSE` - a hard binary cutoff instead of the logistic
 transition above. Every point lands on exactly 0 or 1, regardless of how
 close its value is to the 9.3 ug/L threshold:
 
-![](scoring_files/figure-html/unnamed-chunk-16-1.png)
+![](scoring_files/figure-html/unnamed-chunk-18-1.png)
 
 ## Combining Scores
 
@@ -264,6 +303,7 @@ below) funnel into that category’s score, and the four category scores
 funnel into the single overall score.
 
 ``` mermaid
+%%{init: {"flowchart": {"useMaxWidth": false, "nodeSpacing": 20, "rankSpacing": 35}, "themeVariables": {"fontSize": "13px"}}}%%
 flowchart LR
     A1["wq_attain"] --> WQ["Water Quality"]
     A2["thresh"] --> WQ
@@ -431,7 +471,7 @@ plot_trend(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB',
   yr_range = c(2000, 2024))
 ```
 
-![](scoring_files/figure-html/unnamed-chunk-28-1.png)
+![](scoring_files/figure-html/unnamed-chunk-30-1.png)
 
 ## Notes
 

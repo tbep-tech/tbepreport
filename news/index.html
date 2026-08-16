@@ -51,6 +51,10 @@
 <code><a href="../reference/plot_trend.html">plot_trend()</a></code> gains a <code>yr_range</code> argument (<code>c(min, max)</code>) to restrict the plotted years, defaulting to <code>NULL</code> (all available years)</li>
 <li>
 <strong>Breaking</strong>: <code><a href="../reference/anlz_wq_fib.html">anlz_wq_fib()</a></code> now scores FIB using <code>exceed_rate</code> (<code><a href="https://rdrr.io/pkg/tbeptools/man/anlz_fibmatrix.html" class="external-link">tbeptools::anlz_fibmatrix()</a></code>’s continuous, one-sided 90% upper confidence estimate of the true exceedance rate) instead of the A-E letter grade (<code>cat</code>), giving a continuous outcome (<code>1 - exceed_rate</code>) rather than one of 5 fixed values. Requires a <code>tbeptools</code> version with the <code>exceed_rate</code> column (not yet on CRAN/the published GitHub branch as of this change)</li>
+<li>
+<strong>Breaking</strong>: <code><a href="../reference/anlz_sed_peltel.html">anlz_sed_peltel()</a></code> now scores sediment contaminants directly from the continuous PEL/TEL average (<code>ave</code>), log-transformed and rescaled between the A/B and D/F grade breakpoints, instead of from the A-F letter grade (<code>grd</code>, still returned for reference but no longer used to compute <code>outcome</code>)</li>
+<li>
+<strong>Breaking</strong>: <code><a href="../reference/anlz_sed_tbbi.html">anlz_sed_tbbi()</a></code> now scores the Benthic Index from the median of station-level TBBI scores, rescaled continuously over TBBI’s 73/87 grade breakpoints, instead of from the official Poor/Fair/Good bay segment grade (which is based on the proportion of stations in each condition category, not a single continuous statistic - see <code><a href="../reference/anlz_sed_tbbi.html">?anlz_sed_tbbi</a></code> for how the two can disagree in edge cases). Output column <code>TBBICat</code> is replaced with <code>TBBI</code> (the median score)</li>
 </ul></div>
   </main></div>
 

@@ -58,36 +58,53 @@
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A data.frame with columns <code>yr</code>, <code>bay_segment</code>,
-<code>TBBICat</code> (<code>"Poor"</code>, <code>"Fair"</code>, or <code>"Good"</code>), and
+<code>TBBI</code> (median station-level score for that bay segment/year), and
 <code>outcome</code> (0-1, 1 = best)</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Uses <code><a href="https://rdrr.io/pkg/tbeptools/man/anlz_tbbiscr.html" class="external-link">anlz_tbbiscr</a></code> and
-<code><a href="https://rdrr.io/pkg/tbeptools/man/anlz_tbbimed.html" class="external-link">anlz_tbbimed</a></code> to grade each bay segment/year
-Poor/Fair/Good, drops the aggregate <code>"All"</code>/<code>"All (wt)"</code> rows
-those functions also return (keeping only the real bay segments), then
-converts the grade to a 0-1 outcome with <code><a href="util_outcome.html">util_outcome</a></code>
-(<code>type = "category"</code>).</p>
+    <p>Uses <code><a href="https://rdrr.io/pkg/tbeptools/man/anlz_tbbiscr.html" class="external-link">anlz_tbbiscr</a></code> to get station-level
+TBBI scores (0-100), filtered to the same stations
+<code><a href="https://rdrr.io/pkg/tbeptools/man/anlz_tbbimed.html" class="external-link">anlz_tbbimed</a></code> uses for its bay segment grades
+(<code>FundingProject == "TBEP"</code>, <code>ProgramID == 4</code>, and
+<code>TBBI</code> between 0 and 100, for the 7 bay segments
+<code><a href="https://rdrr.io/pkg/tbeptools/man/anlz_tbbimed.html" class="external-link">anlz_tbbimed</a></code> scores), then takes the median
+station score for each bay segment/year. <code>outcome</code> comes directly
+from that continuous median via <code><a href="util_outcome.html">util_outcome</a></code> (<code>type =
+"continuous"</code>, <code>from = c(73, 87)</code>), TBBI's own grade breakpoints
+(Degraded below 73, Intermediate 73-87, Healthy above 87) - the same
+clamped-breakpoint-window treatment used for the Nekton Index's
+<code>from = c(32, 46)</code>.</p>
+<p>This bypasses <code><a href="https://rdrr.io/pkg/tbeptools/man/anlz_tbbimed.html" class="external-link">anlz_tbbimed</a></code> entirely, which
+instead grades a bay segment/year Poor/Fair/Good from the
+<em>proportion</em> of its stations falling in each of the
+Degraded/Intermediate/Healthy categories - a compound rule on those
+proportions, not a discretized version of a single continuous statistic,
+so there's no direct continuous equivalent of it the way there is for
+TBNI's or PEL/TEL's breakpoints. Scoring the median of the raw station
+values instead is a related but distinct measure - it can disagree with
+<code><a href="https://rdrr.io/pkg/tbeptools/man/anlz_tbbimed.html" class="external-link">anlz_tbbimed</a></code>'s category in some edge cases (e.g.
+a bay segment split between many Healthy and a few very Degraded
+stations can have a middling median while still tripping the proportion
+rule's <code>Degraded &gt;= 0.2</code> condition for <code>"Poor"</code>).</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">anlz_sed_tbbi</span><span class="op">(</span><span class="fu">tbeptools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/tbeptools/man/benthicdata.html" class="external-link">benthicdata</a></span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 222 × 4</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># Rowwise: </span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       yr bay_segment TBBICat outcome</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>  <span style="text-decoration: underline;">1</span>995 BCB         Good        1  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>  <span style="text-decoration: underline;">1</span>996 BCB         Poor        0  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>  <span style="text-decoration: underline;">1</span>997 BCB         Poor        0  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>  <span style="text-decoration: underline;">1</span>998 BCB         Poor        0  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>  <span style="text-decoration: underline;">1</span>999 BCB         Fair        0.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>  <span style="text-decoration: underline;">2</span>000 BCB         Fair        0.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>  <span style="text-decoration: underline;">2</span>001 BCB         Poor        0  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>  <span style="text-decoration: underline;">2</span>002 BCB         Poor        0  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>  <span style="text-decoration: underline;">2</span>003 BCB         Poor        0  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>  <span style="text-decoration: underline;">2</span>004 BCB         Poor        0  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       yr bay_segment  TBBI outcome</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>  <span style="text-decoration: underline;">1</span>995 BCB          87.1   1    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>  <span style="text-decoration: underline;">1</span>996 BCB          84.1   0.793</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>  <span style="text-decoration: underline;">1</span>997 BCB          78.2   0.368</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>  <span style="text-decoration: underline;">1</span>998 BCB          83.6   0.755</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>  <span style="text-decoration: underline;">1</span>999 BCB          80.3   0.523</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>  <span style="text-decoration: underline;">2</span>000 BCB          85.4   0.885</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>  <span style="text-decoration: underline;">2</span>001 BCB          80.3   0.522</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>  <span style="text-decoration: underline;">2</span>002 BCB          78.7   0.406</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>  <span style="text-decoration: underline;">2</span>003 BCB          84.4   0.811</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>  <span style="text-decoration: underline;">2</span>004 BCB          85.3   0.879</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 212 more rows</span></span>
 </code></pre></div>
     </div>

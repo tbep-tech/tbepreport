@@ -33,7 +33,7 @@ lower is better) - and converts it to a 0-1 outcome with
 letter grade
 [`anlz_fibmatrix()`](https://rdrr.io/pkg/tbeptools/man/anlz_fibmatrix.html)
 also returns (`cat`), which is itself a discretized version of
-`exceed_rate` - see
+`exceed_rate`. See
 [`anlz_fibmatrix`](https://rdrr.io/pkg/tbeptools/man/anlz_fibmatrix.html)
 for details.
 
