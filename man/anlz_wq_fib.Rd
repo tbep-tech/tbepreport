@@ -25,7 +25,7 @@ and converts it to a 0-1 outcome with \code{\link{util_outcome}}
 (\code{type = "continuous"}, \code{from = c(0, 1)}, \code{reverse = TRUE}),
 i.e. \code{outcome = 1 - exceed_rate}. This is a continuous analog of the
 A-E letter grade \code{anlz_fibmatrix()} also returns (\code{cat}), which
-is itself a discretized version of \code{exceed_rate} - see
+is itself a discretized version of \code{exceed_rate}.  See
 \code{\link[tbeptools]{anlz_fibmatrix}} for details.
 }
 \examples{

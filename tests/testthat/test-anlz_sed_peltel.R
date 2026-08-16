@@ -16,3 +16,18 @@ test_that("anlz_sed_peltel loops over multiple years", {
   expect_setequal(unique(result$yr), c(2018, 2019, 2020))
 
 })
+
+test_that("anlz_sed_peltel outcome is a log-scale continuous rescale of ave, not grd", {
+
+  result <- anlz_sed_peltel(tbeptools::sedimentdata, yrs = 2020)
+
+  brks <- c(0.00756, 0.02052, 0.08567, 0.28026)
+  expected <- util_outcome(log(result$ave), type = 'continuous',
+                            from = log(c(brks[1], brks[4])), reverse = TRUE)
+
+  expect_equal(result$outcome, expected)
+  # not every distinct grd shares the same outcome, unlike the old
+  # category-based scoring
+  expect_true(length(unique(result$outcome)) > length(unique(na.omit(result$grd))))
+
+})

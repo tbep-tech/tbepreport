@@ -7,12 +7,24 @@
 #'
 #' @details Grades each bay segment/year by its average sediment
 #' contamination score (\code{ave}, from
-#' \code{\link[tbeptools]{anlz_sedimentpelave}}) into A-F , then converts the grade to a
-#' 0-1 outcome with \code{\link{util_outcome}} (\code{type = "category"}).
+#' \code{\link[tbeptools]{anlz_sedimentpelave}}) into A-F, kept here as
+#' \code{grd} for reference, but the \code{outcome} itself comes directly
+#' from the continuous \code{ave} score via \code{\link{util_outcome}}
+#' (\code{type = "continuous"}, \code{reverse = TRUE}) rather than from
+#' \code{grd}. Because the grade breakpoints are geometrically spaced
+#' (each roughly 2.7-4x the last: 0.00756, 0.02052, 0.08567, 0.28026),
+#' \code{ave} is log-transformed first so the outcome varies smoothly
+#' across grades B-D instead of being compressed near one end of the 0-1
+#' scale; \code{from} spans the A/B breakpoint to the D/F breakpoint (on
+#' the log scale), so - matching the same clamped-breakpoint-window
+#' treatment used for the Nekton Index's \code{from = c(32, 46)} - \code{ave}
+#' at or below the A/B breakpoint gives an outcome of 1 and at or above the
+#' D/F breakpoint gives an outcome of 0.
 #'
 #' @returns A data.frame with columns \code{yr}, \code{bay_segment},
 #' \code{ave} (average sediment contamination score), \code{grd} (letter
-#' grade A-F), and \code{outcome} (0-1, 1 = best)
+#' grade A-F, for reference only - not used to compute \code{outcome}), and
+#' \code{outcome} (0-1, 1 = best)
 #'
 #' @export
 #'
@@ -21,6 +33,7 @@
 anlz_sed_peltel <- function(sedimentdata, yrs) {
 
   gradelevs <- c(A = 1, B = 0.75, C = 0.5, D = 0.25, F = 0)
+  brks <- c(0.00756, 0.02052, 0.08567, 0.28026) # same cuts from tbeptools
 
   out <- tibble::tibble(yr = yrs) |>
     dplyr::group_nest(.data$yr) |>
@@ -30,12 +43,9 @@ anlz_sed_peltel <- function(sedimentdata, yrs) {
     tidyr::unnest('data') |>
     dplyr::mutate(
       bay_segment = as.character(.data$AreaAbbr),
-      grd = cut(
-        .data$ave,
-        breaks = c(-Inf, 0.00756, 0.02052, 0.08567, 0.28026, Inf), # same cuts from tbeptools
-        labels = names(gradelevs)
-      ),
-      outcome = util_outcome(.data$grd, type = 'category', levels = gradelevs)
+      grd = cut(.data$ave, breaks = c(-Inf, brks, Inf), labels = names(gradelevs)),
+      outcome = util_outcome(log(.data$ave), type = 'continuous',
+                              from = log(c(brks[1], brks[4])), reverse = TRUE)
     ) |>
     dplyr::select(dplyr::all_of(c('yr', 'bay_segment', 'ave', 'grd', 'outcome')))
 

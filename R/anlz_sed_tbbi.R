@@ -3,15 +3,34 @@
 #' @param benthicdata raw benthic monitoring data, e.g.
 #'   \code{tbeptools::benthicdata}
 #'
-#' @details Uses \code{\link[tbeptools]{anlz_tbbiscr}} and
-#' \code{\link[tbeptools]{anlz_tbbimed}} to grade each bay segment/year
-#' Poor/Fair/Good, drops the aggregate \code{"All"}/\code{"All (wt)"} rows
-#' those functions also return (keeping only the real bay segments), then
-#' converts the grade to a 0-1 outcome with \code{\link{util_outcome}}
-#' (\code{type = "category"}).
+#' @details Uses \code{\link[tbeptools]{anlz_tbbiscr}} to get station-level
+#' TBBI scores (0-100), filtered to the same stations
+#' \code{\link[tbeptools]{anlz_tbbimed}} uses for its bay segment grades
+#' (\code{FundingProject == "TBEP"}, \code{ProgramID == 4}, and
+#' \code{TBBI} between 0 and 100, for the 7 bay segments
+#' \code{\link[tbeptools]{anlz_tbbimed}} scores), then takes the median
+#' station score for each bay segment/year. \code{outcome} comes directly
+#' from that continuous median via \code{\link{util_outcome}} (\code{type =
+#' "continuous"}, \code{from = c(73, 87)}), TBBI's own grade breakpoints
+#' (Degraded below 73, Intermediate 73-87, Healthy above 87) - the same
+#' clamped-breakpoint-window treatment used for the Nekton Index's
+#' \code{from = c(32, 46)}.
+#'
+#' This bypasses \code{\link[tbeptools]{anlz_tbbimed}} entirely, which
+#' instead grades a bay segment/year Poor/Fair/Good from the
+#' \emph{proportion} of its stations falling in each of the
+#' Degraded/Intermediate/Healthy categories - a compound rule on those
+#' proportions, not a discretized version of a single continuous statistic,
+#' so there's no direct continuous equivalent of it the way there is for
+#' TBNI's or PEL/TEL's breakpoints. Scoring the median of the raw station
+#' values instead is a related but distinct measure - it can disagree with
+#' \code{\link[tbeptools]{anlz_tbbimed}}'s category in some edge cases (e.g.
+#' a bay segment split between many Healthy and a few very Degraded
+#' stations can have a middling median while still tripping the proportion
+#' rule's \code{Degraded >= 0.2} condition for \code{"Poor"}).
 #'
 #' @returns A data.frame with columns \code{yr}, \code{bay_segment},
-#' \code{TBBICat} (\code{"Poor"}, \code{"Fair"}, or \code{"Good"}), and
+#' \code{TBBI} (median station-level score for that bay segment/year), and
 #' \code{outcome} (0-1, 1 = best)
 #'
 #' @export
@@ -20,15 +39,24 @@
 #' anlz_sed_tbbi(tbeptools::benthicdata)
 anlz_sed_tbbi <- function(benthicdata) {
 
+  segs <- c('OTB', 'HB', 'MTB', 'LTB', 'TCB', 'MR', 'BCB')
+
   out <- benthicdata |>
     tbeptools::anlz_tbbiscr() |>
-    tbeptools::anlz_tbbimed() |>
-    dplyr::filter(!grepl('All', .data$bay_segment)) |>
+    dplyr::rename(bay_segment = dplyr::all_of('AreaAbbr')) |>
+    dplyr::filter(
+      .data$bay_segment %in% segs,
+      .data$FundingProject == 'TBEP',
+      .data$ProgramID == 4,
+      .data$TBBI >= 0, .data$TBBI <= 100
+    ) |>
+    dplyr::group_by(.data$bay_segment, .data$yr) |>
+    dplyr::summarise(TBBI = stats::median(.data$TBBI, na.rm = TRUE), .groups = 'drop') |>
     dplyr::mutate(
       bay_segment = as.character(.data$bay_segment),
-      outcome = util_outcome(.data$TBBICat, type = 'category', levels = c(Poor = 0, Fair = 0.5, Good = 1))
+      outcome = util_outcome(.data$TBBI, type = 'continuous', from = c(73, 87))
     ) |>
-    dplyr::select(dplyr::all_of(c('yr', 'bay_segment', 'TBBICat', 'outcome')))
+    dplyr::select(dplyr::all_of(c('yr', 'bay_segment', 'TBBI', 'outcome')))
 
   return(out)
 
