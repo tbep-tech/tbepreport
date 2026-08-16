@@ -259,7 +259,7 @@ below) funnel into that category’s score, and the four category scores
 funnel into the single overall score.
 
 ``` mermaid
-flowchart TD
+flowchart LR
     A1["wq_attain"] --> WQ["Water Quality"]
     A2["thresh"] --> WQ
     A3["load"] --> WQ
@@ -309,19 +309,21 @@ flowchart TD
 
 ``` r
 
-wqindic <- anlz_indicators(
-  wq_attain    = wqattain,
-  thresh       = wqthresh,
-  load         = wqload,
-  tidal_creeks = wqtidalcreeks,
-  fib          = wqfib
+wqoverall <- anlz_category(
+  wq_attain = wqattain, 
+  thresh = wqthresh, 
+  load = wqload, 
+  tidal_creeks = wqtidalcreeks, 
+  fib = wqfib
 )
-wqoverall <- anlz_category(wq = wqindic)
 ```
 
 ``` r
 
-sedoverall <- anlz_category(sed_peltel = peltel, sed_tbbi = tbbi)
+sedoverall <- anlz_category(
+  sed_peltel = peltel, 
+  sed_tbbi = tbbi
+)
 ```
 
 ``` r
@@ -362,7 +364,14 @@ score, for a chosen bay segment and year:
 
 ``` r
 
-plot_category(wq = wqindic, bay_segment = 'OTB', yr = 2024)
+plot_category(
+  wq_attain    = wqattain,
+  thresh       = wqthresh,
+  load         = wqload,
+  tidal_creeks = wqtidalcreeks,
+  fib          = wqfib,
+  bay_segment = 'OTB', yr = 2024
+)
 ```
 
 ``` r
@@ -413,7 +422,8 @@ otherwise have to list every category and indicator name at once):
 
 ``` r
 
-plot_trend(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB')
+plot_trend(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB', 
+  yr_range = c(2000, 2024))
 ```
 
 ![](scoring_files/figure-html/unnamed-chunk-28-1.png)
