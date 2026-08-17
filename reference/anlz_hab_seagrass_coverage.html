@@ -46,7 +46,7 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">anlz_hab_seagrass_coverage</span><span class="op">(</span></span>
 <span>  <span class="va">sgsegest</span>,</span>
 <span>  yr_max <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">sgsegest</span><span class="op">$</span><span class="va">year</span><span class="op">)</span>,</span>
-<span>  smooth <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  smooth <span class="op">=</span> <span class="st">"ramp"</span>,</span>
 <span>  pct <span class="op">=</span> <span class="fl">0.1</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -67,15 +67,20 @@ defaults to the last year <code>sgsegest</code> actually has an estimate for
 
 
 <dt id="arg-smooth">smooth<a class="anchor" aria-label="anchor" href="#arg-smooth"></a></dt>
-<dd><p>logical, passed to <code><a href="util_outcome.html">util_outcome</a></code> - if
-<code>TRUE</code> (the default), use a smooth logistic transition centered at
-each segment's acreage target instead of a hard 0/1 cutoff.</p></dd>
+<dd><p>passed to <code><a href="util_outcome.html">util_outcome</a></code> - one of
+<code>"ramp"</code> (the default), <code>"logistic"</code>, or <code>"none"</code>
+(logical <code>TRUE</code>/<code>FALSE</code> also accepted, mapped to
+<code>"logistic"</code>/<code>"none"</code>). <code>"ramp"</code> gives an outcome of 1
+for any acreage at or above a segment's target, decaying toward 0 the
+further short of it a segment falls - unlike <code>"logistic"</code>, which
+gives only 0.5 exactly at the target.</p></dd>
 
 
 <dt id="arg-pct">pct<a class="anchor" aria-label="anchor" href="#arg-pct"></a></dt>
 <dd><p>numeric, passed to <code><a href="util_outcome.html">util_outcome</a></code> as the fraction
-of each acreage target used for the logistic transition's steepness
-when <code>smooth = TRUE</code>. Defaults to <code>0.1</code> (10% of the target).</p></dd>
+of each acreage target used for the transition's steepness when
+<code>smooth</code> is <code>"ramp"</code> or <code>"logistic"</code>. Defaults to
+<code>0.1</code> (10% of the target).</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -83,7 +88,7 @@ when <code>smooth = TRUE</code>. Defaults to <code>0.1</code> (10% of the target
     <p>A data.frame with columns <code>bay_segment</code> (abbreviated, e.g.
 <code>"OTB"</code>), <code>yr</code>, <code>acres</code> (carried forward in non-survey
 years), and <code>outcome</code> (0-1, 1 = best, also carried forward in
-non-survey years; exactly 0 or 1 only if <code>smooth = FALSE</code>)</p>
+non-survey years; exactly 0 or 1 only if <code>smooth = "none"</code>)</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -98,10 +103,11 @@ survey year's acreage and outcome unchanged, until the next actual survey
 year updates it. This means <code>acres</code>/<code>outcome</code> in a non-survey
 year are not a new estimate, just a repeat of the last known one.</p>
 <p>Coverage is compared against a fixed per-segment acreage target with
-<code><a href="util_outcome.html">util_outcome</a></code> (<code>type = "threshold"</code>, <code>op = "&gt;="</code>)</p><ul><li><p>by default (<code>smooth = TRUE</code>) this is a smooth logistic transition
-centered at the target; <code>smooth = FALSE</code> instead gives a hard 0/1
-cutoff (meeting or exceeding the target gives an outcome of 1). Targets
-(acres):</p><dl><dt>Old Tampa Bay</dt>
+<code><a href="util_outcome.html">util_outcome</a></code> (<code>type = "threshold"</code>, <code>op = "&gt;="</code>)</p><ul><li><p>by default (<code>smooth = "ramp"</code>) meeting or exceeding the target
+gives an outcome of 1, decaying toward 0 the further short of it a
+segment falls; <code>smooth = "logistic"</code> instead centers a smooth
+transition on the target (only 0.5 exactly at it), and <code>smooth =
+"none"</code> gives a hard 0/1 cutoff. Targets (acres):</p><dl><dt>Old Tampa Bay</dt>
 <dd><p>11,100</p></dd>
 
 <dt>Hillsborough Bay</dt>
@@ -134,16 +140,16 @@ proportion to each segment's share of total bay area.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 259 × 4</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    bay_segment    yr acres outcome</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> BCB          <span style="text-decoration: underline;">1</span>988 <span style="text-decoration: underline;">6</span>259.  0.052<span style="text-decoration: underline;">8</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> BCB          <span style="text-decoration: underline;">1</span>989 <span style="text-decoration: underline;">6</span>259.  0.052<span style="text-decoration: underline;">8</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> BCB          <span style="text-decoration: underline;">1</span>990 <span style="text-decoration: underline;">6</span>805.  0.093<span style="text-decoration: underline;">9</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> BCB          <span style="text-decoration: underline;">1</span>991 <span style="text-decoration: underline;">6</span>805.  0.093<span style="text-decoration: underline;">9</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> BCB          <span style="text-decoration: underline;">1</span>992 <span style="text-decoration: underline;">6</span>952.  0.109 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> BCB          <span style="text-decoration: underline;">1</span>993 <span style="text-decoration: underline;">6</span>952.  0.109 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> BCB          <span style="text-decoration: underline;">1</span>994 <span style="text-decoration: underline;">7</span>129.  0.130 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> BCB          <span style="text-decoration: underline;">1</span>995 <span style="text-decoration: underline;">7</span>129.  0.130 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> BCB          <span style="text-decoration: underline;">1</span>996 <span style="text-decoration: underline;">7</span>716.  0.226 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> BCB          <span style="text-decoration: underline;">1</span>997 <span style="text-decoration: underline;">7</span>716.  0.226 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> BCB          <span style="text-decoration: underline;">1</span>988 <span style="text-decoration: underline;">6</span>259.  0.055<span style="text-decoration: underline;">7</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> BCB          <span style="text-decoration: underline;">1</span>989 <span style="text-decoration: underline;">6</span>259.  0.055<span style="text-decoration: underline;">7</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> BCB          <span style="text-decoration: underline;">1</span>990 <span style="text-decoration: underline;">6</span>805.  0.104 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> BCB          <span style="text-decoration: underline;">1</span>991 <span style="text-decoration: underline;">6</span>805.  0.104 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> BCB          <span style="text-decoration: underline;">1</span>992 <span style="text-decoration: underline;">6</span>952.  0.123 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> BCB          <span style="text-decoration: underline;">1</span>993 <span style="text-decoration: underline;">6</span>952.  0.123 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> BCB          <span style="text-decoration: underline;">1</span>994 <span style="text-decoration: underline;">7</span>129.  0.150 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> BCB          <span style="text-decoration: underline;">1</span>995 <span style="text-decoration: underline;">7</span>129.  0.150 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> BCB          <span style="text-decoration: underline;">1</span>996 <span style="text-decoration: underline;">7</span>716.  0.292 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> BCB          <span style="text-decoration: underline;">1</span>997 <span style="text-decoration: underline;">7</span>716.  0.292 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 249 more rows</span></span>
 </code></pre></div>
     </div>

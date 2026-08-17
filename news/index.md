@@ -81,3 +81,16 @@
   use a continuous score derived from the same underlying data (FIB,
   sediment PEL/TEL, Benthic Index, tidal creeks); no indicator currently
   uses `util_outcome(type = "category")`, though it remains available
+- [`util_outcome()`](https://tbep-tech.github.io/tbepreport/reference/util_outcome.md)’s
+  `smooth` argument for `type = "threshold"` now takes one of
+  `"logistic"`, `"ramp"`, or `"none"` (logical `TRUE`/`FALSE` still
+  accepted, mapped to `"logistic"`/`"none"`). `"ramp"` gives an outcome
+  of 1 once a value reaches the “good” side of the threshold - not just
+  0.5 there like `"logistic"` - decaying exponentially toward 0 the
+  further it falls on the “bad” side, using the same `pct`-of-threshold
+  steepness rule
+- **Breaking**:
+  [`anlz_hab_seagrass_coverage()`](https://tbep-tech.github.io/tbepreport/reference/anlz_hab_seagrass_coverage.md)’s
+  `smooth` default changes from `TRUE` (logistic) to `"ramp"`, so
+  meeting or exceeding a segment’s acreage target is now full credit
+  (outcome of 1) rather than only 0.5 exactly at the target

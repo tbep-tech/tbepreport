@@ -159,12 +159,15 @@ trnsct <- anlz_hab_seagrass_transect(transect)
 ### Seagrass Coverage
 
 Compares mapped seagrass acreage against a fixed per-segment target (a
-threshold outcome - a smooth logistic transition by default, or a hard
-binary 0/1 with `smooth = FALSE` - see [Scoring](#scoring)), where the
-targets are the baywide 40,000-acre seagrass coverage target apportioned
-across segments by each segment’s share of total bay area. Coverage maps
-are flown only every couple of years, so non-survey years carry forward
-the most recent actual estimate and outcome.
+threshold outcome - by default a “ramp” that’s already 1 once a segment
+meets or exceeds its target, decaying toward 0 the further short of it a
+segment falls, rather than only 0.5 exactly at the target like a smooth
+logistic transition; a hard binary 0/1 is also available with
+`smooth = "none"` - see [Scoring](#scoring)), where the targets are the
+baywide 40,000-acre seagrass coverage target apportioned across segments
+by each segment’s share of total bay area. Coverage maps are flown only
+every couple of years, so non-survey years carry forward the most recent
+actual estimate and outcome.
 
 ``` r
 
@@ -205,15 +208,26 @@ supports three types:
 - **Threshold** - a raw value is compared against a cutoff
   (e.g. nutrient loading against a bay-segment target, chlorophyll/light
   attenuation against their thresholds, seagrass coverage against an
-  acreage target). By default this gives a smooth logistic outcome:
-  exactly 0.5 at the threshold, moving quickly toward 0 or 1 (depending
-  on direction) as a value moves away from it, so values close to the
-  threshold are penalized less harshly than a hard cutoff would. The
-  steepness of that transition is set by `pct`, a fraction of the
-  threshold itself (default 10%) rather than a fixed absolute value, so
-  it stays meaningful across indicators/segments with very different
-  thresholds. Setting `smooth = FALSE` instead gives a hard binary 0 or
-  1.
+  acreage target), in one of three ways set by `smooth`:
+  - `"logistic"` (the default for most threshold indicators) - a smooth
+    outcome exactly 0.5 at the threshold, moving quickly toward 0 or 1
+    (depending on direction) as a value moves away from it, so values
+    close to the threshold are penalized less harshly than a hard cutoff
+    would.
+  - `"ramp"` (the default for seagrass coverage) - already 1 once a
+    value reaches the “good” side of the threshold, rather than only 0.5
+    there, decaying toward 0 the further it falls on the “bad” side.
+    This fits a target that’s fine to meet by any margin (e.g. an
+    acreage target), where a value right at the threshold deserves full
+    credit, not half.
+  - `"none"` - a hard binary 0 or 1, no transition.
+
+  For `"logistic"` and `"ramp"`, the steepness of the transition is set
+  by `pct`, a fraction of the threshold itself (default 10%) rather than
+  a fixed absolute value, so it stays meaningful across
+  indicators/segments with very different thresholds. Logical
+  `TRUE`/`FALSE` are also accepted for `smooth`, mapped to
+  `"logistic"`/`"none"`.
 
 ``` r
 
@@ -229,8 +243,13 @@ util_outcome('B', type = 'category', levels = c(A = 1, B = 0.75, C = 0.5, D = 0.
 util_outcome(8, type = 'threshold', thresh = 10, op = '<')
 #> [1] 0.8807971
 
-# threshold, smooth = FALSE: a hard binary cutoff instead
-util_outcome(8, type = 'threshold', thresh = 10, op = '<', smooth = FALSE)
+# threshold, smooth = "ramp": meeting/beating the cutoff is already full
+# credit, decaying toward 0 only on the "bad" side
+util_outcome(8, type = 'threshold', thresh = 10, op = '<', smooth = 'ramp')
+#> [1] 1
+
+# threshold, smooth = "none" (or FALSE): a hard binary cutoff instead
+util_outcome(8, type = 'threshold', thresh = 10, op = '<', smooth = 'none')
 #> [1] 1
 ```
 
@@ -284,6 +303,19 @@ widens the transition around it.
 
 ![](scoring_files/figure-html/unnamed-chunk-16-1.png)
 
+`smooth = "ramp"` is a third option, for targets that are fine to meet
+by any margin (like seagrass coverage’s acreage targets, `op = ">="`)
+rather than ones where sitting right at the threshold should only count
+as halfway there. The plot below compares it to `"logistic"` for the
+same “meet or exceed 10” target: logistic only reaches an outcome of 1
+well past the threshold (crossing 0.5 exactly at it, the dotted
+horizontal line), while ramp reaches exactly 1 the moment the threshold
+is met and overlaps the hard cutoff above it - the two only diverge
+below the threshold, where ramp decays smoothly instead of dropping
+straight to 0:
+
+![](scoring_files/figure-html/unnamed-chunk-17-1.png)
+
 Applying this to Old Tampa Bay’s chlorophyll threshold (9.3 ug/L)
 demonstrates how many observed annual means actually fall within the
 default 10% transition band: about two-thirds of OTB’s 52 years of data
@@ -293,14 +325,14 @@ this, the default smooth scoring meaningfully changes scoring for a
 majority of years, not just a few borderline ones (compared to
 `smooth = FALSE`):
 
-![](scoring_files/figure-html/unnamed-chunk-17-1.png)
+![](scoring_files/figure-html/unnamed-chunk-18-1.png)
 
 For comparison, here is the same OTB chlorophyll data scored with
 `smooth = FALSE` - a hard binary cutoff instead of the logistic
 transition above. Every point lands on exactly 0 or 1, regardless of how
 close its value is to the 9.3 ug/L threshold:
 
-![](scoring_files/figure-html/unnamed-chunk-18-1.png)
+![](scoring_files/figure-html/unnamed-chunk-19-1.png)
 
 ## Combining Scores
 
@@ -481,10 +513,4 @@ plot_trend(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB',
   yr_range = c(2000, 2024))
 ```
 
-![](scoring_files/figure-html/unnamed-chunk-30-1.png)
-
-## Notes
-
-- Lots of redundancy in the water quality indicators
-- How to incorporate land use change by bay segment? Is this even
-  appropriate?
+![](scoring_files/figure-html/unnamed-chunk-31-1.png)

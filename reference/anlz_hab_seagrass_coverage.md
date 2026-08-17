@@ -8,7 +8,7 @@ Seagrass coverage outcome by bay segment and year
 anlz_hab_seagrass_coverage(
   sgsegest,
   yr_max = max(sgsegest$year),
-  smooth = TRUE,
+  smooth = "ramp",
   pct = 0.1
 )
 ```
@@ -29,25 +29,28 @@ anlz_hab_seagrass_coverage(
 
 - smooth:
 
-  logical, passed to
+  passed to
   [`util_outcome`](https://tbep-tech.github.io/tbepreport/reference/util_outcome.md) -
-  if `TRUE` (the default), use a smooth logistic transition centered at
-  each segment's acreage target instead of a hard 0/1 cutoff.
+  one of `"ramp"` (the default), `"logistic"`, or `"none"` (logical
+  `TRUE`/`FALSE` also accepted, mapped to `"logistic"`/`"none"`).
+  `"ramp"` gives an outcome of 1 for any acreage at or above a segment's
+  target, decaying toward 0 the further short of it a segment falls -
+  unlike `"logistic"`, which gives only 0.5 exactly at the target.
 
 - pct:
 
   numeric, passed to
   [`util_outcome`](https://tbep-tech.github.io/tbepreport/reference/util_outcome.md)
-  as the fraction of each acreage target used for the logistic
-  transition's steepness when `smooth = TRUE`. Defaults to `0.1` (10% of
-  the target).
+  as the fraction of each acreage target used for the transition's
+  steepness when `smooth` is `"ramp"` or `"logistic"`. Defaults to `0.1`
+  (10% of the target).
 
 ## Value
 
 A data.frame with columns `bay_segment` (abbreviated, e.g. `"OTB"`),
 `yr`, `acres` (carried forward in non-survey years), and `outcome` (0-1,
 1 = best, also carried forward in non-survey years; exactly 0 or 1 only
-if `smooth = FALSE`)
+if `smooth = "none"`)
 
 ## Details
 
@@ -69,10 +72,11 @@ Coverage is compared against a fixed per-segment acreage target with
 [`util_outcome`](https://tbep-tech.github.io/tbepreport/reference/util_outcome.md)
 (`type = "threshold"`, `op = ">="`)
 
-- by default (`smooth = TRUE`) this is a smooth logistic transition
-  centered at the target; `smooth = FALSE` instead gives a hard 0/1
-  cutoff (meeting or exceeding the target gives an outcome of 1).
-  Targets (acres):
+- by default (`smooth = "ramp"`) meeting or exceeding the target gives
+  an outcome of 1, decaying toward 0 the further short of it a segment
+  falls; `smooth = "logistic"` instead centers a smooth transition on
+  the target (only 0.5 exactly at it), and `smooth = "none"` gives a
+  hard 0/1 cutoff. Targets (acres):
 
   - Old Tampa Bay:
 
@@ -113,15 +117,15 @@ anlz_hab_seagrass_coverage(sgsegest)
 #> # A tibble: 259 × 4
 #>    bay_segment    yr acres outcome
 #>    <chr>       <dbl> <dbl>   <dbl>
-#>  1 BCB          1988 6259.  0.0528
-#>  2 BCB          1989 6259.  0.0528
-#>  3 BCB          1990 6805.  0.0939
-#>  4 BCB          1991 6805.  0.0939
-#>  5 BCB          1992 6952.  0.109 
-#>  6 BCB          1993 6952.  0.109 
-#>  7 BCB          1994 7129.  0.130 
-#>  8 BCB          1995 7129.  0.130 
-#>  9 BCB          1996 7716.  0.226 
-#> 10 BCB          1997 7716.  0.226 
+#>  1 BCB          1988 6259.  0.0557
+#>  2 BCB          1989 6259.  0.0557
+#>  3 BCB          1990 6805.  0.104 
+#>  4 BCB          1991 6805.  0.104 
+#>  5 BCB          1992 6952.  0.123 
+#>  6 BCB          1993 6952.  0.123 
+#>  7 BCB          1994 7129.  0.150 
+#>  8 BCB          1995 7129.  0.150 
+#>  9 BCB          1996 7716.  0.292 
+#> 10 BCB          1997 7716.  0.292 
 #> # ℹ 249 more rows
 ```

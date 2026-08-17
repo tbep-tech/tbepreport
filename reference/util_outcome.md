@@ -12,7 +12,7 @@ util_outcome(
   reverse = FALSE,
   thresh = NULL,
   op = "<",
-  smooth = TRUE,
+  smooth = "logistic",
   scl = NULL,
   pct = 0.1,
   levels = NULL
@@ -55,23 +55,23 @@ util_outcome(
 
 - smooth:
 
-  logical, if `TRUE` (the default) and `type = "threshold"`, use a
-  smooth logistic transition centered at `thresh` (in the direction
-  given by `op`) instead of a hard cutoff. Set to `FALSE` for a hard
-  `0`/`1` cutoff instead (see Details)
+  for `type = "threshold"`, one of `"logistic"` (the default), `"ramp"`,
+  or `"none"` - see Details. For backward compatibility, logical
+  `TRUE`/`FALSE` are also accepted and mapped to `"logistic"`/`"none"`.
 
 - scl:
 
-  numeric, controls the steepness of the logistic transition when
-  `smooth = TRUE` - smaller values are a sharper transition. Defaults to
+  numeric, controls the steepness of the `"logistic"`/ `"ramp"`
+  transition - smaller values are a sharper transition. Defaults to
   `pct * abs(thresh)` (or `1` if `thresh = 0`). Set this directly to use
   an absolute steepness instead of one relative to `thresh`.
 
 - pct:
 
   numeric, the fraction of `abs(thresh)` used to compute the default
-  `scl` when `smooth = TRUE` and `scl` is not supplied directly.
-  Defaults to `0.1` (10% of `thresh`). Ignored if `scl` is provided.
+  `scl` when `smooth` is `"logistic"` or `"ramp"` and `scl` is not
+  supplied directly. Defaults to `0.1` (10% of `thresh`). Ignored if
+  `scl` is provided.
 
 - levels:
 
@@ -101,16 +101,31 @@ clamped to `c(0, 1)` - values of `x` outside `from` are pinned to `0` or
 window narrower than the full range of `x` (e.g. TBNI's 32-46
 breakpoints within its 0-100 score).
 
-**threshold**: by default (`smooth = TRUE`), `x` is compared to `thresh`
-using `op` and converted to a smooth logistic outcome centered at
-`thresh`, so outcomes near the threshold transition gradually rather
-than jumping discretely, in the same direction `op` would have used
-(e.g. `op = "<"` still means lower `x` is better). The steepness of that
-transition (`scl`) defaults to a percentage (`pct`) of `thresh` rather
-than a fixed absolute value, so it stays meaningful across
-indicators/thresholds with very different units and magnitudes (e.g. a
-threshold of 1 vs. a threshold in the hundreds). Set `smooth = FALSE`
-for a hard `0`/`1` cutoff instead.
+**threshold**: `x` is compared to `thresh` using `op`, in one of three
+ways selected by `smooth`:
+
+- `"logistic"` (the default): a smooth logistic transition centered at
+  `thresh`, exactly `0.5` *at* `thresh` and approaching `0`/`1` on
+  either side, in the direction `op` would have used (e.g. `op = "<"`
+  still means lower `x` is better).
+
+- `"ramp"`: `1` once `x` reaches the "good" side of `thresh` (as defined
+  by `op`) - not just `0.5` there like `"logistic"` - decaying
+  exponentially toward `0` the further `x` is on the "bad" side. Use
+  this when meeting or beating a target should already be full credit
+  rather than half credit (e.g. an acreage target that's fine to exceed
+  by any amount).
+
+- `"none"`: a hard `0`/`1` cutoff, no transition.
+
+Logical `TRUE`/`FALSE` are also accepted for `smooth`, for backward
+compatibility, and map to `"logistic"`/`"none"`.
+
+For `"logistic"` and `"ramp"`, the steepness of the transition (`scl`)
+defaults to a percentage (`pct`) of `thresh` rather than a fixed
+absolute value, so it stays meaningful across indicators/thresholds with
+very different units and magnitudes (e.g. a threshold of 1 vs. a
+threshold in the hundreds).
 
 **category**: `x` is mapped to an outcome via `levels`.
 
@@ -140,9 +155,14 @@ util_outcome(12, type = 'threshold', thresh = 10, pct = 0.1)
 util_outcome(12, type = 'threshold', thresh = 10, pct = 0.2)
 #> [1] 0.2689414
 
-# smooth = FALSE instead gives a hard 0/1 cutoff
-util_outcome(c(5, 15), type = 'threshold', thresh = 10, op = '<', smooth = FALSE)
+# smooth = "none" (or FALSE) instead gives a hard 0/1 cutoff
+util_outcome(c(5, 15), type = 'threshold', thresh = 10, op = '<', smooth = 'none')
 #> [1] 1 0
+
+# smooth = "ramp": meeting/beating a target (op = ">=") is full credit,
+# decaying toward 0 the further short of it a value falls
+util_outcome(c(90, 95, 100, 105), type = 'threshold', thresh = 100, op = '>=', smooth = 'ramp')
+#> [1] 0.3678794 0.6065307 1.0000000 1.0000000
 
 # category, e.g. FIB grades
 util_outcome(c('A', 'C', 'E'), type = 'category',

@@ -58,6 +58,10 @@
 <li>
 <strong>Breaking</strong>: <code><a href="../reference/anlz_wq_tidalcreeks.html">anlz_wq_tidalcreeks()</a></code> now scores each creek from a count-weighted average across the same ordinal scale (<code>monitor</code>/<code>caution</code>/<code>investigate</code>/<code>prioritize</code> counts from <code><a href="https://rdrr.io/pkg/tbeptools/man/anlz_tdlcrk.html" class="external-link">tbeptools::anlz_tdlcrk()</a></code>’s 10-year window) its official Prioritize/Investigate/Caution/Monitor condition category also comes from, instead of that category itself (which uses a compound rule with count-based exceptions - see <code><a href="../reference/anlz_wq_tidalcreeks.html">?anlz_wq_tidalcreeks</a></code> for how the two can disagree in edge cases)</li>
 <li>All indicators previously scored from a discrete grade/category now use a continuous score derived from the same underlying data (FIB, sediment PEL/TEL, Benthic Index, tidal creeks); no indicator currently uses <code>util_outcome(type = "category")</code>, though it remains available</li>
+<li>
+<code><a href="../reference/util_outcome.html">util_outcome()</a></code>’s <code>smooth</code> argument for <code>type = "threshold"</code> now takes one of <code>"logistic"</code>, <code>"ramp"</code>, or <code>"none"</code> (logical <code>TRUE</code>/<code>FALSE</code> still accepted, mapped to <code>"logistic"</code>/<code>"none"</code>). <code>"ramp"</code> gives an outcome of 1 once a value reaches the “good” side of the threshold - not just 0.5 there like <code>"logistic"</code> - decaying exponentially toward 0 the further it falls on the “bad” side, using the same <code>pct</code>-of-threshold steepness rule</li>
+<li>
+<strong>Breaking</strong>: <code><a href="../reference/anlz_hab_seagrass_coverage.html">anlz_hab_seagrass_coverage()</a></code>’s <code>smooth</code> default changes from <code>TRUE</code> (logistic) to <code>"ramp"</code>, so meeting or exceeding a segment’s acreage target is now full credit (outcome of 1) rather than only 0.5 exactly at the target</li>
 </ul></div>
   </main></div>
 
