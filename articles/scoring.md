@@ -52,10 +52,14 @@ wqload <- anlz_wq_load(totanndat)
 
 ### Tidal Creeks
 
-Assigns each tidal creek to a bay segment, converts its condition
-category (Prioritize/Investigate/Caution/Monitor) to an outcome, then
-averages by bay segment/year weighted by creek length so longer creek
-segments contribute proportionally more.
+Assigns each tidal creek to a bay segment, then scores it continuously
+from the same 10-year window of counts
+(`monitor`/`caution`/`investigate`/ `prioritize`) behind its official
+Prioritize/Investigate/Caution/Monitor condition category - a
+count-weighted average across that category’s own ordinal scale, rather
+than the category itself. Creek scores are then averaged by bay
+segment/year, weighted by creek length so longer creek segments
+contribute proportionally more.
 
 ``` r
 
@@ -189,9 +193,15 @@ supports three types:
   reversed since lower is better (`from = c(0, 1)`, `reverse = TRUE`),
   as is sediment PEL/TEL’s average contamination score - log-transformed
   first since its grade breakpoints are geometrically spaced, rather
-  than linear.
+  than linear. Tidal creeks are scored continuously too, as a
+  count-weighted average across the same ordinal scale their official
+  condition category uses, computed directly rather than through
+  [`util_outcome()`](https://tbep-tech.github.io/tbepreport/reference/util_outcome.md).
 - **Category** - a discrete grade or condition category is mapped to a
-  fixed outcome (e.g. tidal creek condition categories).
+  fixed outcome. No indicator currently uses this type (they’ve each
+  moved to a continuous score derived from the same data the category
+  would have used), but it remains available for a grade or category
+  with no natural continuous equivalent.
 - **Threshold** - a raw value is compared against a cutoff
   (e.g. nutrient loading against a bay-segment target, chlorophyll/light
   attenuation against their thresholds, seagrass coverage against an
@@ -475,8 +485,6 @@ plot_trend(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB',
 
 ## Notes
 
-- Indices that use categories from a continuous scale, revert to
-  continuous data to get outcome
 - Lots of redundancy in the water quality indicators
 - How to incorporate land use change by bay segment? Is this even
   appropriate?

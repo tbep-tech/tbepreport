@@ -75,12 +75,31 @@ records feeding that segment/year's outcome)</p>
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>Each tidal creek is assigned to the bay segment subwatershed
 (<code><a href="https://rdrr.io/pkg/tbeptools/man/tbsegshed.html" class="external-link">tbsegshed</a></code>) it overlaps most (by length, for
-creeks spanning more than one subwatershed). Creek condition category
-scores (Prioritize/Investigate/Caution/Monitor) are converted to a 0-1
-outcome with <code><a href="util_outcome.html">util_outcome</a></code> (<code>type = "category"</code>), then
-averaged to a bay-segment/year outcome, weighted by each creek's physical
-length so longer creek segments contribute proportionally more. Creeks
-with a "No Data" assessment are dropped.</p>
+creeks spanning more than one subwatershed).</p>
+<p><code><a href="https://rdrr.io/pkg/tbeptools/man/anlz_tdlcrk.html" class="external-link">anlz_tdlcrk</a></code> computes each creek's condition
+category (Prioritize/Investigate/Caution/Monitor) from counts of how many
+years, out of a rolling 10-year window, its TN concentration fell into
+each of 4 ordinal grades (<code>monitor</code>, <code>caution</code>,
+<code>investigate</code>, <code>prioritize</code>, worst to best) - the category
+itself comes from a compound rule (the worst grade present usually wins,
+with several count-based exceptions that downgrade it, e.g. a single bad
+year surrounded by mostly good years). Rather than use that category,
+this converts each creek's own 4 counts directly into a continuous 0-1
+score - the same count-weighted average across the same ordinal scale
+the category uses (<code>Monitor = 1</code>, <code>Caution = 2/3</code>,
+<code>Investigate = 1/3</code>, <code>Prioritize = 0</code>), i.e. what fraction of
+the 10-year window fell in each grade. This is a related but distinct
+measure from the official category - it can disagree in some cases,
+since the category's downgrade exceptions are non-monotonic and a
+count-weighted average won't reproduce them (e.g. a creek with a single
+Prioritize-level year among mostly Monitor-level years can score higher
+continuously than a creek with several Caution-level years, even though
+the latter is categorized as the less severe "Caution" rather than
+"Prioritize"). Creeks with a "No Data" assessment (no counts at all) are
+dropped.</p>
+<p>Each creek's continuous score is then averaged to a bay-segment/year
+outcome, weighted by each creek's physical length so longer creek
+segments contribute proportionally more.</p>
     </div>
 
     <div class="section level2">

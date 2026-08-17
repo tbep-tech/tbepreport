@@ -66,3 +66,18 @@
   [`?anlz_sed_tbbi`](https://tbep-tech.github.io/tbepreport/reference/anlz_sed_tbbi.md)
   for how the two can disagree in edge cases). Output column `TBBICat`
   is replaced with `TBBI` (the median score)
+- **Breaking**:
+  [`anlz_wq_tidalcreeks()`](https://tbep-tech.github.io/tbepreport/reference/anlz_wq_tidalcreeks.md)
+  now scores each creek from a count-weighted average across the same
+  ordinal scale (`monitor`/`caution`/`investigate`/`prioritize` counts
+  from
+  [`tbeptools::anlz_tdlcrk()`](https://rdrr.io/pkg/tbeptools/man/anlz_tdlcrk.html)’s
+  10-year window) its official Prioritize/Investigate/Caution/Monitor
+  condition category also comes from, instead of that category itself
+  (which uses a compound rule with count-based exceptions - see
+  [`?anlz_wq_tidalcreeks`](https://tbep-tech.github.io/tbepreport/reference/anlz_wq_tidalcreeks.md)
+  for how the two can disagree in edge cases)
+- All indicators previously scored from a discrete grade/category now
+  use a continuous score derived from the same underlying data (FIB,
+  sediment PEL/TEL, Benthic Index, tidal creeks); no indicator currently
+  uses `util_outcome(type = "category")`, though it remains available
