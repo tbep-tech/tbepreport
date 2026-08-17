@@ -11,7 +11,7 @@ util_outcome(
   reverse = FALSE,
   thresh = NULL,
   op = "<",
-  smooth = TRUE,
+  smooth = "logistic",
   scl = NULL,
   pct = 0.1,
   levels = NULL
@@ -41,21 +41,21 @@ outcome. Applies to \code{type = "continuous"} and
 \code{">="} - the comparison defining the condition under which \code{x}
 attains an outcome of 1 when \code{type = "threshold"}}
 
-\item{smooth}{logical, if \code{TRUE} (the default) and \code{type =
-  "threshold"}, use a smooth logistic transition centered at \code{thresh}
-(in the direction given by \code{op}) instead of a hard cutoff. Set to
-\code{FALSE} for a hard \code{0}/\code{1} cutoff instead (see Details)}
+\item{smooth}{for \code{type = "threshold"}, one of \code{"logistic"}
+(the default), \code{"ramp"}, or \code{"none"} - see Details. For
+backward compatibility, logical \code{TRUE}/\code{FALSE} are also
+accepted and mapped to \code{"logistic"}/\code{"none"}.}
 
-\item{scl}{numeric, controls the steepness of the logistic transition when
-\code{smooth = TRUE} - smaller values are a sharper transition. Defaults
-to \code{pct * abs(thresh)} (or \code{1} if \code{thresh = 0}). Set this
-directly to use an absolute steepness instead of one relative to
-\code{thresh}.}
+\item{scl}{numeric, controls the steepness of the \code{"logistic"}/
+\code{"ramp"} transition - smaller values are a sharper transition.
+Defaults to \code{pct * abs(thresh)} (or \code{1} if \code{thresh =
+  0}). Set this directly to use an absolute steepness instead of one
+relative to \code{thresh}.}
 
 \item{pct}{numeric, the fraction of \code{abs(thresh)} used to compute the
-default \code{scl} when \code{smooth = TRUE} and \code{scl} is not
-supplied directly. Defaults to \code{0.1} (10\% of \code{thresh}).
-Ignored if \code{scl} is provided.}
+default \code{scl} when \code{smooth} is \code{"logistic"} or
+\code{"ramp"} and \code{scl} is not supplied directly. Defaults to
+\code{0.1} (10\% of \code{thresh}). Ignored if \code{scl} is provided.}
 
 \item{levels}{named numeric vector mapping each category value in \code{x}
 to a fixed outcome when \code{type = "category"}, e.g.
@@ -84,17 +84,30 @@ function that calls it.
 as a transition window narrower than the full range of \code{x} (e.g.
 TBNI's 32-46 breakpoints within its 0-100 score).
 
-\strong{threshold}: by default (\code{smooth = TRUE}), \code{x} is
-compared to \code{thresh} using \code{op} and converted to a smooth
-logistic outcome centered at \code{thresh}, so outcomes near the
-threshold transition gradually rather than jumping discretely, in the
-same direction \code{op} would have used (e.g. \code{op = "<"} still
-means lower \code{x} is better). The steepness of that transition
+\strong{threshold}: \code{x} is compared to \code{thresh} using \code{op},
+in one of three ways selected by \code{smooth}:
+\itemize{
+\item \code{"logistic"} (the default): a smooth logistic transition
+centered at \code{thresh}, exactly \code{0.5} \emph{at} \code{thresh}
+and approaching \code{0}/\code{1} on either side, in the direction
+\code{op} would have used (e.g. \code{op = "<"} still means lower
+\code{x} is better).
+\item \code{"ramp"}: \code{1} once \code{x} reaches the "good" side of
+\code{thresh} (as defined by \code{op}) - not just \code{0.5} there
+like \code{"logistic"} - decaying exponentially toward \code{0} the
+further \code{x} is on the "bad" side. Use this when meeting or
+beating a target should already be full credit rather than half
+credit (e.g. an acreage target that's fine to exceed by any amount).
+\item \code{"none"}: a hard \code{0}/\code{1} cutoff, no transition.
+}
+Logical \code{TRUE}/\code{FALSE} are also accepted for \code{smooth}, for
+backward compatibility, and map to \code{"logistic"}/\code{"none"}.
+
+For \code{"logistic"} and \code{"ramp"}, the steepness of the transition
 (\code{scl}) defaults to a percentage (\code{pct}) of \code{thresh}
 rather than a fixed absolute value, so it stays meaningful across
 indicators/thresholds with very different units and magnitudes (e.g. a
-threshold of 1 vs. a threshold in the hundreds). Set \code{smooth =
-FALSE} for a hard \code{0}/\code{1} cutoff instead.
+threshold of 1 vs. a threshold in the hundreds).
 
 \strong{category}: \code{x} is mapped to an outcome via \code{levels}.
 
@@ -117,8 +130,12 @@ util_outcome(c(5, 10, 15), type = 'threshold', thresh = 10)
 util_outcome(12, type = 'threshold', thresh = 10, pct = 0.1)
 util_outcome(12, type = 'threshold', thresh = 10, pct = 0.2)
 
-# smooth = FALSE instead gives a hard 0/1 cutoff
-util_outcome(c(5, 15), type = 'threshold', thresh = 10, op = '<', smooth = FALSE)
+# smooth = "none" (or FALSE) instead gives a hard 0/1 cutoff
+util_outcome(c(5, 15), type = 'threshold', thresh = 10, op = '<', smooth = 'none')
+
+# smooth = "ramp": meeting/beating a target (op = ">=") is full credit,
+# decaying toward 0 the further short of it a value falls
+util_outcome(c(90, 95, 100, 105), type = 'threshold', thresh = 100, op = '>=', smooth = 'ramp')
 
 # category, e.g. FIB grades
 util_outcome(c('A', 'C', 'E'), type = 'category',

@@ -23,9 +23,10 @@ test_that("anlz_hab_seagrass_coverage carries the last survey forward through ga
 
 })
 
-test_that("anlz_hab_seagrass_coverage smooth defaults to TRUE, giving a logistic transition", {
+test_that("anlz_hab_seagrass_coverage smooth defaults to 'ramp'", {
 
-  # OTB target is 11100; 11000 sits within a 10% (1110-acre) transition band
+  # OTB target is 11100; 11000 sits within a 10% (1110-acre) transition band,
+  # short of the target, so ramp gives a value strictly between 0 and 1
   sgsegest <- data.frame(
     segment = factor('Old Tampa Bay', levels = 'Old Tampa Bay'),
     acres = 11000,
@@ -35,6 +36,35 @@ test_that("anlz_hab_seagrass_coverage smooth defaults to TRUE, giving a logistic
   result <- anlz_hab_seagrass_coverage(sgsegest)
 
   expect_true(all(result$outcome > 0 & result$outcome < 1))
+  expect_equal(unname(result$outcome), exp(-100 / 1110))
+
+})
+
+test_that("anlz_hab_seagrass_coverage ramp gives exactly 1 at or above the target", {
+
+  sgsegest <- data.frame(
+    segment = factor(c('Old Tampa Bay', 'Old Tampa Bay'), levels = 'Old Tampa Bay'),
+    acres = c(11100, 15000),
+    year = c(2020, 2022)
+  )
+
+  result <- anlz_hab_seagrass_coverage(sgsegest)
+
+  expect_true(all(result$outcome == 1))
+
+})
+
+test_that("anlz_hab_seagrass_coverage smooth = 'logistic' gives 0.5 exactly at the target", {
+
+  sgsegest <- data.frame(
+    segment = factor('Old Tampa Bay', levels = 'Old Tampa Bay'),
+    acres = 11100,
+    year = 2020
+  )
+
+  result <- anlz_hab_seagrass_coverage(sgsegest, smooth = 'logistic')
+
+  expect_equal(unname(result$outcome), 0.5)
 
 })
 

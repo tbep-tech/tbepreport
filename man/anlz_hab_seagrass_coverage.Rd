@@ -7,7 +7,7 @@
 anlz_hab_seagrass_coverage(
   sgsegest,
   yr_max = max(sgsegest$year),
-  smooth = TRUE,
+  smooth = "ramp",
   pct = 0.1
 )
 }
@@ -19,19 +19,24 @@ and year, e.g. \code{\link{sgsegest}}}
 defaults to the last year \code{sgsegest} actually has an estimate for
 (\code{max(sgsegest$year)})}
 
-\item{smooth}{logical, passed to \code{\link{util_outcome}} - if
-\code{TRUE} (the default), use a smooth logistic transition centered at
-each segment's acreage target instead of a hard 0/1 cutoff.}
+\item{smooth}{passed to \code{\link{util_outcome}} - one of
+\code{"ramp"} (the default), \code{"logistic"}, or \code{"none"}
+(logical \code{TRUE}/\code{FALSE} also accepted, mapped to
+\code{"logistic"}/\code{"none"}). \code{"ramp"} gives an outcome of 1
+for any acreage at or above a segment's target, decaying toward 0 the
+further short of it a segment falls - unlike \code{"logistic"}, which
+gives only 0.5 exactly at the target.}
 
 \item{pct}{numeric, passed to \code{\link{util_outcome}} as the fraction
-of each acreage target used for the logistic transition's steepness
-when \code{smooth = TRUE}. Defaults to \code{0.1} (10\% of the target).}
+of each acreage target used for the transition's steepness when
+\code{smooth} is \code{"ramp"} or \code{"logistic"}. Defaults to
+\code{0.1} (10\% of the target).}
 }
 \value{
 A data.frame with columns \code{bay_segment} (abbreviated, e.g.
 \code{"OTB"}), \code{yr}, \code{acres} (carried forward in non-survey
 years), and \code{outcome} (0-1, 1 = best, also carried forward in
-non-survey years; exactly 0 or 1 only if \code{smooth = FALSE})
+non-survey years; exactly 0 or 1 only if \code{smooth = "none"})
 }
 \description{
 Seagrass coverage outcome by bay segment and year
@@ -51,10 +56,11 @@ year are not a new estimate, just a repeat of the last known one.
 Coverage is compared against a fixed per-segment acreage target with
 \code{\link{util_outcome}} (\code{type = "threshold"}, \code{op = ">="})
 \itemize{
-\item by default (\code{smooth = TRUE}) this is a smooth logistic transition
-centered at the target; \code{smooth = FALSE} instead gives a hard 0/1
-cutoff (meeting or exceeding the target gives an outcome of 1). Targets
-(acres):
+\item by default (\code{smooth = "ramp"}) meeting or exceeding the target
+gives an outcome of 1, decaying toward 0 the further short of it a
+segment falls; \code{smooth = "logistic"} instead centers a smooth
+transition on the target (only 0.5 exactly at it), and \code{smooth =
+"none"} gives a hard 0/1 cutoff. Targets (acres):
 \describe{
 \item{Old Tampa Bay}{11,100}
 \item{Hillsborough Bay}{1,751}

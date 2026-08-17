@@ -93,6 +93,59 @@ test_that("util_outcome threshold scl overrides pct", {
 
 })
 
+test_that("util_outcome threshold ramp is 1 at/beyond thresh on the good side and decays on the bad side", {
+
+  # op = '>=' (higher is better, e.g. a target to meet or exceed): at or
+  # above thresh is exactly 1, no partial credit like logistic's 0.5
+  at_thresh <- util_outcome(10, type = 'threshold', thresh = 10, op = '>=', smooth = 'ramp')
+  above     <- util_outcome(15, type = 'threshold', thresh = 10, op = '>=', smooth = 'ramp')
+  expect_equal(at_thresh, 1)
+  expect_equal(above, 1)
+
+  # below thresh, scl = pct * thresh = 1, so x = 9 is exactly 1 scl below
+  # thresh -> outcome = exp(-1)
+  below <- util_outcome(9, type = 'threshold', thresh = 10, op = '>=', smooth = 'ramp')
+  expect_equal(below, exp(-1))
+
+  # further below decays further toward (but never reaches) 0
+  further <- util_outcome(5, type = 'threshold', thresh = 10, op = '>=', smooth = 'ramp')
+  expect_lt(further, below)
+  expect_gt(further, 0)
+
+})
+
+test_that("util_outcome threshold ramp respects op direction (lower is better)", {
+
+  at_thresh <- util_outcome(10, type = 'threshold', thresh = 10, op = '<', smooth = 'ramp')
+  below     <- util_outcome(5, type = 'threshold', thresh = 10, op = '<', smooth = 'ramp')
+  above     <- util_outcome(15, type = 'threshold', thresh = 10, op = '<', smooth = 'ramp')
+
+  expect_equal(at_thresh, 1)
+  expect_equal(below, 1)
+  expect_lt(above, 1)
+  expect_gt(above, 0)
+
+})
+
+test_that("util_outcome threshold smooth accepts logical for backward compatibility", {
+
+  expect_equal(
+    util_outcome(12, type = 'threshold', thresh = 10, smooth = TRUE),
+    util_outcome(12, type = 'threshold', thresh = 10, smooth = 'logistic')
+  )
+  expect_equal(
+    util_outcome(c(5, 15), type = 'threshold', thresh = 10, smooth = FALSE),
+    util_outcome(c(5, 15), type = 'threshold', thresh = 10, smooth = 'none')
+  )
+
+})
+
+test_that("util_outcome threshold smooth errors on an invalid option", {
+
+  expect_error(util_outcome(12, type = 'threshold', thresh = 10, smooth = 'bogus'))
+
+})
+
 test_that("util_outcome category maps values via levels", {
 
   result <- util_outcome(
