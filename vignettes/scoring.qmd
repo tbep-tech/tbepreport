@@ -77,7 +77,7 @@ averaged by bay segment/year, weighted by creek length so longer creek
 segments contribute proportionally more.
 
 ```{r}
-wqtidalcreeks <- anlz_wq_tidalcreeks(tidalcreeks, iwrraw, yrs = 1975:2024)
+wqtidalcreeks <- anlz_wq_tidalcreeks(tidalcreeks, iwrraw, yrs = 1990:2024)
 ```
 
 ### Fecal Indicator Bacteria
