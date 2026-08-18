@@ -104,9 +104,12 @@ plot. Defaults to all five.</p></dd>
 <code>"legend"</code>, or <code>"none"</code>, controlling how series are
 identified. <code>"labels"</code> draws a direct label on each line at its
 right-most value. <code>"legend"</code> instead draws a conventional ggplot
-legend for the color scale. <code>"none"</code> draws neither. When <code>text =
-  "labels"</code>, the extra right-margin/x-axis space reserved for labels is
-included; otherwise it's removed.</p></dd>
+legend for the color scale, with <code>"Score"</code> always listed first.
+<code>"none"</code> draws neither. When <code>text = "labels"</code>, the extra
+right-margin/x-axis space reserved for labels is included, otherwise
+it's removed. <code>"labels"</code> is preferred when more than one facet is
+shown, whereas <code>"legend"</code> works better when <code>facets</code>
+selects only one or two facets.</p></dd>
 
 </dl></div>
     <div class="section level2">

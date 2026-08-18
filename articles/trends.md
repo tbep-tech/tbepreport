@@ -76,7 +76,7 @@ plots <- lapply(bay_segments, function(seg) {
 })
 
 patchwork::wrap_plots(plots, ncol = 2) +
-  patchwork::plot_layout(guides = 'collect') &
+  patchwork::plot_layout(guides = 'collect', axes = 'collect') &
   theme(legend.position = 'bottom')
 ```
 
@@ -128,7 +128,7 @@ p2 <- plot_trend(
   labs(subtitle = 'Full 0-100 range')
 
 patchwork::wrap_plots(p1, p2, ncol = 2) +
-  patchwork::plot_layout(guides = 'collect') &
+  patchwork::plot_layout(guides = 'collect', axes = 'collect') &
   theme(legend.position = 'bottom')
 ```
 
@@ -167,7 +167,7 @@ p2 <- plot_trend(
   labs(subtitle = 'Hard cutoff (smooth = "none")')
 
 patchwork::wrap_plots(p1, p2, ncol = 2) +
-  patchwork::plot_layout(guides = 'collect') &
+  patchwork::plot_layout(guides = 'collect', axes = 'collect') &
   theme(legend.position = 'bottom')
 ```
 
@@ -196,7 +196,7 @@ p2 <- plot_trend(
   labs(subtitle = 'Water Quality weighted 2x')
 
 patchwork::wrap_plots(p1, p2, ncol = 2) +
-  patchwork::plot_layout(guides = 'collect') &
+  patchwork::plot_layout(guides = 'collect', axes = 'collect') &
   theme(legend.position = 'bottom')
 ```
 

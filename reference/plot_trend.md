@@ -70,9 +70,12 @@ plot_trend(
   chr string, one of `"labels"` (the default), `"legend"`, or `"none"`,
   controlling how series are identified. `"labels"` draws a direct label
   on each line at its right-most value. `"legend"` instead draws a
-  conventional ggplot legend for the color scale. `"none"` draws
-  neither. When `text = "labels"`, the extra right-margin/x-axis space
-  reserved for labels is included; otherwise it's removed.
+  conventional ggplot legend for the color scale, with `"Score"` always
+  listed first. `"none"` draws neither. When `text = "labels"`, the
+  extra right-margin/x-axis space reserved for labels is included,
+  otherwise it's removed. `"labels"` is preferred when more than one
+  facet is shown, whereas `"legend"` works better when `facets` selects
+  only one or two facets.
 
 ## Value
 

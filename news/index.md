@@ -19,7 +19,9 @@
   or neither. The right-margin/x-axis padding reserved for labels
   shrinks automatically when `text != "labels"`. `text = "legend"` is
   useful for combining multiple panels with `patchwork` and collecting
-  one shared legend
+  one shared legend, and always lists `"Score"` first rather than
+  falling in alphabetical order with the rest. `"labels"` is preferred
+  over `"legend"` when more than one or two facets are shown
 - Add a “Trends and Sensitivity” vignette (`vignettes/trends.qmd`)
   comparing report card results across the four default bay segments and
   showing how a few scoring decisions (TBNI’s rescale window, threshold
