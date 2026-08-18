@@ -43,9 +43,12 @@ plot. Defaults to all five.}
 \code{"legend"}, or \code{"none"}, controlling how series are
 identified. \code{"labels"} draws a direct label on each line at its
 right-most value. \code{"legend"} instead draws a conventional ggplot
-legend for the color scale. \code{"none"} draws neither. When \code{text =
-  "labels"}, the extra right-margin/x-axis space reserved for labels is
-included; otherwise it's removed.}
+legend for the color scale, with \code{"Score"} always listed first.
+\code{"none"} draws neither. When \code{text = "labels"}, the extra
+right-margin/x-axis space reserved for labels is included, otherwise
+it's removed. \code{"labels"} is preferred when more than one facet is
+shown, whereas \code{"legend"} works better when \code{facets}
+selects only one or two facets.}
 }
 \value{
 A \code{ggplot} object

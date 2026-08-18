@@ -233,6 +233,12 @@ test_that("plot_trend text = 'legend' draws a conventional legend instead of lab
   expect_equal(result$scales$get_scales('colour')$guide, 'legend')
   expect_equal(result$theme$legend.position, 'right')
 
+  # 'Score' is listed first in the legend, ahead of the alphabetically
+  # sorted category/indicator series
+  breaks <- result$scales$get_scales('colour')$breaks
+  expect_equal(breaks[1], 'Score')
+  expect_equal(breaks[-1], sort(breaks[-1]))
+
 })
 
 test_that("plot_trend errors on an invalid text value", {

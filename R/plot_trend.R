@@ -18,9 +18,12 @@
 #'   \code{"legend"}, or \code{"none"}, controlling how series are
 #'   identified. \code{"labels"} draws a direct label on each line at its
 #'   right-most value. \code{"legend"} instead draws a conventional ggplot
-#'   legend for the color scale. \code{"none"} draws neither. When \code{text =
-#'   "labels"}, the extra right-margin/x-axis space reserved for labels is
-#'   included; otherwise it's removed.
+#'   legend for the color scale, with \code{"Score"} always listed first.
+#'   \code{"none"} draws neither. When \code{text = "labels"}, the extra
+#'   right-margin/x-axis space reserved for labels is included, otherwise
+#'   it's removed. \code{"labels"} is preferred when more than one facet is
+#'   shown, whereas \code{"legend"} works better when \code{facets} 
+#'   selects only one or two facets.
 #'
 #' @details Calls \code{\link{anlz_score}} on the four category data.frames
 #' to get the overall bay segment score and each category's own score across
@@ -148,7 +151,10 @@ plot_trend <- function(wqoverall, sedoverall, fwoverall, haboverall, bay_segment
     ggplot2::facet_wrap(~.data$facet, ncol = 1) +
     ggplot2::scale_y_continuous(labels = scales::percent, limits = c(0, 1)) +
     ggplot2::scale_x_continuous(expand = xexpand) +
-    ggplot2::scale_color_manual(values = pal, name = NULL, guide = if (legend) 'legend' else 'none') +
+    ggplot2::scale_color_manual(
+      values = pal, name = NULL, breaks = c('Score', child_series),
+      guide = if (legend) 'legend' else 'none'
+    ) +
     ggplot2::scale_discrete_manual(
       aesthetics = 'fontface', values = c(parent = 'bold', child = 'plain'), guide = 'none'
     ) +
