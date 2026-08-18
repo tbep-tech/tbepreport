@@ -62,15 +62,15 @@
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Uses <code><a href="https://rdrr.io/pkg/tbeptools/man/anlz_fibmatrix.html" class="external-link">anlz_fibmatrix</a></code> to get, for each bay
-segment/year, <code>exceed_rate</code> - a continuous, one-sided 90\<!-- % upper -->
-confidence estimate of the true exceedance rate (0-1, lower is better) -
+    <p>Uses <a href="https://tbep-tech.github.io/tbeptools/reference/anlz_fibmatrix.html" class="external-link"><code>anlz_fibmatrix</code></a> to get,
+for each bay segment/year, <code>exceed_rate</code>, a continuous, one-sided 90\<!-- % upper -->
+confidence estimate of the true exceedance rate (0-1, lower is better),
 and converts it to a 0-1 outcome with <code><a href="util_outcome.html">util_outcome</a></code>
 (<code>type = "continuous"</code>, <code>from = c(0, 1)</code>, <code>reverse = TRUE</code>),
 i.e. <code>outcome = 1 - exceed_rate</code>. This is a continuous analog of the
 A-E letter grade <code><a href="https://rdrr.io/pkg/tbeptools/man/anlz_fibmatrix.html" class="external-link">anlz_fibmatrix()</a></code> also returns (<code>cat</code>), which
 is itself a discretized version of <code>exceed_rate</code>.  See
-<code><a href="https://rdrr.io/pkg/tbeptools/man/anlz_fibmatrix.html" class="external-link">anlz_fibmatrix</a></code> for details.</p>
+<a href="https://tbep-tech.github.io/tbeptools/reference/anlz_fibmatrix.html" class="external-link"><code>anlz_fibmatrix</code></a> for details.</p>
     </div>
 
     <div class="section level2">

@@ -39,8 +39,7 @@ util_outcome(
 - reverse:
 
   logical, if `TRUE` the outcome is flipped (`1 - outcome`) so a higher
-  raw value in `x` indicates a worse outcome. Applies to
-  `type = "continuous"` and `type = "threshold"`.
+  raw value in `x` indicates a worse outcome.
 
 - thresh:
 
@@ -49,20 +48,19 @@ util_outcome(
 
 - op:
 
-  chr string, one of `"<"`, `"<="`, `">"`, `">="` - the comparison
-  defining the condition under which `x` attains an outcome of 1 when
-  `type = "threshold"`
+  chr string, one of `"<"`, `"<="`, `">"`, `">="`. Defines the condition
+  under which `x` attains an outcome of 1 when `type = "threshold"`
 
 - smooth:
 
   for `type = "threshold"`, one of `"logistic"` (the default), `"ramp"`,
-  or `"none"` - see Details. For backward compatibility, logical
+  or `"none"`. See Details. For backward compatibility, logical
   `TRUE`/`FALSE` are also accepted and mapped to `"logistic"`/`"none"`.
 
 - scl:
 
   numeric, controls the steepness of the `"logistic"`/ `"ramp"`
-  transition - smaller values are a sharper transition. Defaults to
+  transition. Smaller values give a sharper transition. Defaults to
   `pct * abs(thresh)` (or `1` if `thresh = 0`). Set this directly to use
   an absolute steepness instead of one relative to `thresh`.
 
@@ -96,7 +94,7 @@ or a hard threshold to a smooth one) without needing to change every
 
 **continuous**: `x` is linearly rescaled from `from` to `c(0, 1)` with
 [`rescale`](https://scales.r-lib.org/reference/rescale.html), then
-clamped to `c(0, 1)` - values of `x` outside `from` are pinned to `0` or
+clamped to `c(0, 1)`. Values of `x` outside `from` are pinned to `0` or
 `1` rather than extrapolated. This lets `from` act as a transition
 window narrower than the full range of `x` (e.g. TBNI's 32-46
 breakpoints within its 0-100 score).
@@ -105,12 +103,12 @@ breakpoints within its 0-100 score).
 ways selected by `smooth`:
 
 - `"logistic"` (the default): a smooth logistic transition centered at
-  `thresh`, exactly `0.5` *at* `thresh` and approaching `0`/`1` on
-  either side, in the direction `op` would have used (e.g. `op = "<"`
-  still means lower `x` is better).
+  `thresh`, exactly `0.5` at `thresh` and approaching `0`/`1` on either
+  side, in the direction `op` would have used (e.g. `op = "<"` still
+  means lower `x` is better).
 
 - `"ramp"`: `1` once `x` reaches the "good" side of `thresh` (as defined
-  by `op`) - not just `0.5` there like `"logistic"` - decaying
+  by `op`). This is not just `0.5` there like `"logistic"`. It decays
   exponentially toward `0` the further `x` is on the "bad" side. Use
   this when meeting or beating a target should already be full credit
   rather than half credit (e.g. an acreage target that's fine to exceed
@@ -140,11 +138,11 @@ util_outcome(c(20, 46, 90), type = 'continuous', from = c(0, 100))
 #> [1] 0.20 0.46 0.90
 
 # continuous with a narrower transition window, e.g. TBNI's 32-46
-# breakpoints - values outside the window are clamped to 0/1
+# breakpoints. Values outside the window are clamped to 0/1
 util_outcome(c(20, 32, 39, 46, 60), type = 'continuous', from = c(32, 46))
 #> [1] 0.0 0.0 0.5 1.0 1.0
 
-# threshold, e.g. chlorophyll attainment (lower is better) - smooth by
+# threshold, e.g. chlorophyll attainment (lower is better). Smooth by
 # default, a logistic transition rather than a hard cutoff
 util_outcome(c(5, 10, 15), type = 'threshold', thresh = 10)
 #> [1] 0.993307149 0.500000000 0.006692851

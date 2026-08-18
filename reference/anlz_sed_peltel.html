@@ -57,31 +57,29 @@
 
 <dt id="arg-yrs">yrs<a class="anchor" aria-label="anchor" href="#arg-yrs"></a></dt>
 <dd><p>integer vector of years to assess, passed to
-<code><a href="https://rdrr.io/pkg/tbeptools/man/anlz_sedimentpelave.html" class="external-link">anlz_sedimentpelave</a></code> one year at a time</p></dd>
+<a href="https://tbep-tech.github.io/tbeptools/reference/anlz_sedimentpelave.html" class="external-link"><code>anlz_sedimentpelave</code></a> one year at a time</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A data.frame with columns <code>yr</code>, <code>bay_segment</code>,
 <code>ave</code> (average sediment contamination score), <code>grd</code> (letter
-grade A-F, for reference only - not used to compute <code>outcome</code>), and
+grade A-F, for reference only, not used to compute <code>outcome</code>), and
 <code>outcome</code> (0-1, 1 = best)</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>Grades each bay segment/year by its average sediment
 contamination score (<code>ave</code>, from
-<code><a href="https://rdrr.io/pkg/tbeptools/man/anlz_sedimentpelave.html" class="external-link">anlz_sedimentpelave</a></code>) into A-F, kept here as
+<a href="https://tbep-tech.github.io/tbeptools/reference/anlz_sedimentpelave.html" class="external-link"><code>anlz_sedimentpelave</code></a>) into A-F, kept here as
 <code>grd</code> for reference, but the <code>outcome</code> itself comes directly
 from the continuous <code>ave</code> score via <code><a href="util_outcome.html">util_outcome</a></code>
 (<code>type = "continuous"</code>, <code>reverse = TRUE</code>) rather than from
 <code>grd</code>. Because the grade breakpoints are geometrically spaced
 (each roughly 2.7-4x the last: 0.00756, 0.02052, 0.08567, 0.28026),
 <code>ave</code> is log-transformed first so the outcome varies smoothly
-across grades B-D instead of being compressed near one end of the 0-1
-scale; <code>from</code> spans the A/B breakpoint to the D/F breakpoint (on
-the log scale), so - matching the same clamped-breakpoint-window
-treatment used for the Nekton Index's <code>from = c(32, 46)</code> - <code>ave</code>
+across grades B-D instead of being compressed. <code>from</code> spans
+the A/B breakpoint to the D/F breakpoint (on the log scale), so that <code>ave</code>
 at or below the A/B breakpoint gives an outcome of 1 and at or above the
 D/F breakpoint gives an outcome of 0.</p>
     </div>

@@ -28,16 +28,17 @@ anlz_fw_tbni(fimdata, from = c(32, 46))
 
 A data.frame with columns `bay_segment`, `yr`, `Segment_TBNI` (the raw
 0-100 score), `Action` (management action category from
-[`anlz_tbniave`](https://rdrr.io/pkg/tbeptools/man/anlz_tbniave.html)),
+[`anlz_tbniave`](https://tbep-tech.github.io/tbeptools/reference/anlz_tbniave.html)),
 and `outcome` (0-1, 1 = best)
 
 ## Details
 
 Uses
-[`anlz_tbniscr`](https://rdrr.io/pkg/tbeptools/man/anlz_tbniscr.html)
+[`anlz_tbniscr`](https://tbep-tech.github.io/tbeptools/reference/anlz_tbniscr.html)
 and
-[`anlz_tbniave`](https://rdrr.io/pkg/tbeptools/man/anlz_tbniave.html) to
-score each bay segment/year 0-100, then converts to a 0-1 outcome with
+[`anlz_tbniave`](https://tbep-tech.github.io/tbeptools/reference/anlz_tbniave.html)
+to score each bay segment/year 0-100, then converts to a 0-1 outcome
+with
 [`util_outcome`](https://tbep-tech.github.io/tbepreport/reference/util_outcome.md)
 (`type = "continuous"`). With the default `from = c(32, 46)`, matching
 TBNI's own grade breakpoints (On Alert below 32, Caution from 32 to 46,

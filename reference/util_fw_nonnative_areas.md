@@ -19,11 +19,10 @@ area in square miles)
 ## Details
 
 Recomputes area from geometry (reprojected to EPSG:3086) rather than
-trusting
+using
 [`bayseg_shp`](https://tbep-tech.github.io/tbepreport/reference/bayseg_shp.md)'s
 static `area_ac` attribute, matching the `tbep-invasives` Python
-pipeline's own area calculation method (the two agree closely where
-checked).
+pipeline's own area calculation method.
 [`bayseg_shp`](https://tbep-tech.github.io/tbepreport/reference/bayseg_shp.md)'s
 7 raw segments are dissolved into 5 groups by `BAY_SEG_GP` before
 computing area (i.e., BCB, TCB, MR to RALTB).

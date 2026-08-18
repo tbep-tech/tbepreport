@@ -67,13 +67,13 @@ over the full score range with no clamping.</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A data.frame with columns <code>bay_segment</code>, <code>yr</code>,
 <code>Segment_TBNI</code> (the raw 0-100 score), <code>Action</code> (management
-action category from <code><a href="https://rdrr.io/pkg/tbeptools/man/anlz_tbniave.html" class="external-link">anlz_tbniave</a></code>), and
+action category from <a href="https://tbep-tech.github.io/tbeptools/reference/anlz_tbniave.html" class="external-link"><code>anlz_tbniave</code></a>), and
 <code>outcome</code> (0-1, 1 = best)</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Uses <code><a href="https://rdrr.io/pkg/tbeptools/man/anlz_tbniscr.html" class="external-link">anlz_tbniscr</a></code> and
-<code><a href="https://rdrr.io/pkg/tbeptools/man/anlz_tbniave.html" class="external-link">anlz_tbniave</a></code> to score each bay segment/year 0-100,
+    <p>Uses <a href="https://tbep-tech.github.io/tbeptools/reference/anlz_tbniscr.html" class="external-link"><code>anlz_tbniscr</code></a> and
+<a href="https://tbep-tech.github.io/tbeptools/reference/anlz_tbniave.html" class="external-link"><code>anlz_tbniave</code></a> to score each bay segment/year 0-100,
 then converts to a 0-1 outcome with <code><a href="util_outcome.html">util_outcome</a></code>
 (<code>type = "continuous"</code>). With the default <code>from = c(32, 46)</code>,
 matching TBNI's own grade breakpoints (On Alert below 32, Caution from 32

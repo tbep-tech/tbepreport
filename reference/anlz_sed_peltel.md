@@ -18,20 +18,20 @@ anlz_sed_peltel(sedimentdata, yrs)
 - yrs:
 
   integer vector of years to assess, passed to
-  [`anlz_sedimentpelave`](https://rdrr.io/pkg/tbeptools/man/anlz_sedimentpelave.html)
+  [`anlz_sedimentpelave`](https://tbep-tech.github.io/tbeptools/reference/anlz_sedimentpelave.html)
   one year at a time
 
 ## Value
 
 A data.frame with columns `yr`, `bay_segment`, `ave` (average sediment
-contamination score), `grd` (letter grade A-F, for reference only - not
+contamination score), `grd` (letter grade A-F, for reference only, not
 used to compute `outcome`), and `outcome` (0-1, 1 = best)
 
 ## Details
 
 Grades each bay segment/year by its average sediment contamination score
 (`ave`, from
-[`anlz_sedimentpelave`](https://rdrr.io/pkg/tbeptools/man/anlz_sedimentpelave.html))
+[`anlz_sedimentpelave`](https://tbep-tech.github.io/tbeptools/reference/anlz_sedimentpelave.html))
 into A-F, kept here as `grd` for reference, but the `outcome` itself
 comes directly from the continuous `ave` score via
 [`util_outcome`](https://tbep-tech.github.io/tbepreport/reference/util_outcome.md)
@@ -39,12 +39,10 @@ comes directly from the continuous `ave` score via
 Because the grade breakpoints are geometrically spaced (each roughly
 2.7-4x the last: 0.00756, 0.02052, 0.08567, 0.28026), `ave` is
 log-transformed first so the outcome varies smoothly across grades B-D
-instead of being compressed near one end of the 0-1 scale; `from` spans
-the A/B breakpoint to the D/F breakpoint (on the log scale), so -
-matching the same clamped-breakpoint-window treatment used for the
-Nekton Index's `from = c(32, 46)` - `ave` at or below the A/B breakpoint
-gives an outcome of 1 and at or above the D/F breakpoint gives an
-outcome of 0.
+instead of being compressed. `from` spans the A/B breakpoint to the D/F
+breakpoint (on the log scale), so that `ave` at or below the A/B
+breakpoint gives an outcome of 1 and at or above the D/F breakpoint
+gives an outcome of 0.
 
 ## Examples
 

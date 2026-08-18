@@ -53,42 +53,40 @@
 <dl><dt id="arg-totanndat">totanndat<a class="anchor" aria-label="anchor" href="#arg-totanndat"></a></dt>
 <dd><p>data.frame of total annual loading estimates, with
 columns <code>year</code>, <code>bay_segment</code> (full segment names, e.g.
-<code>"Old Tampa Bay"</code>), <code>tn_load</code>, and <code>tnhy</code> - e.g. as
+<code>"Old Tampa Bay"</code>), <code>tn_load</code>, and <code>tnhy</code>, e.g. as
 returned by <code><a href="util_rdataload.html">util_rdataload()</a></code> on the
 <a href="https://github.com/tbep-tech/load-estimates" class="external-link">load-estimates</a> data</p></dd>
 
 
 <dt id="arg-smooth">smooth<a class="anchor" aria-label="anchor" href="#arg-smooth"></a></dt>
-<dd><p>logical, passed to <code><a href="util_outcome.html">util_outcome</a></code> - if
+<dd><p>logical, passed to <code><a href="util_outcome.html">util_outcome</a></code>. If
 <code>TRUE</code> (the default), use a smooth logistic transition centered at
-each target instead of a hard 0/1 cutoff.</p></dd>
+each threshold instead of a hard 0/1 cutoff.</p></dd>
 
 
 <dt id="arg-pct">pct<a class="anchor" aria-label="anchor" href="#arg-pct"></a></dt>
 <dd><p>numeric, passed to <code><a href="util_outcome.html">util_outcome</a></code> as the fraction
-of each target used for the logistic transition's steepness when
-<code>smooth = TRUE</code>. Defaults to <code>0.1</code> (10% of the target).</p></dd>
+of each threshold used for the logistic transition's steepness when
+<code>smooth = TRUE</code>. Defaults to <code>0.1</code> (10% of the threshold).</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A data.frame with columns <code>bay_segment</code> (abbreviated, e.g.
 <code>"OTB"</code>), <code>yr</code>, <code>indicator</code> (<code>"tn_load"</code> or
-<code>"tnhy_load"</code> - see Details for what <code>"tnhy_load"</code> measures),
-and <code>outcome</code> (0-1, 1 = best; exactly 0 or 1 only if <code>smooth =
-FALSE</code>)</p>
+<code>"tnhy_load"</code>, see Details for what <code>"tnhy_load"</code> measures),
+and <code>outcome</code> (0-1, 1 = best)</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Compares two loading measures against fixed bay-segment targets,
-using <code><a href="util_outcome.html">util_outcome</a></code> with <code>type = "threshold"</code> - by
-default (<code>smooth = TRUE</code>) a value below its target approaches an
+    <p>Compares two loading measures against fixed bay-segment thresholds,
+using <code><a href="util_outcome.html">util_outcome</a></code> with <code>type = "threshold"</code>. By
+default (<code>smooth = TRUE</code>), a value below its threshold approaches an
 outcome of 1 and at or above approaches 0, with a smooth logistic
-transition between them; <code>smooth = FALSE</code> instead gives a hard 0/1
-cutoff:</p><ul><li><p><code>tn_load</code>: total nitrogen load</p></li>
+transition between them.</p><ul><li><p><code>tn_load</code>: total nitrogen load</p></li>
 <li><p><code>tnhy_load</code>: <code>tnhy</code>, the total nitrogen load normalized
 by hydrologic load (i.e. TN load per unit of hydrologic load, a
-hydrologically-normalized loading rate) - <strong>not</strong> the raw
+hydrologically-normalized loading rate). This is not the raw
 hydrologic (freshwater inflow) load itself. The raw <code>hy_load</code>
 column in <code>totanndat</code> is not used here.</p></li>
 </ul><p>Returned in long format with one row per indicator, ready to stack into

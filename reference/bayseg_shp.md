@@ -18,10 +18,10 @@ An `sf` object (EPSG:4326, WGS 84) with 7 rows and 5 columns:
 
 - BAY_SEG_GP:
 
-  chr, grouped bay segment name (5 unique values) - the 7 raw segments
+  chr, grouped bay segment name (5 unique values). The 7 raw segments
   grouped into "Old Tampa Bay", "Hillsborough Bay", "Middle Tampa Bay",
-  "Lower Tampa Bay", and "Remainder Lower Tampa Bay" (Boca Ciega Bay +
-  Manatee River + Terra Ceia Bay dissolved together)
+  "Lower Tampa Bay", and "Remainder Lower Tampa Bay" (Boca Ciega Bay,
+  Manatee River, and Terra Ceia Bay dissolved together)
 
 - BAY_GP_ABB:
 
@@ -42,7 +42,7 @@ occurrence points to a bay segment (see `anlz_nonnative_obs()`). Copied
 from the [tbep-invasives](https://github.com/tbep-tech) repo
 (`input_data/shp/TBEP_Bay_Segments_4326.shp`), so segment grouping and
 areas match its report cards exactly. Note `area_ac` is a static
-attribute of each raw polygon; functions using this data recompute area
+attribute of each raw polygon. Functions using this data recompute area
 from the geometry instead (grouped by `BAY_SEG_GP`), which matches this
 static value closely but is used for consistency with the source
 pipeline's own area calculation.

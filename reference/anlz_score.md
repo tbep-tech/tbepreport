@@ -37,27 +37,27 @@ anlz_score(wqoverall, sedoverall, fwoverall, haboverall, wt = NULL)
 - wt:
 
   named numeric vector of category weights, e.g.
-  `c(wq = 2, sed = 1, fw = 1, hab = 1)`. Categories not named in `wt` -
-  including all of them when `wt = NULL` - get a weight of `1`, so the
+  `c(wq = 2, sed = 1, fw = 1, hab = 1)`. Categories not named in `wt`
+  (including all of them when `wt = NULL`) get a weight of `1`, so the
   default is a plain unweighted mean across the four categories, passed
-  straight through to
+  to
   [`anlz_category`](https://tbep-tech.github.io/tbepreport/reference/anlz_category.md).
 
 ## Value
 
-A data.frame with columns `bay_segment`, `yr`, `outcome` (0-1, 1 =
-best - the overall Bay Segment Score), `n_indicator` (number of
-categories with a score for that segment/year), and one additional
-column per category (`wq`, `sed`, `fw`, `hab`) holding that category's
-own score, `NA` where a segment/year has no score for it
+A data.frame with columns `bay_segment`, `yr`, `outcome` (0-1, 1 = best,
+the overall Bay Segment Score), `n_indicator` (number of categories with
+a score for that segment/year), and one additional column per category
+(`wq`, `sed`, `fw`, `hab`) holding that category's own score, `NA` where
+a segment/year has no score for it
 
 ## Details
 
 A thin, semantically-named wrapper around
-[`anlz_category`](https://tbep-tech.github.io/tbepreport/reference/anlz_category.md):
-from that function's point of view, a category score is just another
-single-indicator input, so combining the four category scores into one
-bay segment score uses exactly the same stacking
+[`anlz_category`](https://tbep-tech.github.io/tbepreport/reference/anlz_category.md).
+A category score is just another single-indicator input, so combining
+the four category scores into one bay segment score uses exactly the
+same stacking
 ([`anlz_indicators`](https://tbep-tech.github.io/tbepreport/reference/anlz_indicators.md))
 and weighted-averaging logic that combines individual indicators into a
 category score.

@@ -12,7 +12,10 @@
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><script src="tbepreport_files/libs/quarto-html/popper.min.js"></script><script src="tbepreport_files/libs/quarto-html/tippy.umd.min.js"></script><link href="tbepreport_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="tbepreport_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Getting Started">
+<link href="tbepreport_files/libs/htmltools-fill-0.5.9/fill.css" rel="stylesheet">
+<script src="tbepreport_files/libs/htmlwidgets-1.6.4/htmlwidgets.js"></script><script src="tbepreport_files/libs/plotly-binding-4.12.1/plotly.js"></script><script src="tbepreport_files/libs/typedarray-0.1/typedarray.min.js"></script><link href="tbepreport_files/libs/crosstalk-1.2.2/css/crosstalk.min.css" rel="stylesheet">
+<script src="tbepreport_files/libs/crosstalk-1.2.2/js/crosstalk.min.js"></script><link href="tbepreport_files/libs/plotly-htmlwidgets-css-2.25.2/plotly-htmlwidgets.css" rel="stylesheet">
+<script src="tbepreport_files/libs/plotly-main-2.25.2/plotly-latest.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Getting Started">
 <meta property="og:image" content="https://tbep-tech.github.io/tbepreport/logo.png">
 </head>
 <body>
@@ -69,11 +72,85 @@
 
 
 
-    <p>This article is a placeholder for the <code>tbepreport</code> package walkthrough - a shortened version of the working prototype in the <a href="scoring.html">Report Card Scoring</a> article. It will be filled in as the indicator functions listed in the package’s development plan are ported.</p>
-
-
-
-<script id="quarto-html-after-body" type="application/javascript">
+    <p><code>tbepreport</code> builds the Tampa Bay Estuary Program’s annual bay segment report card. Individual indicators are assigned a 0-1 outcome, indicators are averaged into a score for each of four categories (Water Quality, Sediment, Fish and Wildlife, Habitat), and the four category scores are averaged into one overall score per bay segment and year. This article shows a minimal workflow for creating the report card. See the <a href="scoring.html">Report Card Scoring</a> article for how each indicator is calculated and scored.</p>
+<section class="level2"><h2 id="compute-indicators">Compute Indicators<a class="anchor" aria-label="anchor" href="#compute-indicators"></a>
+</h2>
+<p>Every <code>anlz_*</code> indicator function takes raw monitoring data (mostly from <a href="https://tbep-tech.github.io/tbeptools/" class="external-link">tbeptools</a>) and returns a 0-1 outcome by bay segment and year.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># water quality</span></span>
+<span><span class="va">wqattain</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/anlz_wq_attain.html">anlz_wq_attain</a></span><span class="op">(</span><span class="va">epcdata</span><span class="op">)</span></span>
+<span><span class="va">wqthresh</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/anlz_wq_thresh.html">anlz_wq_thresh</a></span><span class="op">(</span><span class="va">epcdata</span><span class="op">)</span></span>
+<span><span class="va">totanndat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/util_rdataload.html">util_rdataload</a></span><span class="op">(</span><span class="st">"https://github.com/tbep-tech/load-estimates/raw/main/data/totanndat.RData"</span><span class="op">)</span></span>
+<span><span class="va">wqload</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/anlz_wq_load.html">anlz_wq_load</a></span><span class="op">(</span><span class="va">totanndat</span><span class="op">)</span></span>
+<span><span class="va">wqtidalcreeks</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/anlz_wq_tidalcreeks.html">anlz_wq_tidalcreeks</a></span><span class="op">(</span><span class="va">tidalcreeks</span>, <span class="va">iwrraw</span>, yrs <span class="op">=</span> <span class="fl">1990</span><span class="op">:</span><span class="fl">2024</span><span class="op">)</span></span>
+<span><span class="va">wqfib</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/anlz_wq_fib.html">anlz_wq_fib</a></span><span class="op">(</span><span class="va">enterodata</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># sediment</span></span>
+<span><span class="va">peltel</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/anlz_sed_peltel.html">anlz_sed_peltel</a></span><span class="op">(</span><span class="va">sedimentdata</span>, yrs <span class="op">=</span> <span class="fl">1993</span><span class="op">:</span><span class="fl">2024</span><span class="op">)</span></span>
+<span><span class="va">tbbi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/anlz_sed_tbbi.html">anlz_sed_tbbi</a></span><span class="op">(</span><span class="va">benthicdata</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># fish and wildlife</span></span>
+<span><span class="va">tbni</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/anlz_fw_tbni.html">anlz_fw_tbni</a></span><span class="op">(</span><span class="va">fimdata</span><span class="op">)</span></span>
+<span><span class="va">nonnative_obs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/anlz_fw_nonnative_obs.html">anlz_fw_nonnative_obs</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">nonnative_abundance</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/anlz_fw_nonnative_abundance.html">anlz_fw_nonnative_abundance</a></span><span class="op">(</span><span class="va">nonnative_obs</span><span class="op">)</span></span>
+<span><span class="va">nonnative_richness</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/anlz_fw_nonnative_richness.html">anlz_fw_nonnative_richness</a></span><span class="op">(</span><span class="va">nonnative_obs</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># habitat</span></span>
+<span><span class="va">trnsct</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/anlz_hab_seagrass_transect.html">anlz_hab_seagrass_transect</a></span><span class="op">(</span><span class="va">transect</span><span class="op">)</span></span>
+<span><span class="va">cov</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/anlz_hab_seagrass_coverage.html">anlz_hab_seagrass_coverage</a></span><span class="op">(</span><span class="va">sgsegest</span><span class="op">)</span></span></code></pre></div>
+</div>
+</section><section class="level2"><h2 id="combine-scores">Combine Scores<a class="anchor" aria-label="anchor" href="#combine-scores"></a>
+</h2>
+<p><code><a href="../reference/anlz_category.html">anlz_category()</a></code> averages a category’s indicators into one score per bay segment/year, and <code><a href="../reference/anlz_score.html">anlz_score()</a></code> averages the four category scores into one overall score.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">wqoverall</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/anlz_category.html">anlz_category</a></span><span class="op">(</span></span>
+<span>  wq_attain    <span class="op">=</span> <span class="va">wqattain</span>,</span>
+<span>  thresh       <span class="op">=</span> <span class="va">wqthresh</span>,</span>
+<span>  load         <span class="op">=</span> <span class="va">wqload</span>,</span>
+<span>  tidal_creeks <span class="op">=</span> <span class="va">wqtidalcreeks</span>,</span>
+<span>  fib          <span class="op">=</span> <span class="va">wqfib</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">sedoverall</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/anlz_category.html">anlz_category</a></span><span class="op">(</span>sed_peltel <span class="op">=</span> <span class="va">peltel</span>, sed_tbbi <span class="op">=</span> <span class="va">tbbi</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">fwoverall</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/anlz_category.html">anlz_category</a></span><span class="op">(</span></span>
+<span>  tbni                <span class="op">=</span> <span class="va">tbni</span>,</span>
+<span>  nonnative_abundance <span class="op">=</span> <span class="va">nonnative_abundance</span>,</span>
+<span>  nonnative_richness  <span class="op">=</span> <span class="va">nonnative_richness</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">haboverall</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/anlz_category.html">anlz_category</a></span><span class="op">(</span></span>
+<span>  seagrass_transect <span class="op">=</span> <span class="va">trnsct</span>,</span>
+<span>  seagrass_coverage <span class="op">=</span> <span class="va">cov</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">score</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/anlz_score.html">anlz_score</a></span><span class="op">(</span><span class="va">wqoverall</span>, <span class="va">sedoverall</span>, <span class="va">fwoverall</span>, <span class="va">haboverall</span><span class="op">)</span></span></code></pre></div>
+</div>
+</section><section class="level2"><h2 id="visualize">Visualize<a class="anchor" aria-label="anchor" href="#visualize"></a>
+</h2>
+<p><code><a href="../reference/plot_score.html">plot_score()</a></code> plots the full results for one bay segment and year.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_score.html">plot_score</a></span><span class="op">(</span><span class="va">wqoverall</span>, <span class="va">sedoverall</span>, <span class="va">fwoverall</span>, <span class="va">haboverall</span>, bay_segment <span class="op">=</span> <span class="st">'OTB'</span>, yr <span class="op">=</span> <span class="fl">2024</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-f3d72ddb3d25aa8e57ab" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-f3d72ddb3d25aa8e57ab">{"x":{"visdat":{"210549c39cc1":["function () ","plotlyVisDat"]},"cur_data":"210549c39cc1","attrs":{"210549c39cc1":{"ids":["overall","wq","wq_wq_attain","wq_chla_thresh","wq_la_thresh","wq_tn_load","wq_tnhy_load","wq_tidal_creeks","wq_fib","sed","sed_sed_peltel","sed_sed_tbbi","fw","fw_tbni","fw_nonnative_abundance","fw_nonnative_richness","hab","hab_seagrass_transect","hab_seagrass_coverage"],"labels":["Overall","Water Quality","Targets","Chla Thresh","Light Thresh","Abs Load","Norm Load","Tidal Creeks","Fecal","Sediment","Contaminants","Benthic Index","Fish and Wildlife","Nekton Index","Nonnative Abundance","Nonnative Richness","Habitat","Seagrass Transect","Seagrass Coverage"],"parents":["","overall","wq","wq","wq","wq","wq","wq","wq","overall","sed","sed","overall","fw","fw","fw","overall","hab","hab"],"values":[4,1,0.14285714285714285,0.14285714285714285,0.14285714285714285,0.14285714285714285,0.14285714285714285,0.14285714285714285,0.14285714285714285,1,0.5,0.5,1,0.33333333333333331,0.33333333333333331,0.33333333333333331,1,0.5,0.5],"branchvalues":"total","marker":{"colors":["#CEC620","#BCC725","#2DC938","#C2C723","#64C934","#CC3231","#A5C82A","#3CC937","#E4A126","#83C92F","#ABC828","#4DC936","#D3C51F","#C1C723","#98C92C","#E19429","#E19529","#C2C723","#CC3331"],"line":{"color":"white","width":1}},"text":["Overall: 60%","Water Quality: 66%","Targets: 100%","Chla Thresh: 64%","Light Thresh: 91%","Abs Load: 0%","Norm Load: 74%","Tidal Creeks: 98%","Fecal: 37%","Sediment: 84%","Contaminants: 72%","Benthic Index: 96%","Fish and Wildlife: 58%","Nekton Index: 64%","Nonnative Abundance: 78%","Nonnative Richness: 32%","Habitat: 32%","Seagrass Transect: 64%","Seagrass Coverage: 0%"],"hoverinfo":"text","textinfo":"text","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"sunburst"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":{"text":"OTB: 2024","x":0.5},"paper_bgcolor":"#fcfcfb","hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"ids":["overall","wq","wq_wq_attain","wq_chla_thresh","wq_la_thresh","wq_tn_load","wq_tnhy_load","wq_tidal_creeks","wq_fib","sed","sed_sed_peltel","sed_sed_tbbi","fw","fw_tbni","fw_nonnative_abundance","fw_nonnative_richness","hab","hab_seagrass_transect","hab_seagrass_coverage"],"labels":["Overall","Water Quality","Targets","Chla Thresh","Light Thresh","Abs Load","Norm Load","Tidal Creeks","Fecal","Sediment","Contaminants","Benthic Index","Fish and Wildlife","Nekton Index","Nonnative Abundance","Nonnative Richness","Habitat","Seagrass Transect","Seagrass Coverage"],"parents":["","overall","wq","wq","wq","wq","wq","wq","wq","overall","sed","sed","overall","fw","fw","fw","overall","hab","hab"],"values":[4,1,0.14285714285714285,0.14285714285714285,0.14285714285714285,0.14285714285714285,0.14285714285714285,0.14285714285714285,0.14285714285714285,1,0.5,0.5,1,0.33333333333333331,0.33333333333333331,0.33333333333333331,1,0.5,0.5],"branchvalues":"total","marker":{"color":"rgba(31,119,180,1)","colors":["#CEC620","#BCC725","#2DC938","#C2C723","#64C934","#CC3231","#A5C82A","#3CC937","#E4A126","#83C92F","#ABC828","#4DC936","#D3C51F","#C1C723","#98C92C","#E19429","#E19529","#C2C723","#CC3331"],"line":{"color":"white","width":1}},"text":["Overall: 60%","Water Quality: 66%","Targets: 100%","Chla Thresh: 64%","Light Thresh: 91%","Abs Load: 0%","Norm Load: 74%","Tidal Creeks: 98%","Fecal: 37%","Sediment: 84%","Contaminants: 72%","Benthic Index: 96%","Fish and Wildlife: 58%","Nekton Index: 64%","Nonnative Abundance: 78%","Nonnative Richness: 32%","Habitat: 32%","Seagrass Transect: 64%","Seagrass Coverage: 0%"],"hoverinfo":["text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text"],"textinfo":"text","type":"sunburst","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p><code><a href="../reference/plot_trend.html">plot_trend()</a></code> plots the same hierarchy across every year for one bay segment.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_trend.html">plot_trend</a></span><span class="op">(</span><span class="va">wqoverall</span>, <span class="va">sedoverall</span>, <span class="va">fwoverall</span>, <span class="va">haboverall</span>, bay_segment <span class="op">=</span> <span class="st">'OTB'</span>, yr_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2000</span>, <span class="fl">2024</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure><p><img src="tbepreport_files/figure-html/unnamed-chunk-4-1.png" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section><script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
@@ -156,7 +233,8 @@
       }
     }
   });
-  </script></main>
+  </script></main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 

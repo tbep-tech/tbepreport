@@ -1,7 +1,96 @@
 # Getting Started
 
-This article is a placeholder for the `tbepreport` package walkthrough -
-a shortened version of the working prototype in the [Report Card
+`tbepreport` builds the Tampa Bay Estuary Program’s annual bay segment
+report card. Individual indicators are assigned a 0-1 outcome,
+indicators are averaged into a score for each of four categories (Water
+Quality, Sediment, Fish and Wildlife, Habitat), and the four category
+scores are averaged into one overall score per bay segment and year.
+This article shows a minimal workflow for creating the report card. See
+the [Report Card
 Scoring](https://tbep-tech.github.io/tbepreport/articles/scoring.md)
-article. It will be filled in as the indicator functions listed in the
-package’s development plan are ported.
+article for how each indicator is calculated and scored.
+
+## Compute Indicators
+
+Every `anlz_*` indicator function takes raw monitoring data (mostly from
+[tbeptools](https://tbep-tech.github.io/tbeptools/)) and returns a 0-1
+outcome by bay segment and year.
+
+``` r
+
+# water quality
+wqattain <- anlz_wq_attain(epcdata)
+wqthresh <- anlz_wq_thresh(epcdata)
+totanndat <- util_rdataload("https://github.com/tbep-tech/load-estimates/raw/main/data/totanndat.RData")
+wqload <- anlz_wq_load(totanndat)
+wqtidalcreeks <- anlz_wq_tidalcreeks(tidalcreeks, iwrraw, yrs = 1990:2024)
+wqfib <- anlz_wq_fib(enterodata)
+
+# sediment
+peltel <- anlz_sed_peltel(sedimentdata, yrs = 1993:2024)
+tbbi <- anlz_sed_tbbi(benthicdata)
+
+# fish and wildlife
+tbni <- anlz_fw_tbni(fimdata)
+nonnative_obs <- anlz_fw_nonnative_obs()
+nonnative_abundance <- anlz_fw_nonnative_abundance(nonnative_obs)
+nonnative_richness <- anlz_fw_nonnative_richness(nonnative_obs)
+
+# habitat
+trnsct <- anlz_hab_seagrass_transect(transect)
+cov <- anlz_hab_seagrass_coverage(sgsegest)
+```
+
+## Combine Scores
+
+[`anlz_category()`](https://tbep-tech.github.io/tbepreport/reference/anlz_category.md)
+averages a category’s indicators into one score per bay segment/year,
+and
+[`anlz_score()`](https://tbep-tech.github.io/tbepreport/reference/anlz_score.md)
+averages the four category scores into one overall score.
+
+``` r
+
+wqoverall <- anlz_category(
+  wq_attain    = wqattain,
+  thresh       = wqthresh,
+  load         = wqload,
+  tidal_creeks = wqtidalcreeks,
+  fib          = wqfib
+)
+
+sedoverall <- anlz_category(sed_peltel = peltel, sed_tbbi = tbbi)
+
+fwoverall <- anlz_category(
+  tbni                = tbni,
+  nonnative_abundance = nonnative_abundance,
+  nonnative_richness  = nonnative_richness
+)
+
+haboverall <- anlz_category(
+  seagrass_transect = trnsct,
+  seagrass_coverage = cov
+)
+
+score <- anlz_score(wqoverall, sedoverall, fwoverall, haboverall)
+```
+
+## Visualize
+
+[`plot_score()`](https://tbep-tech.github.io/tbepreport/reference/plot_score.md)
+plots the full results for one bay segment and year.
+
+``` r
+
+plot_score(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB', yr = 2024)
+```
+
+[`plot_trend()`](https://tbep-tech.github.io/tbepreport/reference/plot_trend.md)
+plots the same hierarchy across every year for one bay segment.
+
+``` r
+
+plot_trend(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB', yr_range = c(2000, 2024))
+```
+
+![](tbepreport_files/figure-html/unnamed-chunk-4-1.png)

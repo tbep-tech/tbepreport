@@ -71,7 +71,7 @@ Supporting datasets used by the other functions.
 Utility functions used by other functions or standalone.
 
 - [`util_fw_fetch_fim()`](https://tbep-tech.github.io/tbepreport/reference/util_fw_fetch_fim.md)
-  : Fetch the Tampa Bay FIM non-native species dataset
+  : Fetch the Tampa Bay FIM species dataset
 - [`util_fw_fetch_nas()`](https://tbep-tech.github.io/tbepreport/reference/util_fw_fetch_nas.md)
   : Fetch USGS NAS non-native species occurrences for a set of HUC8
   watersheds

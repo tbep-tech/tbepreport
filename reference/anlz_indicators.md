@@ -16,8 +16,8 @@ anlz_indicators(..., bay_segments = c("OTB", "HB", "MTB", "LTB"))
   columns. A data.frame may already have its own `indicator` column if
   it bundles more than one indicator (e.g.
   [`anlz_wq_load`](https://tbep-tech.github.io/tbepreport/reference/anlz_wq_load.md)'s
-  output already has `indicator` = `"tn_load"`/`"tnhy_load"`) -
-  otherwise every row is labeled with that argument's name.
+  output already has `indicator` = `"tn_load"`/`"tnhy_load"`). Otherwise
+  every row is labeled with that argument's name.
 
 - bay_segments:
 
@@ -34,19 +34,18 @@ A data.frame with columns `bay_segment`, `yr`, `indicator`, and
 Stacks
 ([`bind_rows`](https://dplyr.tidyverse.org/reference/bind_rows.html))
 rather than joins the inputs, since bay segment/year coverage differs by
-indicator - a segment/ year missing from one indicator's source data
+indicator. A segment/ year missing from one indicator's source data
 simply has no row for it, rather than an `NA`-filled one. Rows outside
 `bay_segments` or with an `NA` outcome are dropped.
 
 This same stacking step is used at every level of the indicator
-hierarchy: once per category to build a category's indicator table from
+hierarchy, once per category to build a category's indicator table from
 its raw `anlz_*` indicator outputs, and again inside
 [`anlz_score`](https://tbep-tech.github.io/tbepreport/reference/anlz_score.md)
 (via
 [`anlz_category`](https://tbep-tech.github.io/tbepreport/reference/anlz_category.md))
 to stack the four category scores into one table before the final
-average - a category score is, from this function's point of view, just
-another single-indicator input.
+average. A category score is just another single-indicator input.
 
 ## Examples
 

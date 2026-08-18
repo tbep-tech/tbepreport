@@ -56,7 +56,7 @@
 
 
 <dt id="arg-smooth">smooth<a class="anchor" aria-label="anchor" href="#arg-smooth"></a></dt>
-<dd><p>logical, passed to <code><a href="util_outcome.html">util_outcome</a></code> - if
+<dd><p>logical, passed to <code><a href="util_outcome.html">util_outcome</a></code>. If
 <code>TRUE</code> (the default), use a smooth logistic transition centered at
 each bay-segment's threshold instead of a hard 0/1 cutoff.</p></dd>
 
@@ -71,20 +71,18 @@ of each threshold used for the logistic transition's steepness when
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A data.frame with columns <code>bay_segment</code>, <code>yr</code>,
 <code>indicator</code> (<code>"chla_thresh"</code> or <code>"la_thresh"</code>), and
-<code>outcome</code> (0-1, 1 = best; exactly 0 or 1 only if <code>smooth =
-FALSE</code>) - ready to stack into <code><a href="anlz_indicators.html">anlz_indicators</a></code></p>
+<code>outcome</code> (0-1, 1 = best)</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>Compares annual mean chlorophyll and light attenuation values
-against the bay-segment-specific thresholds in <code><a href="https://rdrr.io/pkg/tbeptools/man/targets.html" class="external-link">targets</a></code>,
-using <code><a href="util_outcome.html">util_outcome</a></code> with <code>type = "threshold"</code> - by
-default (<code>smooth = TRUE</code>) a value below its threshold approaches an
+against the bay-segment-specific thresholds in <a href="https://tbep-tech.github.io/tbeptools/reference/targets.html" class="external-link"><code>targets</code></a>,
+using <code><a href="util_outcome.html">util_outcome</a></code> with <code>type = "threshold"</code>. By
+default (<code>smooth = TRUE</code>), a value below its threshold approaches an
 outcome of 1 and at or above approaches 0, with a smooth logistic
-transition between them; <code>smooth = FALSE</code> instead gives a hard 0/1
-cutoff. Only <code>mean_chla</code> and <code>mean_la</code> are scored
+transition between them. Only <code>mean_chla</code> and <code>mean_la</code> are scored
 (<code><a href="https://rdrr.io/pkg/tbeptools/man/targets.html" class="external-link">tbeptools::targets</a></code> has no threshold for the third variable
-<code><a href="https://rdrr.io/pkg/tbeptools/man/anlz_avedat.html" class="external-link">anlz_avedat</a></code> returns, <code>mean_sdm</code>).</p>
+<a href="https://tbep-tech.github.io/tbeptools/reference/anlz_avedat.html" class="external-link"><code>anlz_avedat</code></a> returns, <code>mean_sdm</code>).</p>
     </div>
 
     <div class="section level2">

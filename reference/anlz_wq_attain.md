@@ -22,10 +22,11 @@ chlorophyll/light attenuation sub-score), and `outcome` (0-1, 1 = best)
 
 ## Details
 
-Combines chlorophyll and light attenuation attainment (from
-[`anlz_attain`](https://rdrr.io/pkg/tbeptools/man/anlz_attain.html))
-into a single continuous outcome: the two sub-scores are summed, then
-converted with
+Combines chlorophyll and light attenuation attainment of management
+targets (from
+[`anlz_attain`](https://tbep-tech.github.io/tbeptools/reference/anlz_attain.html))
+into a single continuous outcome. The two sub-scores are summed (each
+0-3 assessing magnitude and duration of exceedance), then converted with
 [`util_outcome`](https://tbep-tech.github.io/tbepreport/reference/util_outcome.md)
 (`type = "continuous"`, `reverse = TRUE`) so a lower combined sub-score
 (better attainment) gives a higher outcome.

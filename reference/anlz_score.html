@@ -69,15 +69,15 @@
 <dt id="arg-wt">wt<a class="anchor" aria-label="anchor" href="#arg-wt"></a></dt>
 <dd><p>named numeric vector of category weights, e.g.
 <code>c(wq = 2, sed = 1, fw = 1, hab = 1)</code>. Categories not named in
-<code>wt</code> - including all of them when <code>wt = NULL</code> - get a weight
+<code>wt</code> (including all of them when <code>wt = NULL</code>) get a weight
 of <code>1</code>, so the default is a plain unweighted mean across the four
-categories, passed straight through to <code><a href="anlz_category.html">anlz_category</a></code>.</p></dd>
+categories, passed to <code><a href="anlz_category.html">anlz_category</a></code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A data.frame with columns <code>bay_segment</code>, <code>yr</code>,
-<code>outcome</code> (0-1, 1 = best - the overall Bay Segment Score),
+<code>outcome</code> (0-1, 1 = best, the overall Bay Segment Score),
 <code>n_indicator</code> (number of categories with a score for that
 segment/year), and one additional column per category (<code>wq</code>,
 <code>sed</code>, <code>fw</code>, <code>hab</code>) holding that category's own score,
@@ -86,11 +86,11 @@ segment/year), and one additional column per category (<code>wq</code>,
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>A thin, semantically-named wrapper around
-<code><a href="anlz_category.html">anlz_category</a></code>: from that function's point of view, a
-category score is just another single-indicator input, so combining the
-four category scores into one bay segment score uses exactly the same
-stacking (<code><a href="anlz_indicators.html">anlz_indicators</a></code>) and weighted-averaging logic
-that combines individual indicators into a category score.</p>
+<code><a href="anlz_category.html">anlz_category</a></code>. A category score is just another
+single-indicator input, so combining the four category scores into one
+bay segment score uses exactly the same stacking (<code><a href="anlz_indicators.html">anlz_indicators</a></code>)
+and weighted-averaging logic that combines individual indicators into a
+category score.</p>
     </div>
 
     <div class="section level2">

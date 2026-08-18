@@ -56,14 +56,12 @@
 
 
 <dl><dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>named data.frames, passed to <code><a href="anlz_indicators.html">anlz_indicators</a></code> -
-see its documentation for the expected shape</p></dd>
+<dd><p>named data.frames, passed to <code><a href="anlz_indicators.html">anlz_indicators</a></code></p></dd>
 
 
 <dt id="arg-bay-segments">bay_segments<a class="anchor" aria-label="anchor" href="#arg-bay-segments"></a></dt>
 <dd><p>chr vector of bay segments to include, defaults to
-<code>c('OTB', 'HB', 'MTB', 'LTB')</code>, the four segments with the most
-complete indicator coverage</p></dd>
+<code>c('OTB', 'HB', 'MTB', 'LTB')</code></p></dd>
 
 
 <dt id="arg-yr-min">yr_min<a class="anchor" aria-label="anchor" href="#arg-yr-min"></a></dt>
@@ -75,8 +73,8 @@ complete indicator coverage</p></dd>
 values produced by <code><a href="anlz_indicators.html">anlz_indicators</a></code> (e.g.
 <code>c(chla_thresh = 2, fib = 1)</code> to weight an indicator, or
 <code>c(wq = 2, sed = 1)</code> when combining category scores via
-<code><a href="anlz_score.html">anlz_score</a></code>). Indicators not named in <code>wt</code> - including
-all of them when <code>wt = NULL</code> - get a weight of <code>1</code>, so the
+<code><a href="anlz_score.html">anlz_score</a></code>). Indicators not named in <code>wt</code> (including
+all of them when <code>wt = NULL</code>) get a weight of <code>1</code>, so the
 default is a plain unweighted mean.</p></dd>
 
 </dl></div>
@@ -93,11 +91,11 @@ segment/year has no data for it</p>
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>Stacks <code>...</code> with <code><a href="anlz_indicators.html">anlz_indicators</a></code>, then
 averages <code>outcome</code> across whatever indicators have data for a given
-bay segment/year - see <code>n_indicator</code> in the output for how many
+bay segment/year.  See <code>n_indicator</code> in the output for how many
 contributed. This same averaging step produces a category score when
 <code>...</code> are raw indicator outputs, and the final bay segment score
 when <code>...</code> are the four category scores (see
-<code><a href="anlz_score.html">anlz_score</a></code>) - the two are mechanically identical.</p>
+<code><a href="anlz_score.html">anlz_score</a></code>).</p>
     </div>
 
     <div class="section level2">

@@ -18,14 +18,12 @@ anlz_category(
 - ...:
 
   named data.frames, passed to
-  [`anlz_indicators`](https://tbep-tech.github.io/tbepreport/reference/anlz_indicators.md) -
-  see its documentation for the expected shape
+  [`anlz_indicators`](https://tbep-tech.github.io/tbepreport/reference/anlz_indicators.md)
 
 - bay_segments:
 
   chr vector of bay segments to include, defaults to
-  `c('OTB', 'HB', 'MTB', 'LTB')`, the four segments with the most
-  complete indicator coverage
+  `c('OTB', 'HB', 'MTB', 'LTB')`
 
 - yr_min:
 
@@ -39,9 +37,8 @@ anlz_category(
   (e.g. `c(chla_thresh = 2, fib = 1)` to weight an indicator, or
   `c(wq = 2, sed = 1)` when combining category scores via
   [`anlz_score`](https://tbep-tech.github.io/tbepreport/reference/anlz_score.md)).
-  Indicators not named in `wt` - including all of them when
-  `wt = NULL` - get a weight of `1`, so the default is a plain
-  unweighted mean.
+  Indicators not named in `wt` (including all of them when `wt = NULL`)
+  get a weight of `1`, so the default is a plain unweighted mean.
 
 ## Value
 
@@ -58,12 +55,11 @@ segment/year has no data for it
 Stacks `...` with
 [`anlz_indicators`](https://tbep-tech.github.io/tbepreport/reference/anlz_indicators.md),
 then averages `outcome` across whatever indicators have data for a given
-bay segment/year - see `n_indicator` in the output for how many
+bay segment/year. See `n_indicator` in the output for how many
 contributed. This same averaging step produces a category score when
 `...` are raw indicator outputs, and the final bay segment score when
 `...` are the four category scores (see
-[`anlz_score`](https://tbep-tech.github.io/tbepreport/reference/anlz_score.md)) -
-the two are mechanically identical.
+[`anlz_score`](https://tbep-tech.github.io/tbepreport/reference/anlz_score.md)).
 
 ## Examples
 

@@ -24,9 +24,9 @@ occurrence estimate, 0-100), and `outcome` (0-1, 1 = best)
 ## Details
 
 Uses
-[`anlz_transectocc`](https://rdrr.io/pkg/tbeptools/man/anlz_transectocc.html)
+[`anlz_transectocc`](https://tbep-tech.github.io/tbeptools/reference/anlz_transectocc.html)
 and
-[`anlz_transectave`](https://rdrr.io/pkg/tbeptools/man/anlz_transectave.html)
+[`anlz_transectave`](https://tbep-tech.github.io/tbeptools/reference/anlz_transectave.html)
 to estimate frequency of seagrass occurrence (`foest`, 0-100) at each
 bay segment/year, drops the bay-wide `"All"` aggregate row, then
 converts to a 0-1 outcome with

@@ -63,27 +63,28 @@
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Uses <code><a href="https://rdrr.io/pkg/tbeptools/man/anlz_tbbiscr.html" class="external-link">anlz_tbbiscr</a></code> to get station-level
+    <p>Uses <a href="https://tbep-tech.github.io/tbeptools/reference/anlz_tbbiscr.html" class="external-link"><code>anlz_tbbiscr</code></a> to get station-level
 TBBI scores (0-100), filtered to the same stations
-<code><a href="https://rdrr.io/pkg/tbeptools/man/anlz_tbbimed.html" class="external-link">anlz_tbbimed</a></code> uses for its bay segment grades
+<a href="https://tbep-tech.github.io/tbeptools/reference/anlz_tbbimed.html" class="external-link"><code>anlz_tbbimed</code></a> uses for its bay segment grades
 (<code>FundingProject == "TBEP"</code>, <code>ProgramID == 4</code>, and
 <code>TBBI</code> between 0 and 100, for the 7 bay segments
-<code><a href="https://rdrr.io/pkg/tbeptools/man/anlz_tbbimed.html" class="external-link">anlz_tbbimed</a></code> scores), then takes the median
+<a href="https://tbep-tech.github.io/tbeptools/reference/anlz_tbbimed.html" class="external-link"><code>anlz_tbbimed</code></a> scores), then takes the median
 station score for each bay segment/year. <code>outcome</code> comes directly
 from that continuous median via <code><a href="util_outcome.html">util_outcome</a></code> (<code>type =
 "continuous"</code>, <code>from = c(73, 87)</code>), TBBI's own grade breakpoints
-(Degraded below 73, Intermediate 73-87, Healthy above 87) - the same
-clamped-breakpoint-window treatment used for the Nekton Index's
+(Degraded below 73, Intermediate 73-87, Healthy above 87). This is the
+same clamped-breakpoint-window treatment used for the Nekton Index's
 <code>from = c(32, 46)</code>.</p>
-<p>This bypasses <code><a href="https://rdrr.io/pkg/tbeptools/man/anlz_tbbimed.html" class="external-link">anlz_tbbimed</a></code> entirely, which
+<p>This bypasses <a href="https://tbep-tech.github.io/tbeptools/reference/anlz_tbbimed.html" class="external-link"><code>anlz_tbbimed</code></a> entirely, which
 instead grades a bay segment/year Poor/Fair/Good from the
 <em>proportion</em> of its stations falling in each of the
-Degraded/Intermediate/Healthy categories - a compound rule on those
-proportions, not a discretized version of a single continuous statistic,
-so there's no direct continuous equivalent of it the way there is for
-TBNI's or PEL/TEL's breakpoints. Scoring the median of the raw station
-values instead is a related but distinct measure - it can disagree with
-<code><a href="https://rdrr.io/pkg/tbeptools/man/anlz_tbbimed.html" class="external-link">anlz_tbbimed</a></code>'s category in some edge cases (e.g.
+Degraded/Intermediate/Healthy categories. This is a compound rule on
+those proportions, not a discretized version of a single continuous
+statistic, so there's no direct continuous equivalent of it the way
+there is for TBNI's or PEL/TEL's breakpoints. Scoring the median of the
+raw station values instead is a related but distinct measure. It can
+disagree with <a href="https://tbep-tech.github.io/tbeptools/reference/anlz_tbbimed.html" class="external-link"><code>anlz_tbbimed</code></a>'s category in some
+edge cases (e.g.
 a bay segment split between many Healthy and a few very Degraded
 stations can have a middling median while still tripping the proportion
 rule's <code>Degraded &gt;= 0.2</code> condition for <code>"Poor"</code>).</p>

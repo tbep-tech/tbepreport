@@ -23,10 +23,10 @@ best)
 ## Details
 
 Uses
-[`anlz_fibmatrix`](https://rdrr.io/pkg/tbeptools/man/anlz_fibmatrix.html)
-to get, for each bay segment/year, `exceed_rate` - a continuous,
+[`anlz_fibmatrix`](https://tbep-tech.github.io/tbeptools/reference/anlz_fibmatrix.html)
+to get, for each bay segment/year, `exceed_rate`, a continuous,
 one-sided 90\\ confidence estimate of the true exceedance rate (0-1,
-lower is better) - and converts it to a 0-1 outcome with
+lower is better), and converts it to a 0-1 outcome with
 [`util_outcome`](https://tbep-tech.github.io/tbepreport/reference/util_outcome.md)
 (`type = "continuous"`, `from = c(0, 1)`, `reverse = TRUE`), i.e.
 `outcome = 1 - exceed_rate`. This is a continuous analog of the A-E
@@ -34,7 +34,7 @@ letter grade
 [`anlz_fibmatrix()`](https://rdrr.io/pkg/tbeptools/man/anlz_fibmatrix.html)
 also returns (`cat`), which is itself a discretized version of
 `exceed_rate`. See
-[`anlz_fibmatrix`](https://rdrr.io/pkg/tbeptools/man/anlz_fibmatrix.html)
+[`anlz_fibmatrix`](https://tbep-tech.github.io/tbeptools/reference/anlz_fibmatrix.html)
 for details.
 
 ## Examples

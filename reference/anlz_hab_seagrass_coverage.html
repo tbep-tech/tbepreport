@@ -67,13 +67,12 @@ defaults to the last year <code>sgsegest</code> actually has an estimate for
 
 
 <dt id="arg-smooth">smooth<a class="anchor" aria-label="anchor" href="#arg-smooth"></a></dt>
-<dd><p>passed to <code><a href="util_outcome.html">util_outcome</a></code> - one of
+<dd><p>passed to <code><a href="util_outcome.html">util_outcome</a></code>. One of
 <code>"ramp"</code> (the default), <code>"logistic"</code>, or <code>"none"</code>
 (logical <code>TRUE</code>/<code>FALSE</code> also accepted, mapped to
 <code>"logistic"</code>/<code>"none"</code>). <code>"ramp"</code> gives an outcome of 1
 for any acreage at or above a segment's target, decaying toward 0 the
-further short of it a segment falls - unlike <code>"logistic"</code>, which
-gives only 0.5 exactly at the target.</p></dd>
+further short of it a segment falls.</p></dd>
 
 
 <dt id="arg-pct">pct<a class="anchor" aria-label="anchor" href="#arg-pct"></a></dt>
@@ -88,26 +87,25 @@ of each acreage target used for the transition's steepness when
     <p>A data.frame with columns <code>bay_segment</code> (abbreviated, e.g.
 <code>"OTB"</code>), <code>yr</code>, <code>acres</code> (carried forward in non-survey
 years), and <code>outcome</code> (0-1, 1 = best, also carried forward in
-non-survey years; exactly 0 or 1 only if <code>smooth = "none"</code>)</p>
+non-survey years)</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Seagrass coverage maps are not produced every year - they're
+    <p>Seagrass coverage maps are not produced every year. They're
 flown approximately biennially (<code><a href="sgsegest.html">sgsegest</a></code> has estimates for
-most even years from 1988 to 2024, plus 1999, not every calendar year in
-between). To get a value for every calendar year, this fills the gaps by
+most even years). To get a value for every calendar year, this fills the gaps by
 carrying the most recent actual estimate (and the outcome derived from
 it) <strong>forward</strong> via <code><a href="https://tidyr.tidyverse.org/reference/complete.html" class="external-link">complete</a></code> +
-<code><a href="https://tidyr.tidyverse.org/reference/fill.html" class="external-link">fill</a></code> - e.g. a year with no survey repeats the prior
-survey year's acreage and outcome unchanged, until the next actual survey
-year updates it. This means <code>acres</code>/<code>outcome</code> in a non-survey
-year are not a new estimate, just a repeat of the last known one.</p>
+<code><a href="https://tidyr.tidyverse.org/reference/fill.html" class="external-link">fill</a></code>. For example, a year with no survey repeats the
+prior survey year's acreage and outcome unchanged, until the next actual
+survey year updates it. This means <code>acres</code>/<code>outcome</code> in a
+non-survey year are not a new estimate, just a repeat of the last known
+one.</p>
 <p>Coverage is compared against a fixed per-segment acreage target with
-<code><a href="util_outcome.html">util_outcome</a></code> (<code>type = "threshold"</code>, <code>op = "&gt;="</code>)</p><ul><li><p>by default (<code>smooth = "ramp"</code>) meeting or exceeding the target
+<code><a href="util_outcome.html">util_outcome</a></code> (<code>type = "threshold"</code>, <code>op = "&gt;="</code>).
+By default (<code>smooth = "ramp"</code>), meeting or exceeding the target
 gives an outcome of 1, decaying toward 0 the further short of it a
-segment falls; <code>smooth = "logistic"</code> instead centers a smooth
-transition on the target (only 0.5 exactly at it), and <code>smooth =
-"none"</code> gives a hard 0/1 cutoff. Targets (acres):</p><dl><dt>Old Tampa Bay</dt>
+segment falls. Targets (acres):</p><dl><dt>Old Tampa Bay</dt>
 <dd><p>11,100</p></dd>
 
 <dt>Hillsborough Bay</dt>
@@ -129,10 +127,10 @@ transition on the target (only 0.5 exactly at it), and <code>smooth =
 <dd><p>449</p></dd>
 
 
-</dl><p>These are not independently set per segment - they're the baywide
-40,000-acre seagrass coverage target apportioned across segments in
-proportion to each segment's share of total bay area.</p></li>
-</ul></div>
+</dl><p>These targets are derived from the baywide
+40,000-acre seagrass coverage target apportioned to each segment's
+share of total bay area.</p>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>

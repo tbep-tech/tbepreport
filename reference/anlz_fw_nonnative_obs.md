@@ -35,8 +35,8 @@ anlz_fw_nonnative_obs(
 
 A data.frame with columns `scientificName`, `commonName`, `group`,
 `year`, `lon`, `lat`, `source`, and `bay_segment` (full segment name,
-e.g. `"Old Tampa Bay"`) - one row per occurrence point that fell within
-the AOI and a bay segment
+e.g. `"Old Tampa Bay"`). Each row is one occurrence point that fell
+within the AOI and a bay segment
 
 ## Details
 

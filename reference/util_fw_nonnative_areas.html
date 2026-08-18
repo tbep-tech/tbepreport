@@ -56,11 +56,10 @@ area in square miles)</p>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>Recomputes area from geometry (reprojected to EPSG:3086) rather
-than trusting <code><a href="bayseg_shp.html">bayseg_shp</a></code>'s static <code>area_ac</code> attribute,
+than using <code><a href="bayseg_shp.html">bayseg_shp</a></code>'s static <code>area_ac</code> attribute,
 matching the <code>tbep-invasives</code> Python pipeline's own area calculation
-method (the two agree closely where checked). <code><a href="bayseg_shp.html">bayseg_shp</a></code>'s
-7 raw segments are dissolved into 5 groups by <code>BAY_SEG_GP</code> before
-computing area (i.e., BCB, TCB, MR to RALTB).</p>
+method. <code><a href="bayseg_shp.html">bayseg_shp</a></code>'s 7 raw segments are dissolved into 5
+groups by <code>BAY_SEG_GP</code> before computing area (i.e., BCB, TCB, MR to RALTB).</p>
     </div>
 
     <div class="section level2">

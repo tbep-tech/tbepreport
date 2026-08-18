@@ -19,8 +19,8 @@ anlz_wq_thresh(epcdata, smooth = TRUE, pct = 0.1)
 - smooth:
 
   logical, passed to
-  [`util_outcome`](https://tbep-tech.github.io/tbepreport/reference/util_outcome.md) -
-  if `TRUE` (the default), use a smooth logistic transition centered at
+  [`util_outcome`](https://tbep-tech.github.io/tbepreport/reference/util_outcome.md).
+  If `TRUE` (the default), use a smooth logistic transition centered at
   each bay-segment's threshold instead of a hard 0/1 cutoff.
 
 - pct:
@@ -34,23 +34,22 @@ anlz_wq_thresh(epcdata, smooth = TRUE, pct = 0.1)
 ## Value
 
 A data.frame with columns `bay_segment`, `yr`, `indicator`
-(`"chla_thresh"` or `"la_thresh"`), and `outcome` (0-1, 1 = best;
-exactly 0 or 1 only if `smooth = FALSE`) - ready to stack into
-[`anlz_indicators`](https://tbep-tech.github.io/tbepreport/reference/anlz_indicators.md)
+(`"chla_thresh"` or `"la_thresh"`), and `outcome` (0-1, 1 = best)
 
 ## Details
 
 Compares annual mean chlorophyll and light attenuation values against
 the bay-segment-specific thresholds in
-[`targets`](https://rdrr.io/pkg/tbeptools/man/targets.html), using
+[`targets`](https://tbep-tech.github.io/tbeptools/reference/targets.html),
+using
 [`util_outcome`](https://tbep-tech.github.io/tbepreport/reference/util_outcome.md)
-with `type = "threshold"` - by default (`smooth = TRUE`) a value below
+with `type = "threshold"`. By default (`smooth = TRUE`), a value below
 its threshold approaches an outcome of 1 and at or above approaches 0,
-with a smooth logistic transition between them; `smooth = FALSE` instead
-gives a hard 0/1 cutoff. Only `mean_chla` and `mean_la` are scored
+with a smooth logistic transition between them. Only `mean_chla` and
+`mean_la` are scored
 ([`tbeptools::targets`](https://rdrr.io/pkg/tbeptools/man/targets.html)
 has no threshold for the third variable
-[`anlz_avedat`](https://rdrr.io/pkg/tbeptools/man/anlz_avedat.html)
+[`anlz_avedat`](https://tbep-tech.github.io/tbeptools/reference/anlz_avedat.html)
 returns, `mean_sdm`).
 
 ## Examples

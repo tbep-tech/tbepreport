@@ -55,7 +55,7 @@
 <code>outcome</code> columns. A data.frame may already have its own
 <code>indicator</code> column if it bundles more than one indicator (e.g.
 <code><a href="anlz_wq_load.html">anlz_wq_load</a></code>'s output already has <code>indicator</code> =
-<code>"tn_load"</code>/<code>"tnhy_load"</code>) - otherwise every row is labeled
+<code>"tn_load"</code>/<code>"tnhy_load"</code>). Otherwise every row is labeled
 with that argument's name.</p></dd>
 
 
@@ -72,16 +72,16 @@ with that argument's name.</p></dd>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>Stacks (<code><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></code>) rather than joins the
-inputs, since bay segment/year coverage differs by indicator - a segment/
+inputs, since bay segment/year coverage differs by indicator. A segment/
 year missing from one indicator's source data simply has no row for it,
 rather than an <code>NA</code>-filled one. Rows outside <code>bay_segments</code> or
 with an <code>NA</code> outcome are dropped.</p>
-<p>This same stacking step is used at every level of the indicator hierarchy:
+<p>This same stacking step is used at every level of the indicator hierarchy,
 once per category to build a category's indicator table from its raw
 <code>anlz_*</code> indicator outputs, and again inside <code><a href="anlz_score.html">anlz_score</a></code>
 (via <code><a href="anlz_category.html">anlz_category</a></code>) to stack the four category scores into
-one table before the final average - a category score is, from this
-function's point of view, just another single-indicator input.</p>
+one table before the final average. A category score is just another
+single-indicator input.</p>
     </div>
 
     <div class="section level2">
