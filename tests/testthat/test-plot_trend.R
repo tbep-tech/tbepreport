@@ -109,3 +109,95 @@ test_that("plot_trend errors when yr_range excludes all rows", {
   )
 
 })
+
+test_that("plot_trend facets subsets to the requested panels, in order", {
+
+  wqoverall <- anlz_category(
+    wq_attain = data.frame(bay_segment = 'OTB', yr = 2018:2020, outcome = c(0.6, 0.7, 0.8))
+  )
+  sedoverall <- anlz_category(
+    sed_tbbi = data.frame(bay_segment = 'OTB', yr = 2018:2020, outcome = c(0.5, 0.6, 0.6))
+  )
+  fwoverall <- anlz_category(
+    tbni = data.frame(bay_segment = 'OTB', yr = 2018:2020, outcome = c(0.7, 0.65, 0.7))
+  )
+  haboverall <- anlz_category(
+    seagrass = data.frame(bay_segment = 'OTB', yr = 2018:2020, outcome = c(0.4, 0.5, 0.5))
+  )
+
+  result <- plot_trend(
+    wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB', facets = c('Overall', 'wq')
+  )
+
+  expect_equal(levels(result$data$facet), c('Overall', 'Water Quality'))
+  expect_setequal(unique(as.character(result$data$facet)), c('Overall', 'Water Quality'))
+
+})
+
+test_that("plot_trend facets accepts a single non-Overall facet", {
+
+  wqoverall <- anlz_category(
+    wq_attain = data.frame(bay_segment = 'OTB', yr = 2018:2020, outcome = c(0.6, 0.7, 0.8))
+  )
+  sedoverall <- anlz_category(
+    sed_tbbi = data.frame(bay_segment = 'OTB', yr = 2018:2020, outcome = c(0.5, 0.6, 0.6))
+  )
+  fwoverall <- anlz_category(
+    tbni = data.frame(bay_segment = 'OTB', yr = 2018:2020, outcome = c(0.7, 0.65, 0.7))
+  )
+  haboverall <- anlz_category(
+    seagrass = data.frame(bay_segment = 'OTB', yr = 2018:2020, outcome = c(0.4, 0.5, 0.5))
+  )
+
+  result <- plot_trend(
+    wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB', facets = 'hab'
+  )
+
+  expect_equal(levels(result$data$facet), 'Habitat')
+  expect_setequal(result$data$role, c('parent', 'child'))
+
+})
+
+test_that("plot_trend errors on an invalid facets value", {
+
+  wqoverall <- anlz_category(wq_attain = data.frame(bay_segment = 'OTB', yr = 2020, outcome = 0.8))
+  sedoverall <- anlz_category(sed_tbbi = data.frame(bay_segment = 'OTB', yr = 2020, outcome = 0.6))
+  fwoverall <- anlz_category(tbni = data.frame(bay_segment = 'OTB', yr = 2020, outcome = 0.7))
+  haboverall <- anlz_category(seagrass = data.frame(bay_segment = 'OTB', yr = 2020, outcome = 0.5))
+
+  expect_error(
+    plot_trend(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB', facets = 'not_a_facet')
+  )
+
+})
+
+test_that("plot_trend labels defaults to TRUE and draws a repel layer", {
+
+  wqoverall <- anlz_category(
+    wq_attain = data.frame(bay_segment = 'OTB', yr = 2018:2020, outcome = c(0.6, 0.7, 0.8))
+  )
+  sedoverall <- anlz_category(
+    sed_tbbi = data.frame(bay_segment = 'OTB', yr = 2018:2020, outcome = c(0.5, 0.6, 0.6))
+  )
+  fwoverall <- anlz_category(
+    tbni = data.frame(bay_segment = 'OTB', yr = 2018:2020, outcome = c(0.7, 0.65, 0.7))
+  )
+  haboverall <- anlz_category(
+    seagrass = data.frame(bay_segment = 'OTB', yr = 2018:2020, outcome = c(0.4, 0.5, 0.5))
+  )
+
+  is_repel_layer <- function(result) {
+    any(vapply(result$layers, function(l) inherits(l$geom, 'GeomTextRepel'), logical(1)))
+  }
+
+  result_on <- plot_trend(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB')
+  expect_true(is_repel_layer(result_on))
+  expect_equal(as.numeric(result_on$theme$plot.margin)[2], 80)
+
+  result_off <- plot_trend(
+    wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB', labels = FALSE
+  )
+  expect_false(is_repel_layer(result_off))
+  expect_equal(as.numeric(result_off$theme$plot.margin)[2], 5)
+
+})

@@ -11,7 +11,9 @@ plot_trend(
   haboverall,
   bay_segment,
   yr_range = NULL,
-  wt = NULL
+  wt = NULL,
+  facets = c("Overall", "wq", "sed", "fw", "hab"),
+  labels = TRUE
 )
 }
 \arguments{
@@ -32,6 +34,14 @@ available in \code{wqoverall}, \code{sedoverall}, \code{fwoverall}, and
 
 \item{wt}{named numeric vector of category weights, passed to
 \code{\link{anlz_score}}}
+
+\item{facets}{chr vector, one or more of \code{"Overall"}, \code{"wq"},
+\code{"sed"}, \code{"fw"}, \code{"hab"} indicating which facet(s) to
+plot. Defaults to all five.}
+
+\item{labels}{logical, whether to draw direct labels on each line at its
+right-most value. Defaults to \code{TRUE}. When \code{FALSE}, the
+extra right-margin/x-axis space reserved for labels is also removed.}
 }
 \value{
 A \code{ggplot} object
@@ -42,15 +52,16 @@ Faceted trend plot of indicator, category, and overall outcomes over time
 \details{
 Calls \code{\link{anlz_score}} on the four category data.frames
 to get the overall bay segment score and each category's own score across
-all years for \code{bay_segment}, then plots five stacked facets (one
-column, top to bottom): an "Overall" facet with the bay segment score and
-one colored line per category (\code{wq}, \code{sed}, \code{fw},
-\code{hab}), followed by one facet per category with that category's own
-score and one colored line per indicator column of \code{wqoverall},
-\code{sedoverall}, \code{fwoverall}, \code{haboverall}. In every facet,
-the score itself is drawn as a thick dark "Score" line and each component
-(category or indicator) is a thinner colored line, labeled directly at
-its right-most value.
+all years for \code{bay_segment}, then plots up to five stacked facets
+(one column, top to bottom, or a subset via \code{facets}): an "Overall"
+facet with the bay segment score and one colored line per category
+(\code{wq}, \code{sed}, \code{fw}, \code{hab}), followed by one facet per
+category with that category's own score and one colored line per
+indicator column of \code{wqoverall}, \code{sedoverall}, \code{fwoverall},
+\code{haboverall}. In every facet, the score itself is drawn as a thick
+dark "Score" line and each component (category or indicator) is a
+thinner colored line, labeled directly at its right-most value when
+\code{labels = TRUE}.
 }
 \examples{
 wqoverall <- anlz_category(
@@ -66,4 +77,8 @@ haboverall <- anlz_category(
   seagrass = data.frame(bay_segment = 'OTB', yr = 2018:2020, outcome = c(0.4, 0.5, 0.5))
 )
 plot_trend(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB')
+
+# a single facet, with labels turned off
+plot_trend(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB',
+            facets = 'Overall', labels = FALSE)
 }

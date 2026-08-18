@@ -16,6 +16,7 @@ articles:
   navbar: ~
   contents:
   - scoring
+  - trends
 
 reference:
 - title: Analyze data
