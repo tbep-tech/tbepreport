@@ -1,4 +1,4 @@
-# tbepreport (development version)
+# tbepreport 1.0.0
 
 * Fix `plot_score()` and `plot_category()` sunburst titles rendering
   slightly left of center - plotly's title `x` position defaulted to

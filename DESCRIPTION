@@ -1,6 +1,6 @@
 Package: tbepreport
 Title: Compile and Visualize Ecosystem Report Card Indicators for Tampa Bay
-Version: 0.0.0.9000
+Version: 1.0.0
 Authors@R:
     person(given = "Marcus",
       family = "Beck",
