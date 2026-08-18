@@ -21,15 +21,15 @@
   [`util_outcome()`](https://tbep-tech.github.io/tbepreport/reference/util_outcome.md)’s
   threshold steepness is now a tunable `pct` of the threshold (default
   `0.1`) rather than a hardcoded 10%
-- **Breaking**: `smooth` now defaults to `TRUE` for
+- **Breaking**: `smooth` now defaults to `"logistic"` for
   `util_outcome(type = "threshold")` and for
   [`anlz_wq_thresh()`](https://tbep-tech.github.io/tbepreport/reference/anlz_wq_thresh.md),
   [`anlz_wq_load()`](https://tbep-tech.github.io/tbepreport/reference/anlz_wq_load.md),
   and
   [`anlz_hab_seagrass_coverage()`](https://tbep-tech.github.io/tbepreport/reference/anlz_hab_seagrass_coverage.md),
   so these threshold-based outcomes are smooth logistic transitions by
-  default instead of a hard 0/1 cutoff. Pass `smooth = FALSE` to restore
-  the previous hard-cutoff behavior
+  default instead of a hard 0/1 cutoff. Pass `smooth = "none"` to
+  restore the previous hard-cutoff behavior
 - Add
   [`plot_trend()`](https://tbep-tech.github.io/tbepreport/reference/plot_trend.md),
   a new faceted ggplot2 trend plot: an “Overall” facet (bay segment
@@ -83,11 +83,10 @@
   uses `util_outcome(type = "category")`, though it remains available
 - [`util_outcome()`](https://tbep-tech.github.io/tbepreport/reference/util_outcome.md)’s
   `smooth` argument for `type = "threshold"` now takes one of
-  `"logistic"`, `"ramp"`, or `"none"` (logical `TRUE`/`FALSE` still
-  accepted, mapped to `"logistic"`/`"none"`). `"ramp"` gives an outcome
-  of 1 once a value reaches the “good” side of the threshold - not just
-  0.5 there like `"logistic"` - decaying exponentially toward 0 the
-  further it falls on the “bad” side, using the same `pct`-of-threshold
+  `"logistic"`, `"ramp"`, or `"none"`. `"ramp"` gives an outcome of 1
+  once a value reaches the “good” side of the threshold - not just 0.5
+  there like `"logistic"` - decaying exponentially toward 0 the further
+  it falls on the “bad” side, using the same `pct`-of-threshold
   steepness rule
 - **Breaking**:
   [`anlz_hab_seagrass_coverage()`](https://tbep-tech.github.io/tbepreport/reference/anlz_hab_seagrass_coverage.md)’s

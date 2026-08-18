@@ -31,10 +31,9 @@ anlz_hab_seagrass_coverage(
 
   passed to
   [`util_outcome`](https://tbep-tech.github.io/tbepreport/reference/util_outcome.md).
-  One of `"ramp"` (the default), `"logistic"`, or `"none"` (logical
-  `TRUE`/`FALSE` also accepted, mapped to `"logistic"`/`"none"`).
-  `"ramp"` gives an outcome of 1 for any acreage at or above a segment's
-  target, decaying toward 0 the further short of it a segment falls.
+  One of `"ramp"` (the default), `"logistic"`, or `"none"`. `"ramp"`
+  gives an outcome of 1 for any acreage at or above a segment's target,
+  decaying toward 0 the further short of it a segment falls.
 
 - pct:
 

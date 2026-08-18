@@ -13,7 +13,6 @@ util_outcome(
   thresh = NULL,
   op = "<",
   smooth = "logistic",
-  scl = NULL,
   pct = 0.1,
   levels = NULL
 )
@@ -54,22 +53,14 @@ util_outcome(
 - smooth:
 
   for `type = "threshold"`, one of `"logistic"` (the default), `"ramp"`,
-  or `"none"`. See Details. For backward compatibility, logical
-  `TRUE`/`FALSE` are also accepted and mapped to `"logistic"`/`"none"`.
-
-- scl:
-
-  numeric, controls the steepness of the `"logistic"`/ `"ramp"`
-  transition. Smaller values give a sharper transition. Defaults to
-  `pct * abs(thresh)` (or `1` if `thresh = 0`). Set this directly to use
-  an absolute steepness instead of one relative to `thresh`.
+  or `"none"`. See Details.
 
 - pct:
 
-  numeric, the fraction of `abs(thresh)` used to compute the default
-  `scl` when `smooth` is `"logistic"` or `"ramp"` and `scl` is not
-  supplied directly. Defaults to `0.1` (10% of `thresh`). Ignored if
-  `scl` is provided.
+  numeric, the fraction of `abs(thresh)` used as the steepness of the
+  `"logistic"`/`"ramp"` transition when `smooth` is one of those.
+  Smaller values give a sharper transition. Defaults to `0.1` (10% of
+  `thresh`).
 
 - levels:
 
@@ -116,14 +107,10 @@ ways selected by `smooth`:
 
 - `"none"`: a hard `0`/`1` cutoff, no transition.
 
-Logical `TRUE`/`FALSE` are also accepted for `smooth`, for backward
-compatibility, and map to `"logistic"`/`"none"`.
-
-For `"logistic"` and `"ramp"`, the steepness of the transition (`scl`)
-defaults to a percentage (`pct`) of `thresh` rather than a fixed
-absolute value, so it stays meaningful across indicators/thresholds with
-very different units and magnitudes (e.g. a threshold of 1 vs. a
-threshold in the hundreds).
+For `"logistic"` and `"ramp"`, the steepness of the transition is a
+percentage (`pct`) of `thresh` rather than a fixed absolute value, so it
+stays meaningful across indicators/thresholds with very different units
+and magnitudes (e.g. a threshold of 1 vs. a threshold in the hundreds).
 
 **category**: `x` is mapped to an outcome via `levels`.
 
@@ -153,7 +140,7 @@ util_outcome(12, type = 'threshold', thresh = 10, pct = 0.1)
 util_outcome(12, type = 'threshold', thresh = 10, pct = 0.2)
 #> [1] 0.2689414
 
-# smooth = "none" (or FALSE) instead gives a hard 0/1 cutoff
+# smooth = "none" instead gives a hard 0/1 cutoff
 util_outcome(c(5, 15), type = 'threshold', thresh = 10, op = '<', smooth = 'none')
 #> [1] 1 0
 

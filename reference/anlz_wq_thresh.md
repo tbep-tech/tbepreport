@@ -6,7 +6,7 @@ variable
 ## Usage
 
 ``` r
-anlz_wq_thresh(epcdata, smooth = TRUE, pct = 0.1)
+anlz_wq_thresh(epcdata, smooth = "logistic", pct = 0.1)
 ```
 
 ## Arguments
@@ -18,18 +18,19 @@ anlz_wq_thresh(epcdata, smooth = TRUE, pct = 0.1)
 
 - smooth:
 
-  logical, passed to
+  passed to
   [`util_outcome`](https://tbep-tech.github.io/tbepreport/reference/util_outcome.md).
-  If `TRUE` (the default), use a smooth logistic transition centered at
-  each bay-segment's threshold instead of a hard 0/1 cutoff.
+  One of `"logistic"` (the default), `"ramp"`, or `"none"`. By default,
+  use a smooth logistic transition centered at each bay-segment's
+  threshold instead of a hard 0/1 cutoff.
 
 - pct:
 
   numeric, passed to
   [`util_outcome`](https://tbep-tech.github.io/tbepreport/reference/util_outcome.md)
-  as the fraction of each threshold used for the logistic transition's
-  steepness when `smooth = TRUE`. Defaults to `0.1` (10% of the
-  threshold).
+  as the fraction of each threshold used for the transition's steepness
+  when `smooth` is `"logistic"` or `"ramp"`. Defaults to `0.1` (10% of
+  the threshold).
 
 ## Value
 
@@ -43,10 +44,10 @@ the bay-segment-specific thresholds in
 [`targets`](https://tbep-tech.github.io/tbeptools/reference/targets.html),
 using
 [`util_outcome`](https://tbep-tech.github.io/tbepreport/reference/util_outcome.md)
-with `type = "threshold"`. By default (`smooth = TRUE`), a value below
-its threshold approaches an outcome of 1 and at or above approaches 0,
-with a smooth logistic transition between them. Only `mean_chla` and
-`mean_la` are scored
+with `type = "threshold"`. By default (`smooth = "logistic"`), a value
+below its threshold approaches an outcome of 1 and at or above
+approaches 0, with a smooth logistic transition between them. Only
+`mean_chla` and `mean_la` are scored
 ([`tbeptools::targets`](https://rdrr.io/pkg/tbeptools/man/targets.html)
 has no threshold for the third variable
 [`anlz_avedat`](https://tbep-tech.github.io/tbeptools/reference/anlz_avedat.html)

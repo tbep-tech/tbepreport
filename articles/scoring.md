@@ -34,7 +34,7 @@ Compares annual mean chlorophyll and light attenuation values directly
 against bay-segment-specific thresholds, independent of the combined
 attainment score above. Each gives its own threshold outcome as a smooth
 logistic transition by default or a hard binary 0/1 with
-`smooth = FALSE` (see [Scoring](#scoring)). Values below the threshold
+`smooth = 'none'` (see [Scoring](#scoring)). Values below the threshold
 receive better outcomes.
 
 ``` r
@@ -47,7 +47,7 @@ wqthresh <- anlz_wq_thresh(epcdata)
 Compares total nitrogen load and a hydrologically-normalized loading
 against fixed bay-segment thresholds, each as its own threshold outcome.
 Results are determined using a smooth logistic transition by default, or
-a hard binary 0/1 with `smooth = FALSE` (see [Scoring](#scoring)).  
+a hard binary 0/1 with `smooth = 'none'` (see [Scoring](#scoring)).
 Values below the threshold receive better outcomes.
 
 ``` r
@@ -215,9 +215,7 @@ supports three types of scoring:
   For `"logistic"` and `"ramp"`, the steepness of the transition is set
   by `pct`, a fraction of the threshold itself (default 10%) rather than
   a fixed absolute value, so it stays meaningful across
-  indicators/segments with very different thresholds. Logical
-  `TRUE`/`FALSE` are also accepted for `smooth`, mapped to
-  `"logistic"`/`"none"`.
+  indicators/segments with very different thresholds.
 
 ``` r
 
@@ -238,7 +236,7 @@ util_outcome(8, type = 'threshold', thresh = 10, op = '<')
 util_outcome(8, type = 'threshold', thresh = 10, op = '<', smooth = 'ramp')
 #> [1] 1
 
-# threshold, smooth = "none" (or FALSE): a hard binary cutoff instead
+# threshold, smooth = "none": a hard binary cutoff instead
 util_outcome(8, type = 'threshold', thresh = 10, op = '<', smooth = 'none')
 #> [1] 1
 ```
@@ -286,7 +284,7 @@ interpreted.
 
 At it’s simplest level, a binary scoring can be used with a clear break
 at the the threshold (no indicators use this method). Here is an example
-for OTB chlorophyll data scored with `smooth = FALSE` that uses a hard
+for OTB chlorophyll data scored with `smooth = 'none'` that uses a hard
 binary cutoff.
 
 ![](scoring_files/figure-html/unnamed-chunk-16-1.png)
