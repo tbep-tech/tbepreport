@@ -102,12 +102,23 @@ Each sunburst below shows the same 2024 outcome scale across all four bay
 segments.  Color ranges are the same across plots for visual comparison of 
 score ranges.
 
+::: {layout-ncol="2"}
 ```{r}
-#| layout-ncol: 2
-htmltools::tagList(lapply(bay_segments, function(seg) {
-  plot_score(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = seg, yr = 2024)
-}))
+plot_score(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB', yr = 2024)
 ```
+
+```{r}
+plot_score(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'HB', yr = 2024)
+```
+
+```{r}
+plot_score(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'MTB', yr = 2024)
+```
+
+```{r}
+plot_score(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'LTB', yr = 2024)
+```
+:::
 
 ## Part 2: How Scoring Decisions Affect Results
 
