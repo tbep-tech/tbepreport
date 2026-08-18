@@ -5,33 +5,22 @@
 #' @param iwrraw data.frame of raw IWR water quality data for tidal creeks,
 #'   e.g. \code{tbeptools::iwrraw}
 #' @param yrs integer vector of years to assess, passed to
-#'   \code{\link[tbeptools]{anlz_tdlcrk}}
+#'   [`anlz_tdlcrk`](https://tbep-tech.github.io/tbeptools/reference/anlz_tdlcrk.html)
 #'
 #' @details Each tidal creek is assigned to the bay segment subwatershed
-#' (\code{\link[tbeptools]{tbsegshed}}) it overlaps most (by length, for
+#' ([`tbsegshed`](https://tbep-tech.github.io/tbeptools/reference/tbsegshed.html)) it overlaps most (by length, for
 #' creeks spanning more than one subwatershed).
 #'
-#' \code{\link[tbeptools]{anlz_tdlcrk}} computes each creek's condition
-#' category (Prioritize/Investigate/Caution/Monitor) from counts of how many
-#' years, out of a rolling 10-year window, its TN concentration fell into
-#' each of 4 ordinal grades (\code{monitor}, \code{caution},
-#' \code{investigate}, \code{prioritize}, worst to best) - the category
-#' itself comes from a compound rule (the worst grade present usually wins,
+#' [`anlz_tdlcrk`](https://tbep-tech.github.io/tbeptools/reference/anlz_tdlcrk.html) computes each creek's condition
+#' category (Prioritize/Investigate/Caution/Monitor) from year counts out of a rolling 10-year window.
+#' The category itself comes from a compound rule (the worst grade present usually wins,
 #' with several count-based exceptions that downgrade it, e.g. a single bad
 #' year surrounded by mostly good years). Rather than use that category,
 #' this converts each creek's own 4 counts directly into a continuous 0-1
-#' score - the same count-weighted average across the same ordinal scale
-#' the category uses (\code{Monitor = 1}, \code{Caution = 2/3},
-#' \code{Investigate = 1/3}, \code{Prioritize = 0}), i.e. what fraction of
-#' the 10-year window fell in each grade. This is a related but distinct
-#' measure from the official category - it can disagree in some cases,
-#' since the category's downgrade exceptions are non-monotonic and a
-#' count-weighted average won't reproduce them (e.g. a creek with a single
-#' Prioritize-level year among mostly Monitor-level years can score higher
-#' continuously than a creek with several Caution-level years, even though
-#' the latter is categorized as the less severe "Caution" rather than
-#' "Prioritize"). Creeks with a "No Data" assessment (no counts at all) are
-#' dropped.
+#' score. This is a count-weighted average across an ordinal scale for each 
+#' category (\code{Monitor = 1}, \code{Caution = 2/3}, \code{Investigate = 1/3}, 
+#' \code{Prioritize = 0}), i.e. what fraction of the 10-year window fell in each 
+#' grade. Creeks with a "No Data" assessment are dropped.
 #'
 #' Each creek's continuous score is then averaged to a bay-segment/year
 #' outcome, weighted by each creek's physical length so longer creek

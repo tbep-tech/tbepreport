@@ -19,15 +19,15 @@ over the full score range with no clamping.}
 \value{
 A data.frame with columns \code{bay_segment}, \code{yr},
 \code{Segment_TBNI} (the raw 0-100 score), \code{Action} (management
-action category from \code{\link[tbeptools]{anlz_tbniave}}), and
+action category from \href{https://tbep-tech.github.io/tbeptools/reference/anlz_tbniave.html}{\code{anlz_tbniave}}), and
 \code{outcome} (0-1, 1 = best)
 }
 \description{
 Tampa Bay Nekton Index (TBNI) outcome by bay segment and year
 }
 \details{
-Uses \code{\link[tbeptools]{anlz_tbniscr}} and
-\code{\link[tbeptools]{anlz_tbniave}} to score each bay segment/year 0-100,
+Uses \href{https://tbep-tech.github.io/tbeptools/reference/anlz_tbniscr.html}{\code{anlz_tbniscr}} and
+\href{https://tbep-tech.github.io/tbeptools/reference/anlz_tbniave.html}{\code{anlz_tbniave}} to score each bay segment/year 0-100,
 then converts to a 0-1 outcome with \code{\link{util_outcome}}
 (\code{type = "continuous"}). With the default \code{from = c(32, 46)},
 matching TBNI's own grade breakpoints (On Alert below 32, Caution from 32

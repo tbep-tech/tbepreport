@@ -4,23 +4,23 @@
 #'   \code{outcome} columns. A data.frame may already have its own
 #'   \code{indicator} column if it bundles more than one indicator (e.g.
 #'   \code{\link{anlz_wq_load}}'s output already has \code{indicator} =
-#'   \code{"tn_load"}/\code{"tnhy_load"}) - otherwise every row is labeled
+#'   \code{"tn_load"}/\code{"tnhy_load"}). Otherwise every row is labeled
 #'   with that argument's name.
 #' @param bay_segments chr vector of bay segments to keep, defaults to
 #'   \code{c('OTB', 'HB', 'MTB', 'LTB')}
 #'
 #' @details Stacks (\code{\link[dplyr]{bind_rows}}) rather than joins the
-#' inputs, since bay segment/year coverage differs by indicator - a segment/
+#' inputs, since bay segment/year coverage differs by indicator. A segment/
 #' year missing from one indicator's source data simply has no row for it,
 #' rather than an \code{NA}-filled one. Rows outside \code{bay_segments} or
 #' with an \code{NA} outcome are dropped.
 #'
-#' This same stacking step is used at every level of the indicator hierarchy:
+#' This same stacking step is used at every level of the indicator hierarchy,
 #' once per category to build a category's indicator table from its raw
 #' \code{anlz_*} indicator outputs, and again inside \code{\link{anlz_score}}
 #' (via \code{\link{anlz_category}}) to stack the four category scores into
-#' one table before the final average - a category score is, from this
-#' function's point of view, just another single-indicator input.
+#' one table before the final average. A category score is just another 
+#' single-indicator input.
 #'
 #' @returns A data.frame with columns \code{bay_segment}, \code{yr},
 #' \code{indicator}, and \code{outcome} (0-1, 1 = best)

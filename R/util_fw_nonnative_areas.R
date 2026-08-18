@@ -1,11 +1,10 @@
 #' Bay segment and AOI areas for non-native species density calculations
 #'
 #' @details Recomputes area from geometry (reprojected to EPSG:3086) rather
-#' than trusting \code{\link{bayseg_shp}}'s static \code{area_ac} attribute,
+#' than using \code{\link{bayseg_shp}}'s static \code{area_ac} attribute,
 #' matching the \code{tbep-invasives} Python pipeline's own area calculation
-#' method (the two agree closely where checked). \code{\link{bayseg_shp}}'s
-#' 7 raw segments are dissolved into 5 groups by \code{BAY_SEG_GP} before
-#' computing area (i.e., BCB, TCB, MR to RALTB).
+#' method. \code{\link{bayseg_shp}}'s 7 raw segments are dissolved into 5 
+#' groups by \code{BAY_SEG_GP} before computing area (i.e., BCB, TCB, MR to RALTB).
 #'
 #' @returns A named list with \code{bayseg_area_sqmi} (a named numeric
 #' vector of area in square miles, one per \code{BAY_SEG_GP} group) and

@@ -6,19 +6,19 @@
 #' @param haboverall output of \code{\link{anlz_category}} for habitat
 #' @param wt named numeric vector of category weights, e.g.
 #'   \code{c(wq = 2, sed = 1, fw = 1, hab = 1)}. Categories not named in
-#'   \code{wt} - including all of them when \code{wt = NULL} - get a weight
+#'   \code{wt} (including all of them when \code{wt = NULL}) get a weight
 #'   of \code{1}, so the default is a plain unweighted mean across the four
-#'   categories, passed straight through to \code{\link{anlz_category}}.
+#'   categories, passed to \code{\link{anlz_category}}.
 #'
 #' @details A thin, semantically-named wrapper around
-#' \code{\link{anlz_category}}: from that function's point of view, a
-#' category score is just another single-indicator input, so combining the
-#' four category scores into one bay segment score uses exactly the same
-#' stacking (\code{\link{anlz_indicators}}) and weighted-averaging logic
-#' that combines individual indicators into a category score.
+#' \code{\link{anlz_category}}. A category score is just another 
+#' single-indicator input, so combining the four category scores into one 
+#' bay segment score uses exactly the same stacking (\code{\link{anlz_indicators}}) 
+#' and weighted-averaging logic that combines individual indicators into a 
+#' category score.
 #'
 #' @returns A data.frame with columns \code{bay_segment}, \code{yr},
-#' \code{outcome} (0-1, 1 = best - the overall Bay Segment Score),
+#' \code{outcome} (0-1, 1 = best, the overall Bay Segment Score),
 #' \code{n_indicator} (number of categories with a score for that
 #' segment/year), and one additional column per category (\code{wq},
 #' \code{sed}, \code{fw}, \code{hab}) holding that category's own score,

@@ -41,12 +41,12 @@ segment and year
 \details{
 Calls \code{\link{anlz_score}} on the four category data.frames
 to get the overall bay segment score and each category's own score for
-\code{bay_segment}/\code{yr}, then plots a three-ring sunburst: a colored
-center hole for the overall score, a middle ring with one equal-size
+\code{bay_segment}/\code{yr}, then plots a three-ring sunburst using a colored
+center for the overall score, a middle ring with one equal-size
 wedge per category (\code{wq}, \code{sed}, \code{fw}, \code{hab}), and an
 outer ring with the indicator columns of each of \code{wqoverall},
 \code{sedoverall}, \code{fwoverall}, \code{haboverall} split evenly
-within their own category's wedge - regardless of how many indicators
+within their own category's wedge, regardless of how many indicators
 another category has. Every ring is colored on the same continuous
 red/yellow/green outcome scale used by \code{\link{plot_category}}, with
 missing indicators/categories rendered gray rather than dropped.

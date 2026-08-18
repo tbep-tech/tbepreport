@@ -3,27 +3,25 @@
 #' @param sedimentdata data.frame of raw sediment monitoring data, e.g.
 #'   \code{tbeptools::sedimentdata}
 #' @param yrs integer vector of years to assess, passed to
-#'   \code{\link[tbeptools]{anlz_sedimentpelave}} one year at a time
+#'   [`anlz_sedimentpelave`](https://tbep-tech.github.io/tbeptools/reference/anlz_sedimentpelave.html) one year at a time
 #'
 #' @details Grades each bay segment/year by its average sediment
 #' contamination score (\code{ave}, from
-#' \code{\link[tbeptools]{anlz_sedimentpelave}}) into A-F, kept here as
+#' [`anlz_sedimentpelave`](https://tbep-tech.github.io/tbeptools/reference/anlz_sedimentpelave.html)) into A-F, kept here as
 #' \code{grd} for reference, but the \code{outcome} itself comes directly
 #' from the continuous \code{ave} score via \code{\link{util_outcome}}
 #' (\code{type = "continuous"}, \code{reverse = TRUE}) rather than from
 #' \code{grd}. Because the grade breakpoints are geometrically spaced
 #' (each roughly 2.7-4x the last: 0.00756, 0.02052, 0.08567, 0.28026),
 #' \code{ave} is log-transformed first so the outcome varies smoothly
-#' across grades B-D instead of being compressed near one end of the 0-1
-#' scale; \code{from} spans the A/B breakpoint to the D/F breakpoint (on
-#' the log scale), so - matching the same clamped-breakpoint-window
-#' treatment used for the Nekton Index's \code{from = c(32, 46)} - \code{ave}
+#' across grades B-D instead of being compressed. \code{from} spans 
+#' the A/B breakpoint to the D/F breakpoint (on the log scale), so that \code{ave}
 #' at or below the A/B breakpoint gives an outcome of 1 and at or above the
 #' D/F breakpoint gives an outcome of 0.
 #'
 #' @returns A data.frame with columns \code{yr}, \code{bay_segment},
 #' \code{ave} (average sediment contamination score), \code{grd} (letter
-#' grade A-F, for reference only - not used to compute \code{outcome}), and
+#' grade A-F, for reference only, not used to compute \code{outcome}), and
 #' \code{outcome} (0-1, 1 = best)
 #'
 #' @export

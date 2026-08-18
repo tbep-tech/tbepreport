@@ -3,15 +3,15 @@
 #' @param enterodata data.frame of raw enterococcus monitoring data, e.g.
 #'   \code{tbeptools::enterodata}
 #'
-#' @details Uses \code{\link[tbeptools]{anlz_fibmatrix}} to get, for each bay
-#' segment/year, \code{exceed_rate} - a continuous, one-sided 90\% upper
-#' confidence estimate of the true exceedance rate (0-1, lower is better) -
+#' @details Uses [`anlz_fibmatrix`](https://tbep-tech.github.io/tbeptools/reference/anlz_fibmatrix.html) to get, 
+#' for each bay segment/year, \code{exceed_rate}, a continuous, one-sided 90\% upper
+#' confidence estimate of the true exceedance rate (0-1, lower is better),
 #' and converts it to a 0-1 outcome with \code{\link{util_outcome}}
 #' (\code{type = "continuous"}, \code{from = c(0, 1)}, \code{reverse = TRUE}),
 #' i.e. \code{outcome = 1 - exceed_rate}. This is a continuous analog of the
 #' A-E letter grade \code{anlz_fibmatrix()} also returns (\code{cat}), which
 #' is itself a discretized version of \code{exceed_rate}.  See
-#' \code{\link[tbeptools]{anlz_fibmatrix}} for details.
+#' [`anlz_fibmatrix`](https://tbep-tech.github.io/tbeptools/reference/anlz_fibmatrix.html) for details.
 #'
 #' @returns A data.frame with columns \code{bay_segment}, \code{yr}, and
 #' \code{outcome} (0-1, 1 = best)

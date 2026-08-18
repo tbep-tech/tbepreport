@@ -14,7 +14,7 @@ plot_category(
 )
 }
 \arguments{
-\item{...}{named data.frames, passed to \code{\link{anlz_category}} - see
+\item{...}{named data.frames, passed to \code{\link{anlz_category}}. See
 its documentation (and \code{\link{anlz_indicators}}) for the expected
 shape}
 
@@ -42,9 +42,9 @@ Sunburst plot of indicator outcomes for one category, bay segment, and year
 Calls \code{\link{anlz_category}} on \code{...} to get both the
 per-indicator outcomes (one wide column per indicator) and the overall
 category score for \code{bay_segment}/\code{yr}, then plots a two-ring
-sunburst: a colored center hole for the category's overall
-\code{outcome}, and an outer ring with one equal-size wedge per
-indicator, colored by that indicator's own outcome. Both rings use the
+sunburst using a colored center for the category's overall
+\code{outcome} and an outer ring with one equal-size wedge per
+indicator colored by that indicator's own outcome. Both rings use the
 same continuous red/yellow/green outcome scale, and an indicator missing
 for \code{bay_segment}/\code{yr} still gets an equal-size wedge, rendered
 gray rather than dropped. Thematically identical to

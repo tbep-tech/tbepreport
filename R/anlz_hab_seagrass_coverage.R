@@ -5,36 +5,33 @@
 #' @param yr_max integer, the last year to carry estimates forward to,
 #'   defaults to the last year \code{sgsegest} actually has an estimate for
 #'   (\code{max(sgsegest$year)})
-#' @param smooth passed to \code{\link{util_outcome}} - one of
+#' @param smooth passed to \code{\link{util_outcome}}. One of
 #'   \code{"ramp"} (the default), \code{"logistic"}, or \code{"none"}
 #'   (logical \code{TRUE}/\code{FALSE} also accepted, mapped to
 #'   \code{"logistic"}/\code{"none"}). \code{"ramp"} gives an outcome of 1
 #'   for any acreage at or above a segment's target, decaying toward 0 the
-#'   further short of it a segment falls - unlike \code{"logistic"}, which
-#'   gives only 0.5 exactly at the target.
+#'   further short of it a segment falls.
 #' @param pct numeric, passed to \code{\link{util_outcome}} as the fraction
 #'   of each acreage target used for the transition's steepness when
 #'   \code{smooth} is \code{"ramp"} or \code{"logistic"}. Defaults to
 #'   \code{0.1} (10% of the target).
 #'
-#' @details Seagrass coverage maps are not produced every year - they're
+#' @details Seagrass coverage maps are not produced every year. They're
 #' flown approximately biennially (\code{\link{sgsegest}} has estimates for
-#' most even years from 1988 to 2024, plus 1999, not every calendar year in
-#' between). To get a value for every calendar year, this fills the gaps by
+#' most even years). To get a value for every calendar year, this fills the gaps by
 #' carrying the most recent actual estimate (and the outcome derived from
 #' it) \strong{forward} via \code{\link[tidyr]{complete}} +
-#' \code{\link[tidyr]{fill}} - e.g. a year with no survey repeats the prior
-#' survey year's acreage and outcome unchanged, until the next actual survey
-#' year updates it. This means \code{acres}/\code{outcome} in a non-survey
-#' year are not a new estimate, just a repeat of the last known one.
+#' \code{\link[tidyr]{fill}}. For example, a year with no survey repeats the
+#' prior survey year's acreage and outcome unchanged, until the next actual
+#' survey year updates it. This means \code{acres}/\code{outcome} in a
+#' non-survey year are not a new estimate, just a repeat of the last known
+#' one.
 #'
 #' Coverage is compared against a fixed per-segment acreage target with
-#' \code{\link{util_outcome}} (\code{type = "threshold"}, \code{op = ">="})
-#' - by default (\code{smooth = "ramp"}) meeting or exceeding the target
+#' \code{\link{util_outcome}} (\code{type = "threshold"}, \code{op = ">="}).
+#' By default (\code{smooth = "ramp"}), meeting or exceeding the target
 #' gives an outcome of 1, decaying toward 0 the further short of it a
-#' segment falls; \code{smooth = "logistic"} instead centers a smooth
-#' transition on the target (only 0.5 exactly at it), and \code{smooth =
-#' "none"} gives a hard 0/1 cutoff. Targets (acres):
+#' segment falls. Targets (acres):
 #' \describe{
 #'   \item{Old Tampa Bay}{11,100}
 #'   \item{Hillsborough Bay}{1,751}
@@ -44,14 +41,14 @@
 #'   \item{Terra Ceia Bay}{1,100}
 #'   \item{Manatee River}{449}
 #' }
-#' These are not independently set per segment - they're the baywide
-#' 40,000-acre seagrass coverage target apportioned across segments in
-#' proportion to each segment's share of total bay area.
+#' These targets are derived from the baywide
+#' 40,000-acre seagrass coverage target apportioned to each segment's 
+#' share of total bay area.
 #'
 #' @returns A data.frame with columns \code{bay_segment} (abbreviated, e.g.
 #' \code{"OTB"}), \code{yr}, \code{acres} (carried forward in non-survey
 #' years), and \code{outcome} (0-1, 1 = best, also carried forward in
-#' non-survey years; exactly 0 or 1 only if \code{smooth = "none"})
+#' non-survey years)
 #'
 #' @export
 #'

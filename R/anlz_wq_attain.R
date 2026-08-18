@@ -3,9 +3,10 @@
 #' @param epcdata data.frame of raw water quality data, e.g.
 #'   \code{tbeptools::epcdata}
 #'
-#' @details Combines chlorophyll and light attenuation attainment (from
-#' \code{\link[tbeptools]{anlz_attain}}) into a single continuous outcome:
-#' the two sub-scores are summed, then converted with \code{\link{util_outcome}}
+#' @details Combines chlorophyll and light attenuation attainment of management targets (from
+#' [`anlz_attain`](https://tbep-tech.github.io/tbeptools/reference/anlz_attain.html)) into 
+#' a single continuous outcome.  The two sub-scores are summed (each 0-3 assessing magnitude and duration 
+#' of exceedance), then converted with \code{\link{util_outcome}}
 #' (\code{type = "continuous"}, \code{reverse = TRUE}) so a lower combined
 #' sub-score (better attainment) gives a higher outcome.
 #'
@@ -27,7 +28,7 @@ anlz_wq_attain <- function(epcdata) {
     dplyr::mutate(dplyr::across(dplyr::all_of(c('chl', 'la')), as.numeric)) |>
     dplyr::mutate(
       totsum = .data$chl + .data$la,
-      outcome = util_outcome(.data$totsum, type = 'continuous', reverse = TRUE)
+      outcome = util_outcome(.data$totsum, type = 'continuous', reverse = TRUE, from = c(0, 6))
     ) |>
     dplyr::select(dplyr::all_of(c('bay_segment', 'yr', 'totsum', 'outcome')))
 

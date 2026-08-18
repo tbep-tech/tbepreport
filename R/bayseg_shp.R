@@ -4,10 +4,10 @@
 #' \describe{
 #'   \item{BAY_SEG}{chr, raw bay segment name (7 unique values, e.g. "Boca
 #'     Ciega Bay")}
-#'   \item{BAY_SEG_GP}{chr, grouped bay segment name (5 unique values) - the
+#'   \item{BAY_SEG_GP}{chr, grouped bay segment name (5 unique values). The
 #'     7 raw segments grouped into "Old Tampa Bay", "Hillsborough Bay",
 #'     "Middle Tampa Bay", "Lower Tampa Bay", and "Remainder Lower Tampa
-#'     Bay" (Boca Ciega Bay + Manatee River + Terra Ceia Bay dissolved
+#'     Bay" (Boca Ciega Bay, Manatee River, and Terra Ceia Bay dissolved
 #'     together)}
 #'   \item{BAY_GP_ABB}{chr, abbreviation of \code{BAY_SEG_GP} (OTB, HB,
 #'     MTB, LTB, RLTB)}
@@ -20,7 +20,7 @@
 #' Copied from the \href{https://github.com/tbep-tech}{tbep-invasives} repo
 #' (\code{input_data/shp/TBEP_Bay_Segments_4326.shp}), so segment grouping
 #' and areas match its report cards exactly. Note \code{area_ac} is a
-#' static attribute of each raw polygon; functions using this data
+#' static attribute of each raw polygon. Functions using this data
 #' recompute area from the geometry instead (grouped by \code{BAY_SEG_GP}),
 #' which matches this static value closely but is used for consistency with
 #' the source pipeline's own area calculation.

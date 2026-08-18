@@ -19,28 +19,29 @@ A data.frame with columns \code{yr}, \code{bay_segment},
 Benthic index (TBBI) outcome by bay segment and year
 }
 \details{
-Uses \code{\link[tbeptools]{anlz_tbbiscr}} to get station-level
+Uses \href{https://tbep-tech.github.io/tbeptools/reference/anlz_tbbiscr.html}{\code{anlz_tbbiscr}} to get station-level
 TBBI scores (0-100), filtered to the same stations
-\code{\link[tbeptools]{anlz_tbbimed}} uses for its bay segment grades
+\href{https://tbep-tech.github.io/tbeptools/reference/anlz_tbbimed.html}{\code{anlz_tbbimed}} uses for its bay segment grades
 (\code{FundingProject == "TBEP"}, \code{ProgramID == 4}, and
 \code{TBBI} between 0 and 100, for the 7 bay segments
-\code{\link[tbeptools]{anlz_tbbimed}} scores), then takes the median
+\href{https://tbep-tech.github.io/tbeptools/reference/anlz_tbbimed.html}{\code{anlz_tbbimed}} scores), then takes the median
 station score for each bay segment/year. \code{outcome} comes directly
 from that continuous median via \code{\link{util_outcome}} (\code{type =
 "continuous"}, \code{from = c(73, 87)}), TBBI's own grade breakpoints
-(Degraded below 73, Intermediate 73-87, Healthy above 87) - the same
-clamped-breakpoint-window treatment used for the Nekton Index's
+(Degraded below 73, Intermediate 73-87, Healthy above 87). This is the
+same clamped-breakpoint-window treatment used for the Nekton Index's
 \code{from = c(32, 46)}.
 
-This bypasses \code{\link[tbeptools]{anlz_tbbimed}} entirely, which
+This bypasses \href{https://tbep-tech.github.io/tbeptools/reference/anlz_tbbimed.html}{\code{anlz_tbbimed}} entirely, which
 instead grades a bay segment/year Poor/Fair/Good from the
 \emph{proportion} of its stations falling in each of the
-Degraded/Intermediate/Healthy categories - a compound rule on those
-proportions, not a discretized version of a single continuous statistic,
-so there's no direct continuous equivalent of it the way there is for
-TBNI's or PEL/TEL's breakpoints. Scoring the median of the raw station
-values instead is a related but distinct measure - it can disagree with
-\code{\link[tbeptools]{anlz_tbbimed}}'s category in some edge cases (e.g.
+Degraded/Intermediate/Healthy categories. This is a compound rule on
+those proportions, not a discretized version of a single continuous
+statistic, so there's no direct continuous equivalent of it the way
+there is for TBNI's or PEL/TEL's breakpoints. Scoring the median of the
+raw station values instead is a related but distinct measure. It can
+disagree with \href{https://tbep-tech.github.io/tbeptools/reference/anlz_tbbimed.html}{\code{anlz_tbbimed}}'s category in some
+edge cases (e.g.
 a bay segment split between many Healthy and a few very Degraded
 stations can have a middling median while still tripping the proportion
 rule's \code{Degraded >= 0.2} condition for \code{"Poor"}).

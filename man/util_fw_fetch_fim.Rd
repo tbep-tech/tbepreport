@@ -2,7 +2,7 @@
 % Please edit documentation in R/util_fw_fetch_fim.R
 \name{util_fw_fetch_fim}
 \alias{util_fw_fetch_fim}
-\title{Fetch the Tampa Bay FIM non-native species dataset}
+\title{Fetch the Tampa Bay FIM species dataset}
 \usage{
 util_fw_fetch_fim(
   fim_url =
@@ -10,7 +10,7 @@ util_fw_fetch_fim(
 )
 }
 \arguments{
-\item{fim_url}{chr string, the URL of the FIM non-native species RData
+\item{fim_url}{chr string, the URL of the FIM species RData
 file, defaults to the
 \href{https://github.com/kflahertywalia/tb_fim_nonnatives}{tb_fim_nonnatives}
 repo's output}
@@ -21,14 +21,12 @@ A data.frame with columns \code{scientificName}, \code{commonName},
 (always \code{"FIM"})
 }
 \description{
-Fetch the Tampa Bay FIM non-native species dataset
+Fetch the Tampa Bay FIM species dataset
 }
 \details{
 Downloads and parses the FIM RData file directly (not via
-\code{\link{util_rdataload}} - the object stored inside this particular
-file is named \code{inv}, not derived from the URL's basename, so that
-helper's assumption doesn't apply here). Only \code{Fish}/\code{Turtle}
-taxa are present in this dataset; they're recoded to \code{Fishes}/
+\code{\link{util_rdataload}}). Only \code{Fish}/\code{Turtle}
+taxa are present in this dataset. They're recoded to \code{Fishes}/
 \code{Reptiles} to match \code{\link{util_fw_fetch_nas}}'s group names.
 Year is recovered from the \code{Reference} field.
 }

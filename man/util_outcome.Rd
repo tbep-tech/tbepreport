@@ -31,23 +31,22 @@ fixed outcome values}
 
 \item{reverse}{logical, if \code{TRUE} the outcome is flipped
 (\code{1 - outcome}) so a higher raw value in \code{x} indicates a worse
-outcome. Applies to \code{type = "continuous"} and
-\code{type = "threshold"}.}
+outcome.}
 
 \item{thresh}{numeric, the cutoff value to compare \code{x} against when
 \code{type = "threshold"}}
 
 \item{op}{chr string, one of \code{"<"}, \code{"<="}, \code{">"},
-\code{">="} - the comparison defining the condition under which \code{x}
+\code{">="}. Defines the condition under which \code{x}
 attains an outcome of 1 when \code{type = "threshold"}}
 
 \item{smooth}{for \code{type = "threshold"}, one of \code{"logistic"}
-(the default), \code{"ramp"}, or \code{"none"} - see Details. For
+(the default), \code{"ramp"}, or \code{"none"}. See Details. For
 backward compatibility, logical \code{TRUE}/\code{FALSE} are also
 accepted and mapped to \code{"logistic"}/\code{"none"}.}
 
 \item{scl}{numeric, controls the steepness of the \code{"logistic"}/
-\code{"ramp"} transition - smaller values are a sharper transition.
+\code{"ramp"} transition. Smaller values give a sharper transition.
 Defaults to \code{pct * abs(thresh)} (or \code{1} if \code{thresh =
   0}). Set this directly to use an absolute steepness instead of one
 relative to \code{thresh}.}
@@ -79,7 +78,7 @@ function that calls it.
 
 \strong{continuous}: \code{x} is linearly rescaled from \code{from} to
 \code{c(0, 1)} with \code{\link[scales]{rescale}}, then clamped to
-\code{c(0, 1)} - values of \code{x} outside \code{from} are pinned to
+\code{c(0, 1)}. Values of \code{x} outside \code{from} are pinned to
 \code{0} or \code{1} rather than extrapolated. This lets \code{from} act
 as a transition window narrower than the full range of \code{x} (e.g.
 TBNI's 32-46 breakpoints within its 0-100 score).
@@ -88,16 +87,17 @@ TBNI's 32-46 breakpoints within its 0-100 score).
 in one of three ways selected by \code{smooth}:
 \itemize{
 \item \code{"logistic"} (the default): a smooth logistic transition
-centered at \code{thresh}, exactly \code{0.5} \emph{at} \code{thresh}
+centered at \code{thresh}, exactly \code{0.5} at \code{thresh}
 and approaching \code{0}/\code{1} on either side, in the direction
 \code{op} would have used (e.g. \code{op = "<"} still means lower
 \code{x} is better).
 \item \code{"ramp"}: \code{1} once \code{x} reaches the "good" side of
-\code{thresh} (as defined by \code{op}) - not just \code{0.5} there
-like \code{"logistic"} - decaying exponentially toward \code{0} the
-further \code{x} is on the "bad" side. Use this when meeting or
-beating a target should already be full credit rather than half
-credit (e.g. an acreage target that's fine to exceed by any amount).
+\code{thresh} (as defined by \code{op}). This is not just \code{0.5}
+there like \code{"logistic"}. It decays exponentially toward
+\code{0} the further \code{x} is on the "bad" side. Use this when
+meeting or beating a target should already be full credit rather
+than half credit (e.g. an acreage target that's fine to exceed by
+any amount).
 \item \code{"none"}: a hard \code{0}/\code{1} cutoff, no transition.
 }
 Logical \code{TRUE}/\code{FALSE} are also accepted for \code{smooth}, for
@@ -119,10 +119,10 @@ in \code{x} corresponds to a lower (worse) outcome.
 util_outcome(c(20, 46, 90), type = 'continuous', from = c(0, 100))
 
 # continuous with a narrower transition window, e.g. TBNI's 32-46
-# breakpoints - values outside the window are clamped to 0/1
+# breakpoints. Values outside the window are clamped to 0/1
 util_outcome(c(20, 32, 39, 46, 60), type = 'continuous', from = c(32, 46))
 
-# threshold, e.g. chlorophyll attainment (lower is better) - smooth by
+# threshold, e.g. chlorophyll attainment (lower is better). Smooth by
 # default, a logistic transition rather than a hard cutoff
 util_outcome(c(5, 10, 15), type = 'threshold', thresh = 10)
 

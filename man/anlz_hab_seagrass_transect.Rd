@@ -19,8 +19,8 @@ A data.frame with columns \code{bay_segment}, \code{yr},
 Seagrass transect frequency of occurrence outcome by bay segment and year
 }
 \details{
-Uses \code{\link[tbeptools]{anlz_transectocc}} and
-\code{\link[tbeptools]{anlz_transectave}} to estimate frequency of
+Uses \href{https://tbep-tech.github.io/tbeptools/reference/anlz_transectocc.html}{\code{anlz_transectocc}} and
+\href{https://tbep-tech.github.io/tbeptools/reference/anlz_transectave.html}{\code{anlz_transectave}} to estimate frequency of
 seagrass occurrence (\code{foest}, 0-100) at each bay segment/year,
 drops the bay-wide \code{"All"} aggregate row, then converts to a 0-1
 outcome with \code{\link{util_outcome}} (\code{type = "continuous"},

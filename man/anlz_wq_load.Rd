@@ -9,40 +9,38 @@ anlz_wq_load(totanndat, smooth = TRUE, pct = 0.1)
 \arguments{
 \item{totanndat}{data.frame of total annual loading estimates, with
 columns \code{year}, \code{bay_segment} (full segment names, e.g.
-\code{"Old Tampa Bay"}), \code{tn_load}, and \code{tnhy} - e.g. as
+\code{"Old Tampa Bay"}), \code{tn_load}, and \code{tnhy}, e.g. as
 returned by \code{util_rdataload()} on the
 \href{https://github.com/tbep-tech/load-estimates}{load-estimates} data}
 
-\item{smooth}{logical, passed to \code{\link{util_outcome}} - if
+\item{smooth}{logical, passed to \code{\link{util_outcome}}. If
 \code{TRUE} (the default), use a smooth logistic transition centered at
-each target instead of a hard 0/1 cutoff.}
+each threshold instead of a hard 0/1 cutoff.}
 
 \item{pct}{numeric, passed to \code{\link{util_outcome}} as the fraction
-of each target used for the logistic transition's steepness when
-\code{smooth = TRUE}. Defaults to \code{0.1} (10\% of the target).}
+of each threshold used for the logistic transition's steepness when
+\code{smooth = TRUE}. Defaults to \code{0.1} (10\% of the threshold).}
 }
 \value{
 A data.frame with columns \code{bay_segment} (abbreviated, e.g.
 \code{"OTB"}), \code{yr}, \code{indicator} (\code{"tn_load"} or
-\code{"tnhy_load"} - see Details for what \code{"tnhy_load"} measures),
-and \code{outcome} (0-1, 1 = best; exactly 0 or 1 only if \code{smooth =
-FALSE})
+\code{"tnhy_load"}, see Details for what \code{"tnhy_load"} measures),
+and \code{outcome} (0-1, 1 = best)
 }
 \description{
 Nutrient loading outcome by bay segment, year, and indicator
 }
 \details{
-Compares two loading measures against fixed bay-segment targets,
-using \code{\link{util_outcome}} with \code{type = "threshold"} - by
-default (\code{smooth = TRUE}) a value below its target approaches an
+Compares two loading measures against fixed bay-segment thresholds,
+using \code{\link{util_outcome}} with \code{type = "threshold"}. By
+default (\code{smooth = TRUE}), a value below its threshold approaches an
 outcome of 1 and at or above approaches 0, with a smooth logistic
-transition between them; \code{smooth = FALSE} instead gives a hard 0/1
-cutoff:
+transition between them.
 \itemize{
 \item \code{tn_load}: total nitrogen load
 \item \code{tnhy_load}: \code{tnhy}, the total nitrogen load normalized
 by hydrologic load (i.e. TN load per unit of hydrologic load, a
-hydrologically-normalized loading rate) - \strong{not} the raw
+hydrologically-normalized loading rate). This is not the raw
 hydrologic (freshwater inflow) load itself. The raw \code{hy_load}
 column in \code{totanndat} is not used here.
 }

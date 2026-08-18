@@ -1,15 +1,13 @@
-#' Fetch the Tampa Bay FIM non-native species dataset
+#' Fetch the Tampa Bay FIM species dataset
 #'
-#' @param fim_url chr string, the URL of the FIM non-native species RData
+#' @param fim_url chr string, the URL of the FIM species RData
 #'   file, defaults to the
 #'   \href{https://github.com/kflahertywalia/tb_fim_nonnatives}{tb_fim_nonnatives}
 #'   repo's output
 #'
 #' @details Downloads and parses the FIM RData file directly (not via
-#' \code{\link{util_rdataload}} - the object stored inside this particular
-#' file is named \code{inv}, not derived from the URL's basename, so that
-#' helper's assumption doesn't apply here). Only \code{Fish}/\code{Turtle}
-#' taxa are present in this dataset; they're recoded to \code{Fishes}/
+#' \code{\link{util_rdataload}}). Only \code{Fish}/\code{Turtle}
+#' taxa are present in this dataset. They're recoded to \code{Fishes}/
 #' \code{Reptiles} to match \code{\link{util_fw_fetch_nas}}'s group names.
 #' Year is recovered from the \code{Reference} field.
 #'

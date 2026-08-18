@@ -24,8 +24,8 @@ anlz_fw_nonnative_obs(
 \value{
 A data.frame with columns \code{scientificName}, \code{commonName},
 \code{group}, \code{year}, \code{lon}, \code{lat}, \code{source}, and
-\code{bay_segment} (full segment name, e.g. \code{"Old Tampa Bay"}) - one
-row per occurrence point that fell within the AOI and a bay segment
+\code{bay_segment} (full segment name, e.g. \code{"Old Tampa Bay"}). Each
+row is one occurrence point that fell within the AOI and a bay segment
 }
 \description{
 Non-native species occurrence points, clipped and assigned to a bay segment

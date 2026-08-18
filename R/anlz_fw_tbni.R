@@ -8,8 +8,8 @@
 #'   breakpoints. Pass \code{c(0, 100)} to revert to a plain linear rescale
 #'   over the full score range with no clamping.
 #'
-#' @details Uses \code{\link[tbeptools]{anlz_tbniscr}} and
-#' \code{\link[tbeptools]{anlz_tbniave}} to score each bay segment/year 0-100,
+#' @details Uses [`anlz_tbniscr`](https://tbep-tech.github.io/tbeptools/reference/anlz_tbniscr.html) and
+#' [`anlz_tbniave`](https://tbep-tech.github.io/tbeptools/reference/anlz_tbniave.html) to score each bay segment/year 0-100,
 #' then converts to a 0-1 outcome with \code{\link{util_outcome}}
 #' (\code{type = "continuous"}). With the default \code{from = c(32, 46)},
 #' matching TBNI's own grade breakpoints (On Alert below 32, Caution from 32
@@ -19,7 +19,7 @@
 #'
 #' @returns A data.frame with columns \code{bay_segment}, \code{yr},
 #' \code{Segment_TBNI} (the raw 0-100 score), \code{Action} (management
-#' action category from \code{\link[tbeptools]{anlz_tbniave}}), and
+#' action category from [`anlz_tbniave`](https://tbep-tech.github.io/tbeptools/reference/anlz_tbniave.html)), and
 #' \code{outcome} (0-1, 1 = best)
 #'
 #' @export

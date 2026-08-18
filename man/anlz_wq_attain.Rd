@@ -19,9 +19,10 @@ A data.frame with columns \code{bay_segment}, \code{yr},
 Water quality attainment outcome by bay segment and year
 }
 \details{
-Combines chlorophyll and light attenuation attainment (from
-\code{\link[tbeptools]{anlz_attain}}) into a single continuous outcome:
-the two sub-scores are summed, then converted with \code{\link{util_outcome}}
+Combines chlorophyll and light attenuation attainment of management targets (from
+\href{https://tbep-tech.github.io/tbeptools/reference/anlz_attain.html}{\code{anlz_attain}}) into
+a single continuous outcome.  The two sub-scores are summed (each 0-3 assessing magnitude and duration
+of exceedance), then converted with \code{\link{util_outcome}}
 (\code{type = "continuous"}, \code{reverse = TRUE}) so a lower combined
 sub-score (better attainment) gives a higher outcome.
 }

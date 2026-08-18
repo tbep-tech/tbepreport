@@ -12,12 +12,10 @@ anlz_category(
 )
 }
 \arguments{
-\item{...}{named data.frames, passed to \code{\link{anlz_indicators}} -
-see its documentation for the expected shape}
+\item{...}{named data.frames, passed to \code{\link{anlz_indicators}}}
 
 \item{bay_segments}{chr vector of bay segments to include, defaults to
-\code{c('OTB', 'HB', 'MTB', 'LTB')}, the four segments with the most
-complete indicator coverage}
+\code{c('OTB', 'HB', 'MTB', 'LTB')}}
 
 \item{yr_min}{integer, minimum year to include, defaults to \code{2000}}
 
@@ -25,8 +23,8 @@ complete indicator coverage}
 values produced by \code{\link{anlz_indicators}} (e.g.
 \code{c(chla_thresh = 2, fib = 1)} to weight an indicator, or
 \code{c(wq = 2, sed = 1)} when combining category scores via
-\code{\link{anlz_score}}). Indicators not named in \code{wt} - including
-all of them when \code{wt = NULL} - get a weight of \code{1}, so the
+\code{\link{anlz_score}}). Indicators not named in \code{wt} (including
+all of them when \code{wt = NULL}) get a weight of \code{1}, so the
 default is a plain unweighted mean.}
 }
 \value{
@@ -43,11 +41,11 @@ Combine indicators into a single score by bay segment and year
 \details{
 Stacks \code{...} with \code{\link{anlz_indicators}}, then
 averages \code{outcome} across whatever indicators have data for a given
-bay segment/year - see \code{n_indicator} in the output for how many
+bay segment/year.  See \code{n_indicator} in the output for how many
 contributed. This same averaging step produces a category score when
 \code{...} are raw indicator outputs, and the final bay segment score
 when \code{...} are the four category scores (see
-\code{\link{anlz_score}}) - the two are mechanically identical.
+\code{\link{anlz_score}}).
 }
 \examples{
 anlz_category(
