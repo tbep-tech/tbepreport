@@ -1,12 +1,10 @@
 # Trends and Sensitivity
 
-This article has two parts. The first compares report card results
-across bay segments, both as trends from 2000-2024 and as a snapshot of
-2024 conditions. The second shows how scoring decisions (highlighted in
+This article shows a comparison of report card results across bay
+segments and how scoring decisions can change the results. Please see
 the [Report Card
 Scoring](https://tbep-tech.github.io/tbepreport/articles/scoring.md)
-article) can change the results, using the Nekton Index’s rescaling
-window, threshold smoothing, and category weights as examples.
+article for more information on the methods.
 
 ## Setup
 
@@ -58,13 +56,13 @@ haboverall <- anlz_category(
 )
 ```
 
-## Part 1: Comparing Bay Segments
+## Comparing Bay Segments
 
-### Trends by Bay Segment
+### Trends
 
-Each panel below shows one bay segment’s overall score from 2000-2024
-(the “Overall” facet from
-[`plot_trend()`](https://tbep-tech.github.io/tbepreport/reference/plot_trend.md)).
+The plot below shows each bay segment’s overall score from 2000-2024.
+Only the overall scores by category are shown (water quality, sediment,
+fish & wildlife, habitat).
 
 ``` r
 
@@ -84,8 +82,9 @@ patchwork::wrap_plots(plots, ncol = 2) +
 
 ### 2024 Snapshot by Bay Segment
 
-Each sunburst below shows the same 2024 outcome scale across all four
-bay segments. Color ranges are the same across plots for visual
+The plots below show the 2024 outcome for each bay segment, including
+the overall score, scores by category, and individual indicator scores
+within each category. Color ranges are the same across plots for visual
 comparison of score ranges.
 
 ``` r
@@ -96,7 +95,13 @@ plot_score(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'MTB', yr
 plot_score(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'LTB', yr = 2024)
 ```
 
-## Part 2: How Scoring Decisions Affect Results
+## How Scoring Decisions Affect Results
+
+The following demonstrates a few examples of how scoring decisions can
+affect the results. This is not a comprehensive demonstration, rather
+the intent is to provide a general overview of the sensitivity of the
+method to different decisions that can be made by the analyst. All
+examples use results from OTB.
 
 ### Nekton Index: Breakpoint Window vs. Full Range
 
@@ -136,20 +141,30 @@ patchwork::wrap_plots(p1, p2, ncol = 2) +
 
 ### Threshold Scoring: Smooth vs. Hard Cutoff
 
+The
 [`anlz_wq_thresh()`](https://tbep-tech.github.io/tbepreport/reference/anlz_wq_thresh.md)
-defaults to a smooth logistic transition at each bay segment’s
-chlorophyll/light attenuation threshold (`smooth = 'logistic'`).
+and
+[`anlz_wq_load()`](https://tbep-tech.github.io/tbepreport/reference/anlz_wq_load.md)
+indicators are scored against a threshold (chlorophyll/light attenuation
+and total/normalized nutrient loading) and both default to a smooth
+logistic transition at their threshold (`smooth = 'logistic'`).
 `smooth = 'none'` instead uses a hard 0/1 cutoff, as described in
 [Report Card
 Scoring](https://tbep-tech.github.io/tbepreport/articles/scoring.html#smooth-vs.-hard-threshold-example).
+The other three water quality indicators (`wq_attain`, `tidal_creeks`,
+`fib`) are continuous rather than threshold-based and are unaffected
+here.  
+Note the differences in `Chla Thresh`, `Light Thresh`, `Abs Load`, and
+`Norm Load` scores between the two plots, as well as the overall score.
 
 ``` r
 
 wqthresh_hard <- anlz_wq_thresh(epcdata, smooth = 'none')
+wqload_hard <- anlz_wq_load(totanndat, smooth = 'none')
 wqoverall_hard <- anlz_category(
   wq_attain    = wqattain,
   thresh       = wqthresh_hard,
-  load         = wqload,
+  load         = wqload_hard,
   tidal_creeks = wqtidalcreeks,
   fib          = wqfib
 )
@@ -177,8 +192,8 @@ patchwork::wrap_plots(p1, p2, ncol = 2) +
 
 [`anlz_score()`](https://tbep-tech.github.io/tbepreport/reference/anlz_score.md)’s
 `wt` argument weights the four category scores when combining them into
-the overall score (default `NULL`, equal weight). Below, Water Quality
-is upweighted twice relative to the other three categories.
+the overall score (default `NULL`, equal weight). Below, habitat is
+upweighted twice relative to the other three categories.
 
 ``` r
 
@@ -190,10 +205,10 @@ p1 <- plot_trend(
 
 p2 <- plot_trend(
   wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB',
-  facets = 'Overall', text = 'legend',
-  wt = c(wq = 2, sed = 1, fw = 1, hab = 1), yr_range = c(2000, 2024)
+  facets = 'Overall', text = 'legend', yr_range = c(2000, 2024),
+  wt = c(wq = 1, sed = 1, fw = 1, hab = 2)
 ) +
-  labs(subtitle = 'Water Quality weighted 2x')
+  labs(subtitle = 'Habitat weighted 2x')
 
 patchwork::wrap_plots(p1, p2, ncol = 2) +
   patchwork::plot_layout(guides = 'collect', axes = 'collect') &
