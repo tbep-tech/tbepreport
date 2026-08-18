@@ -39,7 +39,8 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="tbepreport-development-version">tbepreport (development version)<a class="anchor" aria-label="anchor" href="#tbepreport-development-version"></a></h2>
-<ul><li>
+<ul><li>Fix <code><a href="../reference/plot_score.html">plot_score()</a></code> and <code><a href="../reference/plot_category.html">plot_category()</a></code> sunburst titles rendering slightly left of center - plotly’s title <code>x</code> position defaulted to <code>xref = "container"</code> (the whole widget box) rather than <code>"paper"</code> (the plot’s own drawing area), now set explicitly</li>
+<li>
 <code><a href="../reference/plot_trend.html">plot_trend()</a></code> gains a <code>facets</code> argument (one or more of <code>"Overall"</code>, <code>"wq"</code>, <code>"sed"</code>, <code>"fw"</code>, <code>"hab"</code>, default all five) to show a subset of facets, and a <code>text</code> argument (one of <code>"labels"</code> (the default), <code>"legend"</code>, or <code>"none"</code>) controlling how series are identified: direct labels at each line’s right-most value, a conventional ggplot legend, or neither. The right-margin/x-axis padding reserved for labels shrinks automatically when <code>text != "labels"</code>. <code>text = "legend"</code> is useful for combining multiple panels with <code>patchwork</code> and collecting one shared legend</li>
 <li>Add a “Trends and Sensitivity” vignette (<code>vignettes/trends.qmd</code>) comparing report card results across the four default bay segments and showing how a few scoring decisions (TBNI’s rescale window, threshold smoothing, category weights) change the results</li>
 <li>

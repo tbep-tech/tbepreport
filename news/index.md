@@ -2,6 +2,14 @@
 
 ## tbepreport (development version)
 
+- Fix
+  [`plot_score()`](https://tbep-tech.github.io/tbepreport/reference/plot_score.md)
+  and
+  [`plot_category()`](https://tbep-tech.github.io/tbepreport/reference/plot_category.md)
+  sunburst titles rendering slightly left of center - plotly’s title `x`
+  position defaulted to `xref = "container"` (the whole widget box)
+  rather than `"paper"` (the plot’s own drawing area), now set
+  explicitly
 - [`plot_trend()`](https://tbep-tech.github.io/tbepreport/reference/plot_trend.md)
   gains a `facets` argument (one or more of `"Overall"`, `"wq"`,
   `"sed"`, `"fw"`, `"hab"`, default all five) to show a subset of
