@@ -8,7 +8,7 @@ test_that("anlz_wq_load scores tn_load/tnhy_load against fixed segment targets",
     tnhy = c(1.0, 1.7, 1.2, 0.9)
   )
 
-  result <- anlz_wq_load(totanndat, smooth = FALSE)
+  result <- anlz_wq_load(totanndat, smooth = 'none')
 
   expect_named(result, c('bay_segment', 'yr', 'indicator', 'outcome'))
   expect_setequal(unique(result$indicator), c('tn_load', 'tnhy_load'))

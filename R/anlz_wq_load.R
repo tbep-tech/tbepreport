@@ -5,16 +5,18 @@
 #'   \code{"Old Tampa Bay"}), \code{tn_load}, and \code{tnhy}, e.g. as
 #'   returned by \code{util_rdataload()} on the
 #'   \href{https://github.com/tbep-tech/load-estimates}{load-estimates} data
-#' @param smooth logical, passed to \code{\link{util_outcome}}. If
-#'   \code{TRUE} (the default), use a smooth logistic transition centered at
-#'   each threshold instead of a hard 0/1 cutoff.
+#' @param smooth passed to \code{\link{util_outcome}}. One of
+#'   \code{"logistic"} (the default), \code{"ramp"}, or \code{"none"}. By
+#'   default, use a smooth logistic transition centered at each threshold
+#'   instead of a hard 0/1 cutoff.
 #' @param pct numeric, passed to \code{\link{util_outcome}} as the fraction
-#'   of each threshold used for the logistic transition's steepness when
-#'   \code{smooth = TRUE}. Defaults to \code{0.1} (10% of the threshold).
+#'   of each threshold used for the transition's steepness when
+#'   \code{smooth} is \code{"logistic"} or \code{"ramp"}. Defaults to
+#'   \code{0.1} (10% of the threshold).
 #'
 #' @details Compares two loading measures against fixed bay-segment thresholds,
 #' using \code{\link{util_outcome}} with \code{type = "threshold"}. By
-#' default (\code{smooth = TRUE}), a value below its threshold approaches an
+#' default (\code{smooth = "logistic"}), a value below its threshold approaches an
 #' outcome of 1 and at or above approaches 0, with a smooth logistic
 #' transition between them.
 #' \itemize{
@@ -42,7 +44,7 @@
 #' )
 #' anlz_wq_load(totanndat)
 #' }
-anlz_wq_load <- function(totanndat, smooth = TRUE, pct = 0.1) {
+anlz_wq_load <- function(totanndat, smooth = 'logistic', pct = 0.1) {
 
   segcrsswk <- c(
     'Old Tampa Bay'     = 'OTB',

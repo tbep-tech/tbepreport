@@ -12,7 +12,6 @@ util_outcome(
   thresh = NULL,
   op = "<",
   smooth = "logistic",
-  scl = NULL,
   pct = 0.1,
   levels = NULL
 )
@@ -41,20 +40,12 @@ outcome.}
 attains an outcome of 1 when \code{type = "threshold"}}
 
 \item{smooth}{for \code{type = "threshold"}, one of \code{"logistic"}
-(the default), \code{"ramp"}, or \code{"none"}. See Details. For
-backward compatibility, logical \code{TRUE}/\code{FALSE} are also
-accepted and mapped to \code{"logistic"}/\code{"none"}.}
+(the default), \code{"ramp"}, or \code{"none"}. See Details.}
 
-\item{scl}{numeric, controls the steepness of the \code{"logistic"}/
-\code{"ramp"} transition. Smaller values give a sharper transition.
-Defaults to \code{pct * abs(thresh)} (or \code{1} if \code{thresh =
-  0}). Set this directly to use an absolute steepness instead of one
-relative to \code{thresh}.}
-
-\item{pct}{numeric, the fraction of \code{abs(thresh)} used to compute the
-default \code{scl} when \code{smooth} is \code{"logistic"} or
-\code{"ramp"} and \code{scl} is not supplied directly. Defaults to
-\code{0.1} (10\% of \code{thresh}). Ignored if \code{scl} is provided.}
+\item{pct}{numeric, the fraction of \code{abs(thresh)} used as the
+steepness of the \code{"logistic"}/\code{"ramp"} transition when
+\code{smooth} is one of those. Smaller values give a sharper
+transition. Defaults to \code{0.1} (10\% of \code{thresh}).}
 
 \item{levels}{named numeric vector mapping each category value in \code{x}
 to a fixed outcome when \code{type = "category"}, e.g.
@@ -100,14 +91,11 @@ than half credit (e.g. an acreage target that's fine to exceed by
 any amount).
 \item \code{"none"}: a hard \code{0}/\code{1} cutoff, no transition.
 }
-Logical \code{TRUE}/\code{FALSE} are also accepted for \code{smooth}, for
-backward compatibility, and map to \code{"logistic"}/\code{"none"}.
-
 For \code{"logistic"} and \code{"ramp"}, the steepness of the transition
-(\code{scl}) defaults to a percentage (\code{pct}) of \code{thresh}
-rather than a fixed absolute value, so it stays meaningful across
-indicators/thresholds with very different units and magnitudes (e.g. a
-threshold of 1 vs. a threshold in the hundreds).
+is a percentage (\code{pct}) of \code{thresh} rather than a fixed
+absolute value, so it stays meaningful across indicators/thresholds with
+very different units and magnitudes (e.g. a threshold of 1 vs. a
+threshold in the hundreds).
 
 \strong{category}: \code{x} is mapped to an outcome via \code{levels}.
 
@@ -130,7 +118,7 @@ util_outcome(c(5, 10, 15), type = 'threshold', thresh = 10)
 util_outcome(12, type = 'threshold', thresh = 10, pct = 0.1)
 util_outcome(12, type = 'threshold', thresh = 10, pct = 0.2)
 
-# smooth = "none" (or FALSE) instead gives a hard 0/1 cutoff
+# smooth = "none" instead gives a hard 0/1 cutoff
 util_outcome(c(5, 15), type = 'threshold', thresh = 10, op = '<', smooth = 'none')
 
 # smooth = "ramp": meeting/beating a target (op = ">=") is full credit,

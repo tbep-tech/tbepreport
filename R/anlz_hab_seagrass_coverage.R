@@ -6,9 +6,8 @@
 #'   defaults to the last year \code{sgsegest} actually has an estimate for
 #'   (\code{max(sgsegest$year)})
 #' @param smooth passed to \code{\link{util_outcome}}. One of
-#'   \code{"ramp"} (the default), \code{"logistic"}, or \code{"none"}
-#'   (logical \code{TRUE}/\code{FALSE} also accepted, mapped to
-#'   \code{"logistic"}/\code{"none"}). \code{"ramp"} gives an outcome of 1
+#'   \code{"ramp"} (the default), \code{"logistic"}, or \code{"none"}.
+#'   \code{"ramp"} gives an outcome of 1
 #'   for any acreage at or above a segment's target, decaying toward 0 the
 #'   further short of it a segment falls.
 #' @param pct numeric, passed to \code{\link{util_outcome}} as the fraction

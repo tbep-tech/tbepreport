@@ -8,7 +8,7 @@ test_that("anlz_hab_seagrass_coverage carries the last survey forward through ga
     year = c(2018, 2020)
   )
 
-  result <- anlz_hab_seagrass_coverage(sgsegest, smooth = FALSE)
+  result <- anlz_hab_seagrass_coverage(sgsegest, smooth = 'none')
 
   expect_named(result, c('bay_segment', 'yr', 'acres', 'outcome'))
   expect_equal(result$yr, 2018:2020)
@@ -76,7 +76,7 @@ test_that("anlz_hab_seagrass_coverage respects a custom yr_max", {
     year = 2020
   )
 
-  result <- anlz_hab_seagrass_coverage(sgsegest, yr_max = 2022, smooth = FALSE)
+  result <- anlz_hab_seagrass_coverage(sgsegest, yr_max = 2022, smooth = 'none')
 
   expect_equal(result$yr, 2020:2022)
   expect_true(all(result$acres == 12000))
@@ -94,7 +94,7 @@ test_that("anlz_hab_seagrass_coverage matches targets by segment name, not posit
     year = c(2020, 2020)
   )
 
-  result <- anlz_hab_seagrass_coverage(sgsegest, smooth = FALSE)
+  result <- anlz_hab_seagrass_coverage(sgsegest, smooth = 'none')
 
   # Manatee River (MR) target is 449 (500 >= 449 -> 1), Old Tampa Bay (OTB)
   # target is 11100 (500 < 11100 -> 0)

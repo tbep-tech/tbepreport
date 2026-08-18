@@ -50,7 +50,7 @@ wqattain <- anlz_wq_attain(epcdata)
 Compares annual mean chlorophyll and light attenuation values directly
 against bay-segment-specific thresholds, independent of the combined
 attainment score above.  Each gives its own threshold outcome as a smooth
-logistic transition by default or a hard binary 0/1 with `smooth = FALSE` 
+logistic transition by default or a hard binary 0/1 with `smooth = 'none'`
 (see [Scoring](#scoring)).  Values below the threshold receive better outcomes.
 
 ```{r}
@@ -61,8 +61,8 @@ wqthresh <- anlz_wq_thresh(epcdata)
 
 Compares total nitrogen load and a hydrologically-normalized loading
 against fixed bay-segment thresholds, each as its own threshold outcome.
-Results are determined using a smooth logistic transition by default, 
-or a hard binary 0/1 with `smooth = FALSE` (see [Scoring](#scoring)).  
+Results are determined using a smooth logistic transition by default,
+or a hard binary 0/1 with `smooth = 'none'` (see [Scoring](#scoring)).
 Values below the threshold receive better outcomes.
 
 ```{r}
@@ -214,8 +214,7 @@ types of scoring:
   For `"logistic"` and `"ramp"`, the steepness of the transition is set by
   `pct`, a fraction of the threshold itself (default 10%) rather than a
   fixed absolute value, so it stays meaningful across indicators/segments
-  with very different thresholds. Logical `TRUE`/`FALSE` are also accepted
-  for `smooth`, mapped to `"logistic"`/`"none"`.
+  with very different thresholds.
 
 ```{r}
 # continuous: linearly rescale a raw value between known bounds
@@ -231,7 +230,7 @@ util_outcome(8, type = 'threshold', thresh = 10, op = '<')
 # credit, decaying toward 0 only on the "bad" side
 util_outcome(8, type = 'threshold', thresh = 10, op = '<', smooth = 'ramp')
 
-# threshold, smooth = "none" (or FALSE): a hard binary cutoff instead
+# threshold, smooth = "none": a hard binary cutoff instead
 util_outcome(8, type = 'threshold', thresh = 10, op = '<', smooth = 'none')
 ```
 
@@ -352,7 +351,7 @@ can be handled differently based on how exceedance could be interpreted.
 
 At it's simplest level, a binary scoring can be used with a clear break at 
 the the threshold (no indicators use this method).  Here is an example for 
-OTB chlorophyll data scored with `smooth = FALSE` that uses a hard binary cutoff. 
+OTB chlorophyll data scored with `smooth = 'none'` that uses a hard binary cutoff.
 
 ```{r}
 #| echo: false
@@ -361,13 +360,13 @@ otb_chla <- tbeptools::anlz_avedat(epcdata)$ann |>
   dplyr::filter(bay_segment == 'OTB', var == 'mean_chla')
 otb_thresh <- tbeptools::targets$chla_thresh[tbeptools::targets$bay_segment == 'OTB']
 curve_df <- data.frame(xvals = xvals,
-                        outcome = util_outcome(xvals, type = 'threshold', thresh = otb_thresh, op = '<', smooth = FALSE))
+                        outcome = util_outcome(xvals, type = 'threshold', thresh = otb_thresh, op = '<', smooth = 'none'))
 
 ggplot(curve_df, aes(x = xvals, y = outcome)) +
   geom_step(aes(color = 'hard cutoff'), linewidth = 0.8) +
   geom_vline(xintercept = otb_thresh, linetype = 2, color = 'grey70') +
   geom_point(data = otb_chla, aes(x = val,
-                                   y = util_outcome(val, type = 'threshold', thresh = otb_thresh, op = '<', smooth = FALSE),
+                                   y = util_outcome(val, type = 'threshold', thresh = otb_thresh, op = '<', smooth = 'none'),
                                    color = 'observed annual means'),
              shape = 16) +
   scale_color_manual(name = NULL, values = c('hard cutoff' = 'grey40', 'observed annual means' = 'darkorange'),
@@ -400,9 +399,9 @@ thresh_df <- data.frame(
   xvals = rep(xvals, 4),
   outcome = c(
     as.numeric(xvals < thresh),
-    util_outcome(xvals, type = 'threshold', thresh = thresh, smooth = TRUE, pct = 0.05),
-    util_outcome(xvals, type = 'threshold', thresh = thresh, smooth = TRUE, pct = 0.1),
-    util_outcome(xvals, type = 'threshold', thresh = thresh, smooth = TRUE, pct = 0.2)
+    util_outcome(xvals, type = 'threshold', thresh = thresh, smooth = 'logistic', pct = 0.05),
+    util_outcome(xvals, type = 'threshold', thresh = thresh, smooth = 'logistic', pct = 0.1),
+    util_outcome(xvals, type = 'threshold', thresh = thresh, smooth = 'logistic', pct = 0.2)
   ),
   method = factor(rep(thresh_ord, each = length(xvals)), levels = thresh_ord)
 )
@@ -428,13 +427,13 @@ scoring use a smooth transition of 10% of the actual threshold value.
 #| echo: false
 xvals <- seq(0, 20, by = 0.1)
 curve_df <- data.frame(xvals = xvals,
-                        outcome = util_outcome(xvals, type = 'threshold', thresh = otb_thresh, op = '<', smooth = TRUE))
+                        outcome = util_outcome(xvals, type = 'threshold', thresh = otb_thresh, op = '<', smooth = 'logistic'))
 
 ggplot(curve_df, aes(x = xvals, y = outcome)) +
   geom_line(aes(color = 'smooth threshold curve'), linewidth = 0.8) +
   geom_vline(xintercept = otb_thresh, linetype = 2, color = 'grey70') +
   geom_point(data = otb_chla, aes(x = val,
-                                   y = util_outcome(val, type = 'threshold', thresh = otb_thresh, op = '<', smooth = TRUE),
+                                   y = util_outcome(val, type = 'threshold', thresh = otb_thresh, op = '<', smooth = 'logistic'),
                                    color = 'observed annual means'),
              shape = 16) +
   scale_color_manual(name = NULL, values = c('smooth threshold curve' = 'steelblue', 'observed annual means' = 'darkorange'),

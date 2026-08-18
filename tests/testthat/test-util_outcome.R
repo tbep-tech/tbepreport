@@ -30,18 +30,18 @@ test_that("util_outcome continuous clamps values outside from to 0/1", {
 
 })
 
-test_that("util_outcome threshold hard cutoff respects op when smooth = FALSE", {
+test_that("util_outcome threshold hard cutoff respects op when smooth = 'none'", {
 
-  expect_equal(util_outcome(c(5, 15), type = 'threshold', thresh = 10, op = '<', smooth = FALSE), c(1, 0))
-  expect_equal(util_outcome(c(5, 15), type = 'threshold', thresh = 10, op = '>', smooth = FALSE), c(0, 1))
-  expect_equal(util_outcome(c(10, 15), type = 'threshold', thresh = 10, op = '<=', smooth = FALSE), c(1, 0))
+  expect_equal(util_outcome(c(5, 15), type = 'threshold', thresh = 10, op = '<', smooth = 'none'), c(1, 0))
+  expect_equal(util_outcome(c(5, 15), type = 'threshold', thresh = 10, op = '>', smooth = 'none'), c(0, 1))
+  expect_equal(util_outcome(c(10, 15), type = 'threshold', thresh = 10, op = '<=', smooth = 'none'), c(1, 0))
 
 })
 
-test_that("util_outcome threshold defaults to smooth = TRUE", {
+test_that("util_outcome threshold defaults to smooth = 'logistic'", {
 
   result <- util_outcome(c(5, 10, 15), type = 'threshold', thresh = 10)
-  expected <- util_outcome(c(5, 10, 15), type = 'threshold', thresh = 10, smooth = TRUE)
+  expected <- util_outcome(c(5, 10, 15), type = 'threshold', thresh = 10, smooth = 'logistic')
 
   expect_equal(result, expected)
   expect_true(any(result > 0 & result < 1))
@@ -56,16 +56,16 @@ test_that("util_outcome threshold requires thresh", {
 
 test_that("util_outcome threshold smooth is near 0.5 at the threshold and respects op direction", {
 
-  at_thresh <- util_outcome(10, type = 'threshold', thresh = 10, smooth = TRUE)
+  at_thresh <- util_outcome(10, type = 'threshold', thresh = 10, smooth = 'logistic')
   expect_equal(at_thresh, 0.5)
 
-  lower_op_lt <- util_outcome(0, type = 'threshold', thresh = 10, smooth = TRUE, op = '<')
-  higher_op_lt <- util_outcome(20, type = 'threshold', thresh = 10, smooth = TRUE, op = '<')
+  lower_op_lt <- util_outcome(0, type = 'threshold', thresh = 10, smooth = 'logistic', op = '<')
+  higher_op_lt <- util_outcome(20, type = 'threshold', thresh = 10, smooth = 'logistic', op = '<')
   expect_gt(lower_op_lt, 0.9)
   expect_lt(higher_op_lt, 0.1)
 
-  lower_op_gt <- util_outcome(0, type = 'threshold', thresh = 10, smooth = TRUE, op = '>')
-  higher_op_gt <- util_outcome(20, type = 'threshold', thresh = 10, smooth = TRUE, op = '>')
+  lower_op_gt <- util_outcome(0, type = 'threshold', thresh = 10, smooth = 'logistic', op = '>')
+  higher_op_gt <- util_outcome(20, type = 'threshold', thresh = 10, smooth = 'logistic', op = '>')
   expect_lt(lower_op_gt, 0.1)
   expect_gt(higher_op_gt, 0.9)
 
@@ -73,23 +73,16 @@ test_that("util_outcome threshold smooth is near 0.5 at the threshold and respec
 
 test_that("util_outcome threshold pct controls steepness relative to thresh", {
 
-  # pct = 0.2 on thresh = 10 gives scl = 2, so x = 12 is exactly 1 scl above
-  # thresh -> outcome = 1 / (1 + exp(1))
-  result <- util_outcome(12, type = 'threshold', thresh = 10, smooth = TRUE, pct = 0.2)
+  # pct = 0.2 on thresh = 10 gives a steepness of 2, so x = 12 is exactly 1
+  # steepness unit above thresh -> outcome = 1 / (1 + exp(1))
+  result <- util_outcome(12, type = 'threshold', thresh = 10, smooth = 'logistic', pct = 0.2)
   expect_equal(result, 1 / (1 + exp(1)))
 
   # a smaller pct sharpens the transition, so the same x sits further out
   # along the curve and is closer to the hard-cutoff outcome of 0
-  tight <- util_outcome(12, type = 'threshold', thresh = 10, smooth = TRUE, pct = 0.05)
-  wide  <- util_outcome(12, type = 'threshold', thresh = 10, smooth = TRUE, pct = 0.2)
+  tight <- util_outcome(12, type = 'threshold', thresh = 10, smooth = 'logistic', pct = 0.05)
+  wide  <- util_outcome(12, type = 'threshold', thresh = 10, smooth = 'logistic', pct = 0.2)
   expect_lt(tight, wide)
-
-})
-
-test_that("util_outcome threshold scl overrides pct", {
-
-  result <- util_outcome(12, type = 'threshold', thresh = 10, smooth = TRUE, scl = 2, pct = 0.5)
-  expect_equal(result, 1 / (1 + exp(1)))
 
 })
 
@@ -124,19 +117,6 @@ test_that("util_outcome threshold ramp respects op direction (lower is better)",
   expect_equal(below, 1)
   expect_lt(above, 1)
   expect_gt(above, 0)
-
-})
-
-test_that("util_outcome threshold smooth accepts logical for backward compatibility", {
-
-  expect_equal(
-    util_outcome(12, type = 'threshold', thresh = 10, smooth = TRUE),
-    util_outcome(12, type = 'threshold', thresh = 10, smooth = 'logistic')
-  )
-  expect_equal(
-    util_outcome(c(5, 15), type = 'threshold', thresh = 10, smooth = FALSE),
-    util_outcome(c(5, 15), type = 'threshold', thresh = 10, smooth = 'none')
-  )
 
 })
 

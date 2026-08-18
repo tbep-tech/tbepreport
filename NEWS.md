@@ -13,11 +13,12 @@
   threshold outcome; `util_outcome()`'s threshold steepness is now a
   tunable `pct` of the threshold (default `0.1`) rather than a hardcoded
   10%
-* **Breaking**: `smooth` now defaults to `TRUE` for `util_outcome(type =
-  "threshold")` and for `anlz_wq_thresh()`, `anlz_wq_load()`, and
-  `anlz_hab_seagrass_coverage()`, so these threshold-based outcomes are
-  smooth logistic transitions by default instead of a hard 0/1 cutoff.
-  Pass `smooth = FALSE` to restore the previous hard-cutoff behavior
+* **Breaking**: `smooth` now defaults to `"logistic"` for
+  `util_outcome(type = "threshold")` and for `anlz_wq_thresh()`,
+  `anlz_wq_load()`, and `anlz_hab_seagrass_coverage()`, so these
+  threshold-based outcomes are smooth logistic transitions by default
+  instead of a hard 0/1 cutoff. Pass `smooth = "none"` to restore the
+  previous hard-cutoff behavior
 * Add `plot_trend()`, a new faceted ggplot2 trend plot: an "Overall" facet
   (bay segment score with one line per category) followed by one facet per
   category (that category's score with one line per indicator), each
@@ -58,8 +59,7 @@
   PEL/TEL, Benthic Index, tidal creeks); no indicator currently uses
   `util_outcome(type = "category")`, though it remains available
 * `util_outcome()`'s `smooth` argument for `type = "threshold"` now takes
-  one of `"logistic"`, `"ramp"`, or `"none"` (logical `TRUE`/`FALSE` still
-  accepted, mapped to `"logistic"`/`"none"`). `"ramp"` gives an outcome of
+  one of `"logistic"`, `"ramp"`, or `"none"`. `"ramp"` gives an outcome of
   1 once a value reaches the "good" side of the threshold - not just 0.5
   there like `"logistic"` - decaying exponentially toward 0 the further it
   falls on the "bad" side, using the same `pct`-of-threshold steepness
