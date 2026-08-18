@@ -216,6 +216,17 @@ types of scoring:
   fixed absolute value, so it stays meaningful across indicators/segments
   with very different thresholds.
 
+  The direction that counts as "good" is set by `op` (one of `"<"`,
+  `"<="`, `">"`, `">="`), passed straight through from each indicator
+  function. Every threshold indicator currently uses one of two:
+  * `op = "<"` - a lower raw value is better. Used by `anlz_wq_thresh()`
+    (chlorophyll and light attenuation compared to their bay-segment thresholds)
+    and `anlz_wq_load()` (both total nitrogen load and the
+    hydrologically-normalized load compared to their bay-segment targets).
+  * `op = ">="` - meeting or exceeding the raw value is better. Used by
+    `anlz_hab_seagrass_coverage()` (mapped seagrass acreage compared to its
+    bay-segment target).
+
 ```{r}
 # continuous: linearly rescale a raw value between known bounds
 util_outcome(75, type = 'continuous', from = c(0, 100))
