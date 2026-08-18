@@ -20,7 +20,7 @@ library(tbepreport)
 ```
 
 `tbepreport` builds the Tampa Bay Estuary Program's annual bay segment
-report card: raw monitoring data becomes a 0-1 outcome for each indicator,
+report card.  Individual indicators are assigned a 0-1 outcome,
 indicators are averaged into a score for each of four categories (Water
 Quality, Sediment, Fish and Wildlife, Habitat), and the four category
 scores are averaged into one overall score per bay segment and year. This
@@ -32,7 +32,7 @@ calculated and scored.
 
 Every `anlz_*` indicator function takes raw monitoring data (mostly from
 [tbeptools](https://tbep-tech.github.io/tbeptools/)) and returns a 0-1
-outcome by bay segment and year:
+outcome by bay segment and year.
 
 ```{r}
 # water quality
@@ -62,7 +62,7 @@ cov <- anlz_hab_seagrass_coverage(sgsegest)
 
 `anlz_category()` averages a category's indicators into one score per bay
 segment/year, and `anlz_score()` averages the four category scores into
-one overall score:
+one overall score.
 
 ```{r}
 wqoverall <- anlz_category(
@@ -91,15 +91,14 @@ score <- anlz_score(wqoverall, sedoverall, fwoverall, haboverall)
 
 ## Visualize
 
-`plot_score()` plots the full hierarchy - indicators, then categories,
-then the overall score - as a sunburst for one bay segment and year:
+`plot_score()` plots the full results for one bay segment and year.
 
 ```{r}
 plot_score(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB', yr = 2024)
 ```
 
-`plot_trend()` plots the same hierarchy across every year instead, for
-one bay segment:
+`plot_trend()` plots the same hierarchy across every year for
+one bay segment.
 
 ```{r}
 #| fig-height: 12
