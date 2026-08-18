@@ -65,27 +65,22 @@ haboverall <- anlz_category(
 Each panel below shows one bay segment’s overall score from 2000-2024
 (the “Overall” facet from
 [`plot_trend()`](https://tbep-tech.github.io/tbepreport/reference/plot_trend.md)).
-Labels are turned off since they would collide at this smaller panel
-size.
 
 ``` r
 
-for (seg in bay_segments) {
-  p <- plot_trend(
+plots <- lapply(bay_segments, function(seg) {
+  plot_trend(
     wqoverall, sedoverall, fwoverall, haboverall, bay_segment = seg,
-    yr_range = c(2000, 2024), facets = 'Overall', labels = FALSE
+    yr_range = c(2000, 2024), facets = 'Overall', text = 'legend'
   )
-  print(p)
-}
+})
+
+patchwork::wrap_plots(plots, ncol = 2) +
+  patchwork::plot_layout(guides = 'collect') &
+  theme(legend.position = 'bottom')
 ```
 
 ![](trends_files/figure-html/unnamed-chunk-2-1.png)
-
-![](trends_files/figure-html/unnamed-chunk-2-2.png)
-
-![](trends_files/figure-html/unnamed-chunk-2-3.png)
-
-![](trends_files/figure-html/unnamed-chunk-2-4.png)
 
 ### 2024 Snapshot by Bay Segment
 
@@ -120,22 +115,24 @@ fwoverall_full <- anlz_category(
   nonnative_richness  = nonnative_richness
 )
 
-plot_trend(
+p1 <- plot_trend(
   wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB',
-  facets = 'fw', labels = FALSE, yr_range = c(2000, 2024)
+  facets = 'fw', text = 'legend', yr_range = c(2000, 2024)
 ) +
   labs(subtitle = '32-46 breakpoint (default)')
 
-plot_trend(
+p2 <- plot_trend(
   wqoverall, sedoverall, fwoverall_full, haboverall, bay_segment = 'OTB',
-  facets = 'fw', labels = FALSE, yr_range = c(2000, 2024)
+  facets = 'fw', text = 'legend', yr_range = c(2000, 2024)
 ) +
   labs(subtitle = 'Full 0-100 range')
+
+patchwork::wrap_plots(p1, p2, ncol = 2) +
+  patchwork::plot_layout(guides = 'collect') &
+  theme(legend.position = 'bottom')
 ```
 
 ![](trends_files/figure-html/unnamed-chunk-7-1.png)
-
-![](trends_files/figure-html/unnamed-chunk-7-2.png)
 
 ### Threshold Scoring: Smooth vs. Hard Cutoff
 
@@ -157,22 +154,24 @@ wqoverall_hard <- anlz_category(
   fib          = wqfib
 )
 
-plot_trend(
+p1 <- plot_trend(
   wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB',
-  facets = 'wq', labels = FALSE, yr_range = c(2000, 2024)
+  facets = 'wq', text = 'legend', yr_range = c(2000, 2024)
 ) +
   labs(subtitle = 'Smooth logistic (default)')
 
-plot_trend(
+p2 <- plot_trend(
   wqoverall_hard, sedoverall, fwoverall, haboverall, bay_segment = 'OTB',
-  facets = 'wq', labels = FALSE, yr_range = c(2000, 2024)
+  facets = 'wq', text = 'legend', yr_range = c(2000, 2024)
 ) +
   labs(subtitle = 'Hard cutoff (smooth = "none")')
+
+patchwork::wrap_plots(p1, p2, ncol = 2) +
+  patchwork::plot_layout(guides = 'collect') &
+  theme(legend.position = 'bottom')
 ```
 
 ![](trends_files/figure-html/unnamed-chunk-8-1.png)
-
-![](trends_files/figure-html/unnamed-chunk-8-2.png)
 
 ### Category Weights
 
@@ -183,20 +182,22 @@ is upweighted twice relative to the other three categories.
 
 ``` r
 
-plot_trend(
+p1 <- plot_trend(
   wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB',
-  facets = 'Overall', labels = FALSE, yr_range = c(2000, 2024)
+  facets = 'Overall', text = 'legend', yr_range = c(2000, 2024)
 ) +
   labs(subtitle = 'Equal category weights (default)')
 
-plot_trend(
+p2 <- plot_trend(
   wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB',
-  facets = 'Overall', labels = FALSE, wt = c(wq = 2, sed = 1, fw = 1, hab = 1), 
-  yr_range = c(2000, 2024)
+  facets = 'Overall', text = 'legend',
+  wt = c(wq = 2, sed = 1, fw = 1, hab = 1), yr_range = c(2000, 2024)
 ) +
   labs(subtitle = 'Water Quality weighted 2x')
+
+patchwork::wrap_plots(p1, p2, ncol = 2) +
+  patchwork::plot_layout(guides = 'collect') &
+  theme(legend.position = 'bottom')
 ```
 
 ![](trends_files/figure-html/unnamed-chunk-9-1.png)
-
-![](trends_files/figure-html/unnamed-chunk-9-2.png)

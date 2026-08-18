@@ -5,9 +5,13 @@
 - [`plot_trend()`](https://tbep-tech.github.io/tbepreport/reference/plot_trend.md)
   gains a `facets` argument (one or more of `"Overall"`, `"wq"`,
   `"sed"`, `"fw"`, `"hab"`, default all five) to show a subset of
-  facets, and a `labels` argument (default `TRUE`) to toggle the direct
-  line labels off; the right-margin/x-axis padding reserved for labels
-  shrinks automatically when `labels = FALSE`
+  facets, and a `text` argument (one of `"labels"` (the default),
+  `"legend"`, or `"none"`) controlling how series are identified: direct
+  labels at each line’s right-most value, a conventional ggplot legend,
+  or neither. The right-margin/x-axis padding reserved for labels
+  shrinks automatically when `text != "labels"`. `text = "legend"` is
+  useful for combining multiple panels with `patchwork` and collecting
+  one shared legend
 - Add a “Trends and Sensitivity” vignette (`vignettes/trends.qmd`)
   comparing report card results across the four default bay segments and
   showing how a few scoring decisions (TBNI’s rescale window, threshold

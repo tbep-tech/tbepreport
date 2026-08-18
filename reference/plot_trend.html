@@ -53,7 +53,7 @@
 <span>  yr_range <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  wt <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  facets <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Overall"</span>, <span class="st">"wq"</span>, <span class="st">"sed"</span>, <span class="st">"fw"</span>, <span class="st">"hab"</span><span class="op">)</span>,</span>
-<span>  labels <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  text <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"labels"</span>, <span class="st">"legend"</span>, <span class="st">"none"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -99,10 +99,14 @@ available in <code>wqoverall</code>, <code>sedoverall</code>, <code>fwoverall</c
 plot. Defaults to all five.</p></dd>
 
 
-<dt id="arg-labels">labels<a class="anchor" aria-label="anchor" href="#arg-labels"></a></dt>
-<dd><p>logical, whether to draw direct labels on each line at its
-right-most value. Defaults to <code>TRUE</code>. When <code>FALSE</code>, the
-extra right-margin/x-axis space reserved for labels is also removed.</p></dd>
+<dt id="arg-text">text<a class="anchor" aria-label="anchor" href="#arg-text"></a></dt>
+<dd><p>chr string, one of <code>"labels"</code> (the default),
+<code>"legend"</code>, or <code>"none"</code>, controlling how series are
+identified. <code>"labels"</code> draws a direct label on each line at its
+right-most value. <code>"legend"</code> instead draws a conventional ggplot
+legend for the color scale. <code>"none"</code> draws neither. When <code>text =
+  "labels"</code>, the extra right-margin/x-axis space reserved for labels is
+included; otherwise it's removed.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -121,8 +125,8 @@ category with that category's own score and one colored line per
 indicator column of <code>wqoverall</code>, <code>sedoverall</code>, <code>fwoverall</code>,
 <code>haboverall</code>. In every facet, the score itself is drawn as a thick
 dark "Score" line and each component (category or indicator) is a
-thinner colored line, labeled directly at its right-most value when
-<code>labels = TRUE</code>.</p>
+thinner colored line, identified either by a direct label or a
+conventional legend depending on <code>text</code>.</p>
     </div>
 
     <div class="section level2">
@@ -142,10 +146,15 @@ thinner colored line, labeled directly at its right-most value when
 <span class="r-in"><span><span class="fu">plot_trend</span><span class="op">(</span><span class="va">wqoverall</span>, <span class="va">sedoverall</span>, <span class="va">fwoverall</span>, <span class="va">haboverall</span>, bay_segment <span class="op">=</span> <span class="st">'OTB'</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plot_trend-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># a single facet, with labels turned off</span></span></span>
+<span class="r-in"><span><span class="co"># a single facet, with no series identification at all</span></span></span>
 <span class="r-in"><span><span class="fu">plot_trend</span><span class="op">(</span><span class="va">wqoverall</span>, <span class="va">sedoverall</span>, <span class="va">fwoverall</span>, <span class="va">haboverall</span>, bay_segment <span class="op">=</span> <span class="st">'OTB'</span>,</span></span>
-<span class="r-in"><span>            facets <span class="op">=</span> <span class="st">'Overall'</span>, labels <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span>            facets <span class="op">=</span> <span class="st">'Overall'</span>, text <span class="op">=</span> <span class="st">'none'</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plot_trend-2.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># a conventional legend instead of direct labels</span></span></span>
+<span class="r-in"><span><span class="fu">plot_trend</span><span class="op">(</span><span class="va">wqoverall</span>, <span class="va">sedoverall</span>, <span class="va">fwoverall</span>, <span class="va">haboverall</span>, bay_segment <span class="op">=</span> <span class="st">'OTB'</span>,</span></span>
+<span class="r-in"><span>            facets <span class="op">=</span> <span class="st">'Overall'</span>, text <span class="op">=</span> <span class="st">'legend'</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="plot_trend-3.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

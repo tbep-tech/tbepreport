@@ -15,7 +15,7 @@ plot_trend(
   yr_range = NULL,
   wt = NULL,
   facets = c("Overall", "wq", "sed", "fw", "hab"),
-  labels = TRUE
+  text = c("labels", "legend", "none")
 )
 ```
 
@@ -65,11 +65,14 @@ plot_trend(
   chr vector, one or more of `"Overall"`, `"wq"`, `"sed"`, `"fw"`,
   `"hab"` indicating which facet(s) to plot. Defaults to all five.
 
-- labels:
+- text:
 
-  logical, whether to draw direct labels on each line at its right-most
-  value. Defaults to `TRUE`. When `FALSE`, the extra right-margin/x-axis
-  space reserved for labels is also removed.
+  chr string, one of `"labels"` (the default), `"legend"`, or `"none"`,
+  controlling how series are identified. `"labels"` draws a direct label
+  on each line at its right-most value. `"legend"` instead draws a
+  conventional ggplot legend for the color scale. `"none"` draws
+  neither. When `text = "labels"`, the extra right-margin/x-axis space
+  reserved for labels is included; otherwise it's removed.
 
 ## Value
 
@@ -88,8 +91,8 @@ facet per category with that category's own score and one colored line
 per indicator column of `wqoverall`, `sedoverall`, `fwoverall`,
 `haboverall`. In every facet, the score itself is drawn as a thick dark
 "Score" line and each component (category or indicator) is a thinner
-colored line, labeled directly at its right-most value when
-`labels = TRUE`.
+colored line, identified either by a direct label or a conventional
+legend depending on `text`.
 
 ## Examples
 
@@ -109,7 +112,12 @@ haboverall <- anlz_category(
 plot_trend(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB')
 
 
-# a single facet, with labels turned off
+# a single facet, with no series identification at all
 plot_trend(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB',
-            facets = 'Overall', labels = FALSE)
+            facets = 'Overall', text = 'none')
+
+
+# a conventional legend instead of direct labels
+plot_trend(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB',
+            facets = 'Overall', text = 'legend')
 ```
