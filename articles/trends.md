@@ -95,9 +95,10 @@ comparison of score ranges.
 
 ``` r
 
-htmltools::tagList(lapply(bay_segments, function(seg) {
-  plot_score(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = seg, yr = 2024)
-}))
+plot_score(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB', yr = 2024)
+plot_score(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'HB', yr = 2024)
+plot_score(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'MTB', yr = 2024)
+plot_score(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'LTB', yr = 2024)
 ```
 
 ## Part 2: How Scoring Decisions Affect Results
@@ -132,9 +133,9 @@ plot_trend(
   labs(subtitle = 'Full 0-100 range')
 ```
 
-![](trends_files/figure-html/unnamed-chunk-4-1.png)
+![](trends_files/figure-html/unnamed-chunk-7-1.png)
 
-![](trends_files/figure-html/unnamed-chunk-4-2.png)
+![](trends_files/figure-html/unnamed-chunk-7-2.png)
 
 ### Threshold Scoring: Smooth vs. Hard Cutoff
 
@@ -169,9 +170,9 @@ plot_trend(
   labs(subtitle = 'Hard cutoff (smooth = "none")')
 ```
 
-![](trends_files/figure-html/unnamed-chunk-5-1.png)
+![](trends_files/figure-html/unnamed-chunk-8-1.png)
 
-![](trends_files/figure-html/unnamed-chunk-5-2.png)
+![](trends_files/figure-html/unnamed-chunk-8-2.png)
 
 ### Category Weights
 
@@ -196,6 +197,6 @@ plot_trend(
   labs(subtitle = 'Water Quality weighted 2x')
 ```
 
-![](trends_files/figure-html/unnamed-chunk-6-1.png)
+![](trends_files/figure-html/unnamed-chunk-9-1.png)
 
-![](trends_files/figure-html/unnamed-chunk-6-2.png)
+![](trends_files/figure-html/unnamed-chunk-9-2.png)
