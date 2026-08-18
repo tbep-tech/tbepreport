@@ -76,7 +76,7 @@ plot_category <- function(..., bay_segment, yr, bay_segments = c('OTB', 'HB', 'M
     textinfo     = 'text'
   ) |>
     plotly::layout(
-      title         = list(text = paste0(bay_segment, ': ', yr), x = 0.5),
+      title         = list(text = paste0(bay_segment, ': ', yr), x = 0.5, xanchor = 'center', xref = 'paper'),
       paper_bgcolor = '#fcfcfb'
     )
 

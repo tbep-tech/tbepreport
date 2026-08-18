@@ -1,5 +1,9 @@
 # tbepreport (development version)
 
+* Fix `plot_score()` and `plot_category()` sunburst titles rendering
+  slightly left of center - plotly's title `x` position defaulted to
+  `xref = "container"` (the whole widget box) rather than `"paper"` (the
+  plot's own drawing area), now set explicitly
 * `plot_trend()` gains a `facets` argument (one or more of `"Overall"`,
   `"wq"`, `"sed"`, `"fw"`, `"hab"`, default all five) to show a subset of
   facets, and a `text` argument (one of `"labels"` (the default),

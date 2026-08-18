@@ -109,7 +109,7 @@ plot_score <- function(wqoverall, sedoverall, fwoverall, haboverall, bay_segment
     textinfo     = 'text'
   ) |>
     plotly::layout(
-      title         = list(text = paste0(bay_segment, ': ', yr), x = 0.5),
+      title         = list(text = paste0(bay_segment, ': ', yr), x = 0.5, xanchor = 'center', xref = 'paper'),
       paper_bgcolor = '#fcfcfb'
     )
 
