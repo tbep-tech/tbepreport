@@ -14,9 +14,13 @@
 #' @param facets chr vector, one or more of \code{"Overall"}, \code{"wq"},
 #'   \code{"sed"}, \code{"fw"}, \code{"hab"} indicating which facet(s) to
 #'   plot. Defaults to all five.
-#' @param labels logical, whether to draw direct labels on each line at its
-#'   right-most value. Defaults to \code{TRUE}. When \code{FALSE}, the
-#'   extra right-margin/x-axis space reserved for labels is also removed.
+#' @param text chr string, one of \code{"labels"} (the default),
+#'   \code{"legend"}, or \code{"none"}, controlling how series are
+#'   identified. \code{"labels"} draws a direct label on each line at its
+#'   right-most value. \code{"legend"} instead draws a conventional ggplot
+#'   legend for the color scale. \code{"none"} draws neither. When \code{text =
+#'   "labels"}, the extra right-margin/x-axis space reserved for labels is
+#'   included; otherwise it's removed.
 #'
 #' @details Calls \code{\link{anlz_score}} on the four category data.frames
 #' to get the overall bay segment score and each category's own score across
@@ -28,8 +32,8 @@
 #' indicator column of \code{wqoverall}, \code{sedoverall}, \code{fwoverall},
 #' \code{haboverall}. In every facet, the score itself is drawn as a thick
 #' dark "Score" line and each component (category or indicator) is a
-#' thinner colored line, labeled directly at its right-most value when
-#' \code{labels = TRUE}.
+#' thinner colored line, identified either by a direct label or a
+#' conventional legend depending on \code{text}.
 #'
 #' @returns A \code{ggplot} object
 #'
@@ -50,15 +54,23 @@
 #' )
 #' plot_trend(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB')
 #'
-#' # a single facet, with labels turned off
+#' # a single facet, with no series identification at all
 #' plot_trend(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB',
-#'             facets = 'Overall', labels = FALSE)
+#'             facets = 'Overall', text = 'none')
+#'
+#' # a conventional legend instead of direct labels
+#' plot_trend(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB',
+#'             facets = 'Overall', text = 'legend')
 plot_trend <- function(wqoverall, sedoverall, fwoverall, haboverall, bay_segment, yr_range = NULL,
-                        wt = NULL, facets = c('Overall', 'wq', 'sed', 'fw', 'hab'), labels = TRUE) {
+                        wt = NULL, facets = c('Overall', 'wq', 'sed', 'fw', 'hab'),
+                        text = c('labels', 'legend', 'none')) {
 
   cats <- list(wq = wqoverall, sed = sedoverall, fw = fwoverall, hab = haboverall)
 
   facets <- match.arg(facets, choices = c('Overall', names(cats)), several.ok = TRUE)
+  text <- match.arg(text)
+  labels <- text == 'labels'
+  legend <- text == 'legend'
 
   score <- anlz_score(wqoverall, sedoverall, fwoverall, haboverall, wt = wt) |>
     dplyr::filter(.data$bay_segment == !!bay_segment)
@@ -136,7 +148,7 @@ plot_trend <- function(wqoverall, sedoverall, fwoverall, haboverall, bay_segment
     ggplot2::facet_wrap(~.data$facet, ncol = 1) +
     ggplot2::scale_y_continuous(labels = scales::percent, limits = c(0, 1)) +
     ggplot2::scale_x_continuous(expand = xexpand) +
-    ggplot2::scale_color_manual(values = pal, guide = 'none') +
+    ggplot2::scale_color_manual(values = pal, name = NULL, guide = if (legend) 'legend' else 'none') +
     ggplot2::scale_discrete_manual(
       aesthetics = 'fontface', values = c(parent = 'bold', child = 'plain'), guide = 'none'
     ) +
@@ -144,7 +156,7 @@ plot_trend <- function(wqoverall, sedoverall, fwoverall, haboverall, bay_segment
     ggplot2::labs(title = bay_segment, x = NULL, y = 'Outcome') +
     ggplot2::theme_minimal() +
     ggplot2::theme(
-      legend.position = 'none',
+      legend.position = if (legend) 'right' else 'none',
       plot.margin = ggplot2::margin(r = rmargin, t = 5, b = 5, l = 5)
     )
 

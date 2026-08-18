@@ -41,6 +41,7 @@ BugReports: https://github.com/tbep-tech/tbepreport/issues
 Suggests:
     knitr,
     mockery,
+    patchwork,
     quarto,
     testthat (>= 3.0.0)
 SystemRequirements: GDAL (>= 2.0.0)

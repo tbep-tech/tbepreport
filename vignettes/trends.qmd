@@ -19,6 +19,7 @@ knitr:
 #| include: false
 library(tbepreport)
 library(ggplot2)
+library(patchwork)
 ```
 
 This article has two parts. The first compares report card results across
@@ -82,18 +83,21 @@ haboverall <- anlz_category(
 ### Trends by Bay Segment
 
 Each panel below shows one bay segment's overall score from 2000-2024
-(the "Overall" facet from `plot_trend()`). Labels are turned off since
-they would collide at this smaller panel size.
+(the "Overall" facet from `plot_trend()`).
 
 ```{r}
-#| layout-ncol: 2
-for (seg in bay_segments) {
-  p <- plot_trend(
+#| fig-width: 8
+#| fig-height: 8
+plots <- lapply(bay_segments, function(seg) {
+  plot_trend(
     wqoverall, sedoverall, fwoverall, haboverall, bay_segment = seg,
-    yr_range = c(2000, 2024), facets = 'Overall', labels = FALSE
+    yr_range = c(2000, 2024), facets = 'Overall', text = 'legend'
   )
-  print(p)
-}
+})
+
+patchwork::wrap_plots(plots, ncol = 2) +
+  patchwork::plot_layout(guides = 'collect') &
+  theme(legend.position = 'bottom')
 ```
 
 ### 2024 Snapshot by Bay Segment
@@ -130,7 +134,8 @@ its own 32-46 grade breakpoints (`from = c(32, 46)`). Passing
 range rather than concentrating it near the breakpoints.
 
 ```{r}
-#| layout-ncol: 2
+#| fig-width: 9
+#| fig-height: 5
 tbni_full <- anlz_fw_tbni(fimdata, from = c(0, 100))
 fwoverall_full <- anlz_category(
   tbni                = tbni_full,
@@ -138,17 +143,21 @@ fwoverall_full <- anlz_category(
   nonnative_richness  = nonnative_richness
 )
 
-plot_trend(
+p1 <- plot_trend(
   wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB',
-  facets = 'fw', labels = FALSE, yr_range = c(2000, 2024)
+  facets = 'fw', text = 'legend', yr_range = c(2000, 2024)
 ) +
   labs(subtitle = '32-46 breakpoint (default)')
 
-plot_trend(
+p2 <- plot_trend(
   wqoverall, sedoverall, fwoverall_full, haboverall, bay_segment = 'OTB',
-  facets = 'fw', labels = FALSE, yr_range = c(2000, 2024)
+  facets = 'fw', text = 'legend', yr_range = c(2000, 2024)
 ) +
   labs(subtitle = 'Full 0-100 range')
+
+patchwork::wrap_plots(p1, p2, ncol = 2) +
+  patchwork::plot_layout(guides = 'collect') &
+  theme(legend.position = 'bottom')
 ```
 
 ### Threshold Scoring: Smooth vs. Hard Cutoff
@@ -159,7 +168,8 @@ segment's chlorophyll/light attenuation threshold (`smooth = 'logistic'`).
 [Report Card Scoring](scoring.html#smooth-vs.-hard-threshold-example).
 
 ```{r}
-#| layout-ncol: 2
+#| fig-width: 9
+#| fig-height: 5
 wqthresh_hard <- anlz_wq_thresh(epcdata, smooth = 'none')
 wqoverall_hard <- anlz_category(
   wq_attain    = wqattain,
@@ -169,17 +179,21 @@ wqoverall_hard <- anlz_category(
   fib          = wqfib
 )
 
-plot_trend(
+p1 <- plot_trend(
   wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB',
-  facets = 'wq', labels = FALSE, yr_range = c(2000, 2024)
+  facets = 'wq', text = 'legend', yr_range = c(2000, 2024)
 ) +
   labs(subtitle = 'Smooth logistic (default)')
 
-plot_trend(
+p2 <- plot_trend(
   wqoverall_hard, sedoverall, fwoverall, haboverall, bay_segment = 'OTB',
-  facets = 'wq', labels = FALSE, yr_range = c(2000, 2024)
+  facets = 'wq', text = 'legend', yr_range = c(2000, 2024)
 ) +
   labs(subtitle = 'Hard cutoff (smooth = "none")')
+
+patchwork::wrap_plots(p1, p2, ncol = 2) +
+  patchwork::plot_layout(guides = 'collect') &
+  theme(legend.position = 'bottom')
 ```
 
 ### Category Weights
@@ -190,17 +204,22 @@ Below, Water Quality is upweighted twice relative to the other three
 categories.
 
 ```{r}
-#| layout-ncol: 2
-plot_trend(
+#| fig-width: 9
+#| fig-height: 5
+p1 <- plot_trend(
   wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB',
-  facets = 'Overall', labels = FALSE, yr_range = c(2000, 2024)
+  facets = 'Overall', text = 'legend', yr_range = c(2000, 2024)
 ) +
   labs(subtitle = 'Equal category weights (default)')
 
-plot_trend(
+p2 <- plot_trend(
   wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB',
-  facets = 'Overall', labels = FALSE, wt = c(wq = 2, sed = 1, fw = 1, hab = 1), 
-  yr_range = c(2000, 2024)
+  facets = 'Overall', text = 'legend',
+  wt = c(wq = 2, sed = 1, fw = 1, hab = 1), yr_range = c(2000, 2024)
 ) +
   labs(subtitle = 'Water Quality weighted 2x')
+
+patchwork::wrap_plots(p1, p2, ncol = 2) +
+  patchwork::plot_layout(guides = 'collect') &
+  theme(legend.position = 'bottom')
 ```

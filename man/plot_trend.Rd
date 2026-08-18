@@ -13,7 +13,7 @@ plot_trend(
   yr_range = NULL,
   wt = NULL,
   facets = c("Overall", "wq", "sed", "fw", "hab"),
-  labels = TRUE
+  text = c("labels", "legend", "none")
 )
 }
 \arguments{
@@ -39,9 +39,13 @@ available in \code{wqoverall}, \code{sedoverall}, \code{fwoverall}, and
 \code{"sed"}, \code{"fw"}, \code{"hab"} indicating which facet(s) to
 plot. Defaults to all five.}
 
-\item{labels}{logical, whether to draw direct labels on each line at its
-right-most value. Defaults to \code{TRUE}. When \code{FALSE}, the
-extra right-margin/x-axis space reserved for labels is also removed.}
+\item{text}{chr string, one of \code{"labels"} (the default),
+\code{"legend"}, or \code{"none"}, controlling how series are
+identified. \code{"labels"} draws a direct label on each line at its
+right-most value. \code{"legend"} instead draws a conventional ggplot
+legend for the color scale. \code{"none"} draws neither. When \code{text =
+  "labels"}, the extra right-margin/x-axis space reserved for labels is
+included; otherwise it's removed.}
 }
 \value{
 A \code{ggplot} object
@@ -60,8 +64,8 @@ category with that category's own score and one colored line per
 indicator column of \code{wqoverall}, \code{sedoverall}, \code{fwoverall},
 \code{haboverall}. In every facet, the score itself is drawn as a thick
 dark "Score" line and each component (category or indicator) is a
-thinner colored line, labeled directly at its right-most value when
-\code{labels = TRUE}.
+thinner colored line, identified either by a direct label or a
+conventional legend depending on \code{text}.
 }
 \examples{
 wqoverall <- anlz_category(
@@ -78,7 +82,11 @@ haboverall <- anlz_category(
 )
 plot_trend(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB')
 
-# a single facet, with labels turned off
+# a single facet, with no series identification at all
 plot_trend(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB',
-            facets = 'Overall', labels = FALSE)
+            facets = 'Overall', text = 'none')
+
+# a conventional legend instead of direct labels
+plot_trend(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB',
+            facets = 'Overall', text = 'legend')
 }
