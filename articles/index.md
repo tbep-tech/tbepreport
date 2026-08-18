@@ -9,3 +9,5 @@
 
 - [Report Card
   Scoring](https://tbep-tech.github.io/tbepreport/articles/scoring.md):
+- [Trends and
+  Sensitivity](https://tbep-tech.github.io/tbepreport/articles/trends.md):

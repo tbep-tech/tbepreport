@@ -20,6 +20,7 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/scoring.html">Report Card Scoring</a></li>
+    <li><a class="dropdown-item" href="../articles/trends.html">Trends and Sensitivity</a></li>
   </ul></li>
 <li class="active nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -39,6 +40,10 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="tbepreport-development-version">tbepreport (development version)<a class="anchor" aria-label="anchor" href="#tbepreport-development-version"></a></h2>
 <ul><li>
+<code><a href="../reference/plot_trend.html">plot_trend()</a></code> gains a <code>facets</code> argument (one or more of <code>"Overall"</code>, <code>"wq"</code>, <code>"sed"</code>, <code>"fw"</code>, <code>"hab"</code>, default all five) to show a subset of facets, and a <code>labels</code> argument (default <code>TRUE</code>) to toggle the direct line labels off; the right-margin/x-axis padding reserved for labels shrinks automatically when <code>labels = FALSE</code>
+</li>
+<li>Add a “Trends and Sensitivity” vignette (<code>vignettes/trends.qmd</code>) comparing report card results across the four default bay segments and showing how a few scoring decisions (TBNI’s rescale window, threshold smoothing, category weights) change the results</li>
+<li>
 <code><a href="../reference/anlz_fw_tbni.html">anlz_fw_tbni()</a></code> now converts the TBNI 0-100 score to an outcome using its own grade breakpoints (32, 46) instead of a plain linear rescale over the full 0-100 range, and gains a <code>from</code> argument (default <code>c(32, 46)</code>) so this can be reverted (e.g. <code>from = c(0, 100)</code>) or otherwise adjusted without editing the function</li>
 <li>
 <code><a href="../reference/util_outcome.html">util_outcome()</a></code> continuous type now clamps output to <code>c(0, 1)</code>, so a <code>from</code> range narrower than the data (e.g. TBNI’s 32-46 window) pins values outside it to 0/1 instead of extrapolating</li>

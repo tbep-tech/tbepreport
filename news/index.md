@@ -2,6 +2,16 @@
 
 ## tbepreport (development version)
 
+- [`plot_trend()`](https://tbep-tech.github.io/tbepreport/reference/plot_trend.md)
+  gains a `facets` argument (one or more of `"Overall"`, `"wq"`,
+  `"sed"`, `"fw"`, `"hab"`, default all five) to show a subset of
+  facets, and a `labels` argument (default `TRUE`) to toggle the direct
+  line labels off; the right-margin/x-axis padding reserved for labels
+  shrinks automatically when `labels = FALSE`
+- Add a “Trends and Sensitivity” vignette (`vignettes/trends.qmd`)
+  comparing report card results across the four default bay segments and
+  showing how a few scoring decisions (TBNI’s rescale window, threshold
+  smoothing, category weights) change the results
 - [`anlz_fw_tbni()`](https://tbep-tech.github.io/tbepreport/reference/anlz_fw_tbni.md)
   now converts the TBNI 0-100 score to an outcome using its own grade
   breakpoints (32, 46) instead of a plain linear rescale over the full

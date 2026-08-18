@@ -13,7 +13,9 @@ plot_trend(
   haboverall,
   bay_segment,
   yr_range = NULL,
-  wt = NULL
+  wt = NULL,
+  facets = c("Overall", "wq", "sed", "fw", "hab"),
+  labels = TRUE
 )
 ```
 
@@ -58,6 +60,17 @@ plot_trend(
   named numeric vector of category weights, passed to
   [`anlz_score`](https://tbep-tech.github.io/tbepreport/reference/anlz_score.md)
 
+- facets:
+
+  chr vector, one or more of `"Overall"`, `"wq"`, `"sed"`, `"fw"`,
+  `"hab"` indicating which facet(s) to plot. Defaults to all five.
+
+- labels:
+
+  logical, whether to draw direct labels on each line at its right-most
+  value. Defaults to `TRUE`. When `FALSE`, the extra right-margin/x-axis
+  space reserved for labels is also removed.
+
 ## Value
 
 A `ggplot` object
@@ -68,14 +81,15 @@ Calls
 [`anlz_score`](https://tbep-tech.github.io/tbepreport/reference/anlz_score.md)
 on the four category data.frames to get the overall bay segment score
 and each category's own score across all years for `bay_segment`, then
-plots five stacked facets (one column, top to bottom): an "Overall"
-facet with the bay segment score and one colored line per category
-(`wq`, `sed`, `fw`, `hab`), followed by one facet per category with that
-category's own score and one colored line per indicator column of
-`wqoverall`, `sedoverall`, `fwoverall`, `haboverall`. In every facet,
-the score itself is drawn as a thick dark "Score" line and each
-component (category or indicator) is a thinner colored line, labeled
-directly at its right-most value.
+plots up to five stacked facets (one column, top to bottom, or a subset
+via `facets`): an "Overall" facet with the bay segment score and one
+colored line per category (`wq`, `sed`, `fw`, `hab`), followed by one
+facet per category with that category's own score and one colored line
+per indicator column of `wqoverall`, `sedoverall`, `fwoverall`,
+`haboverall`. In every facet, the score itself is drawn as a thick dark
+"Score" line and each component (category or indicator) is a thinner
+colored line, labeled directly at its right-most value when
+`labels = TRUE`.
 
 ## Examples
 
@@ -93,4 +107,9 @@ haboverall <- anlz_category(
   seagrass = data.frame(bay_segment = 'OTB', yr = 2018:2020, outcome = c(0.4, 0.5, 0.5))
 )
 plot_trend(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB')
+
+
+# a single facet, with labels turned off
+plot_trend(wqoverall, sedoverall, fwoverall, haboverall, bay_segment = 'OTB',
+            facets = 'Overall', labels = FALSE)
 ```

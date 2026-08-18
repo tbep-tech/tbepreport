@@ -20,6 +20,7 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/scoring.html">Report Card Scoring</a></li>
+    <li><a class="dropdown-item" href="../articles/trends.html">Trends and Sensitivity</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -50,7 +51,9 @@
 <span>  <span class="va">haboverall</span>,</span>
 <span>  <span class="va">bay_segment</span>,</span>
 <span>  yr_range <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  wt <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  wt <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  facets <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Overall"</span>, <span class="st">"wq"</span>, <span class="st">"sed"</span>, <span class="st">"fw"</span>, <span class="st">"hab"</span><span class="op">)</span>,</span>
+<span>  labels <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -89,6 +92,18 @@ available in <code>wqoverall</code>, <code>sedoverall</code>, <code>fwoverall</c
 <dd><p>named numeric vector of category weights, passed to
 <code><a href="anlz_score.html">anlz_score</a></code></p></dd>
 
+
+<dt id="arg-facets">facets<a class="anchor" aria-label="anchor" href="#arg-facets"></a></dt>
+<dd><p>chr vector, one or more of <code>"Overall"</code>, <code>"wq"</code>,
+<code>"sed"</code>, <code>"fw"</code>, <code>"hab"</code> indicating which facet(s) to
+plot. Defaults to all five.</p></dd>
+
+
+<dt id="arg-labels">labels<a class="anchor" aria-label="anchor" href="#arg-labels"></a></dt>
+<dd><p>logical, whether to draw direct labels on each line at its
+right-most value. Defaults to <code>TRUE</code>. When <code>FALSE</code>, the
+extra right-margin/x-axis space reserved for labels is also removed.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -98,15 +113,16 @@ available in <code>wqoverall</code>, <code>sedoverall</code>, <code>fwoverall</c
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>Calls <code><a href="anlz_score.html">anlz_score</a></code> on the four category data.frames
 to get the overall bay segment score and each category's own score across
-all years for <code>bay_segment</code>, then plots five stacked facets (one
-column, top to bottom): an "Overall" facet with the bay segment score and
-one colored line per category (<code>wq</code>, <code>sed</code>, <code>fw</code>,
-<code>hab</code>), followed by one facet per category with that category's own
-score and one colored line per indicator column of <code>wqoverall</code>,
-<code>sedoverall</code>, <code>fwoverall</code>, <code>haboverall</code>. In every facet,
-the score itself is drawn as a thick dark "Score" line and each component
-(category or indicator) is a thinner colored line, labeled directly at
-its right-most value.</p>
+all years for <code>bay_segment</code>, then plots up to five stacked facets
+(one column, top to bottom, or a subset via <code>facets</code>): an "Overall"
+facet with the bay segment score and one colored line per category
+(<code>wq</code>, <code>sed</code>, <code>fw</code>, <code>hab</code>), followed by one facet per
+category with that category's own score and one colored line per
+indicator column of <code>wqoverall</code>, <code>sedoverall</code>, <code>fwoverall</code>,
+<code>haboverall</code>. In every facet, the score itself is drawn as a thick
+dark "Score" line and each component (category or indicator) is a
+thinner colored line, labeled directly at its right-most value when
+<code>labels = TRUE</code>.</p>
     </div>
 
     <div class="section level2">
@@ -125,6 +141,11 @@ its right-most value.</p>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">plot_trend</span><span class="op">(</span><span class="va">wqoverall</span>, <span class="va">sedoverall</span>, <span class="va">fwoverall</span>, <span class="va">haboverall</span>, bay_segment <span class="op">=</span> <span class="st">'OTB'</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plot_trend-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># a single facet, with labels turned off</span></span></span>
+<span class="r-in"><span><span class="fu">plot_trend</span><span class="op">(</span><span class="va">wqoverall</span>, <span class="va">sedoverall</span>, <span class="va">fwoverall</span>, <span class="va">haboverall</span>, bay_segment <span class="op">=</span> <span class="st">'OTB'</span>,</span></span>
+<span class="r-in"><span>            facets <span class="op">=</span> <span class="st">'Overall'</span>, labels <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="plot_trend-2.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
