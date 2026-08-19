@@ -8,7 +8,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/tbep-tech/tbepreport/blob/v1.0.0/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/tbep-tech/tbepreport/blob/main/DESCRIPTION)
 
 Beck M (2026). *tbepreport: Compile and Visualize Ecosystem Report Card
 Indicators for Tampa Bay*. R package version 1.0.0,
