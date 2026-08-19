@@ -1,6 +1,6 @@
 # Changelog
 
-## tbepreport (development version)
+## tbepreport 1.0.0
 
 - Fix
   [`plot_score()`](https://tbep-tech.github.io/tbepreport/reference/plot_score.md)

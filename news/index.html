@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tbepreport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,11 +34,11 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/tbep-tech/tbepreport/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/tbep-tech/tbepreport/blob/v1.0.0/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="development version" id="tbepreport-development-version">tbepreport (development version)<a class="anchor" aria-label="anchor" href="#tbepreport-development-version"></a></h2>
+<h2 class="pkg-version" data-toc-text="1.0.0" id="tbepreport-100">tbepreport 1.0.0<a class="anchor" aria-label="anchor" href="#tbepreport-100"></a></h2>
 <ul><li>Fix <code><a href="../reference/plot_score.html">plot_score()</a></code> and <code><a href="../reference/plot_category.html">plot_category()</a></code> sunburst titles rendering slightly left of center - plotly’s title <code>x</code> position defaulted to <code>xref = "container"</code> (the whole widget box) rather than <code>"paper"</code> (the plot’s own drawing area), now set explicitly</li>
 <li>
 <code><a href="../reference/plot_trend.html">plot_trend()</a></code> gains a <code>facets</code> argument (one or more of <code>"Overall"</code>, <code>"wq"</code>, <code>"sed"</code>, <code>"fw"</code>, <code>"hab"</code>, default all five) to show a subset of facets, and a <code>text</code> argument (one of <code>"labels"</code> (the default), <code>"legend"</code>, or <code>"none"</code>) controlling how series are identified: direct labels at each line’s right-most value, a conventional ggplot legend, or neither. The right-margin/x-axis padding reserved for labels shrinks automatically when <code>text != "labels"</code>. <code>text = "legend"</code> is useful for combining multiple panels with <code>patchwork</code> and collecting one shared legend, and always lists <code>"Score"</code> first rather than falling in alphabetical order with the rest. <code>"labels"</code> is preferred over <code>"legend"</code> when more than one or two facets are shown</li>
