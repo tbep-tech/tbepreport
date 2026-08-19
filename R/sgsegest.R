@@ -10,7 +10,7 @@
 #'
 #' @details Seagrass coverage estimates by bay segment, sourced from the
 #' \href{https://github.com/tbep-tech/seagrass-analysis}{seagrass-analysis}
-#' pipeline. Used in \code{anlz_seagrass_coverage()} to compare estimated
+#' pipeline. Used in \code{anlz_hab_seagrass_coverage()} to compare estimated
 #' coverage against bay segment targets.
 #'
 #' See \code{data-raw/sgsegest.R} for construction.

@@ -10,13 +10,13 @@
 #'     Bay" (Boca Ciega Bay, Manatee River, and Terra Ceia Bay dissolved
 #'     together)}
 #'   \item{BAY_GP_ABB}{chr, abbreviation of \code{BAY_SEG_GP} (OTB, HB,
-#'     MTB, LTB, RLTB)}
+#'     MTB, LTB, RALTB)}
 #'   \item{area_ac}{numeric, area of the raw \code{BAY_SEG} polygon in acres}
 #'   \item{geometry}{polygon geometry}
 #' }
 #'
 #' @details Bay segment boundaries used to spatially join non-native species
-#' occurrence points to a bay segment (see \code{anlz_nonnative_obs()}).
+#' occurrence points to a bay segment (see \code{anlz_fw_nonnative_obs()}).
 #' Copied from the \href{https://github.com/tbep-tech}{tbep-invasives} repo
 #' (\code{input_data/shp/TBEP_Bay_Segments_4326.shp}), so segment grouping
 #' and areas match its report cards exactly. Note \code{area_ac} is a

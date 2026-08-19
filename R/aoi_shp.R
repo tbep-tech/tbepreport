@@ -9,7 +9,7 @@
 #'
 #' @details The Tampa Bay area of interest polygon used to clip non-native
 #' species occurrence points to the area covered by the report card (see
-#' \code{anlz_nonnative_obs()}). Copied from the
+#' \code{anlz_fw_nonnative_obs()}). Copied from the
 #' \href{https://github.com/tbep-tech}{tbep-invasives} repo
 #' (\code{input_data/shp/TBEP_AOI_4326.shp}).
 #'
