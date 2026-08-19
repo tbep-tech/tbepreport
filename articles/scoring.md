@@ -192,14 +192,17 @@ supports three types of scoring:
   this way, reversed since lower is better (`from = c(0, 1)`,
   `reverse = TRUE`), as is sediment PEL/TEL’s average contamination
   score.
+
 - **Category** - a discrete grade or condition category is mapped to a
   fixed outcome. No indicator currently uses this type, but it remains
   available for a grade or category with no natural continuous
   equivalent.
+
 - **Threshold** - a raw value is compared against a cutoff
   (e.g. nutrient loading against a bay-segment target, chlorophyll/light
   attenuation against their thresholds, seagrass coverage against an
   acreage target), in one of three ways set by `smooth`:
+
   - `"logistic"` (the default for most threshold indicators) - a smooth
     outcome exactly 0.5 at the threshold, moving quickly toward 0 or 1
     (depending on direction) as a value moves away from it, so values
@@ -216,6 +219,21 @@ supports three types of scoring:
   by `pct`, a fraction of the threshold itself (default 10%) rather than
   a fixed absolute value, so it stays meaningful across
   indicators/segments with very different thresholds.
+
+  The direction that counts as “good” is set by `op` (one of `"<"`,
+  `"<="`, `">"`, `">="`), passed straight through from each indicator
+  function. Every threshold indicator currently uses one of two:
+
+  - `op = "<"` - a lower raw value is better. Used by
+    [`anlz_wq_thresh()`](https://tbep-tech.github.io/tbepreport/reference/anlz_wq_thresh.md)
+    (chlorophyll and light attenuation compared to their bay-segment
+    thresholds) and
+    [`anlz_wq_load()`](https://tbep-tech.github.io/tbepreport/reference/anlz_wq_load.md)
+    (both total nitrogen load and the hydrologically-normalized load
+    compared to their bay-segment targets).
+  - `op = ">="` - meeting or exceeding the raw value is better. Used by
+    [`anlz_hab_seagrass_coverage()`](https://tbep-tech.github.io/tbepreport/reference/anlz_hab_seagrass_coverage.md)
+    (mapped seagrass acreage compared to its bay-segment target).
 
 ``` r
 
