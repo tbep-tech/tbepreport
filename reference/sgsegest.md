@@ -28,8 +28,9 @@ A `data.frame` with 126 rows and 3 columns:
 
 Seagrass coverage estimates by bay segment, sourced from the
 [seagrass-analysis](https://github.com/tbep-tech/seagrass-analysis)
-pipeline. Used in `anlz_seagrass_coverage()` to compare estimated
-coverage against bay segment targets.
+pipeline. Used in
+[`anlz_hab_seagrass_coverage()`](https://tbep-tech.github.io/tbepreport/reference/anlz_hab_seagrass_coverage.md)
+to compare estimated coverage against bay segment targets.
 
 See `data-raw/sgsegest.R` for construction.
 

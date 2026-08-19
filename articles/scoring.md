@@ -5,7 +5,7 @@ annual report card. This includes descriptions of each individual
 indicator, converting raw indicator values to a common 0-1 outcome
 scale, combining indicators into category scores and an overall bay
 segment score, and visualizing the results. The sections below describe
-the cagories and the indicators within each category, how scoring is
+the categories and the indicators within each category, how scoring is
 calculated, how the scores are combined across indicators and
 categories, and methods for visualizing the results.
 
@@ -264,7 +264,7 @@ util_outcome(8, type = 'threshold', thresh = 10, op = '<', smooth = 'none')
 The plot below compares how the Nekton Index’s 0-100 score is rescaled
 to an outcome under the current default (`from = c(32, 46)`, TBNI’s own
 grade breakpoints, anything below 32 is 0 and above 46 is 1) versus
-scorring across the full range (`from = c(0, 100)`). Each bay
+scoring across the full range (`from = c(0, 100)`). Each bay
 segment/year’s actual TBNI score (from `tbni`, computed earlier) is
 overlaid on the current curve. Most observed scores fall inside or above
 the 32-46 breakpoint window, where the two methods diverge most.
@@ -288,7 +288,7 @@ breakpoint receive 0.
 [`anlz_sed_tbbi()`](https://tbep-tech.github.io/tbepreport/reference/anlz_sed_tbbi.md)
 returns a continuous value from 0-1 within the range of the raw TBBI
 scores between 73-87. Values below 73 or above 87 receive 0 or 1,
-respectively, consistent with the caetgorical grades assigned with the
+respectively, consistent with the categorical grades assigned with the
 conventional TBBI (see [Benthic Index](#benthic-index)). The plot below
 shows how the outcomes relate to the categories.
 
@@ -300,9 +300,9 @@ Outcomes that are based on attainment of a threshold or other binary
 result can be handled differently based on how exceedance could be
 interpreted.
 
-At it’s simplest level, a binary scoring can be used with a clear break
-at the the threshold (no indicators use this method). Here is an example
-for OTB chlorophyll data scored with `smooth = 'none'` that uses a hard
+At its simplest level, a binary scoring can be used with a clear break
+at the threshold (no indicators use this method). Here is an example for
+OTB chlorophyll data scored with `smooth = 'none'` that uses a hard
 binary cutoff.
 
 ![](scoring_files/figure-html/unnamed-chunk-16-1.png)
@@ -492,7 +492,7 @@ plot_category(
 [`plot_score()`](https://tbep-tech.github.io/tbepreport/reference/plot_score.md)
 takes the same four category data.frames as
 [`anlz_score()`](https://tbep-tech.github.io/tbepreport/reference/anlz_score.md)
-to plot the full hierarchy showing ndicators, then categories, then the
+to plot the full hierarchy showing indicators, then categories, then the
 overall score for a chosen bay segment and year.
 
 ``` r

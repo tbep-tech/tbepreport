@@ -25,7 +25,7 @@ An `sf` object (EPSG:4326, WGS 84) with 7 rows and 5 columns:
 
 - BAY_GP_ABB:
 
-  chr, abbreviation of `BAY_SEG_GP` (OTB, HB, MTB, LTB, RLTB)
+  chr, abbreviation of `BAY_SEG_GP` (OTB, HB, MTB, LTB, RALTB)
 
 - area_ac:
 
@@ -38,8 +38,9 @@ An `sf` object (EPSG:4326, WGS 84) with 7 rows and 5 columns:
 ## Details
 
 Bay segment boundaries used to spatially join non-native species
-occurrence points to a bay segment (see `anlz_nonnative_obs()`). Copied
-from the [tbep-invasives](https://github.com/tbep-tech) repo
+occurrence points to a bay segment (see
+[`anlz_fw_nonnative_obs()`](https://tbep-tech.github.io/tbepreport/reference/anlz_fw_nonnative_obs.md)).
+Copied from the [tbep-invasives](https://github.com/tbep-tech) repo
 (`input_data/shp/TBEP_Bay_Segments_4326.shp`), so segment grouping and
 areas match its report cards exactly. Note `area_ac` is a static
 attribute of each raw polygon. Functions using this data recompute area

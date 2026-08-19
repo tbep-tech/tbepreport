@@ -28,8 +28,8 @@ An `sf` object (EPSG:4326, WGS 84) with 1 row and 3 columns:
 
 The Tampa Bay area of interest polygon used to clip non-native species
 occurrence points to the area covered by the report card (see
-`anlz_nonnative_obs()`). Copied from the
-[tbep-invasives](https://github.com/tbep-tech) repo
+[`anlz_fw_nonnative_obs()`](https://tbep-tech.github.io/tbepreport/reference/anlz_fw_nonnative_obs.md)).
+Copied from the [tbep-invasives](https://github.com/tbep-tech) repo
 (`input_data/shp/TBEP_AOI_4326.shp`).
 
 See `data-raw/aoi_shp.R` for construction.
