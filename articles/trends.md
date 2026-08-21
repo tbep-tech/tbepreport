@@ -107,9 +107,10 @@ examples use results from OTB.
 
 [`anlz_fw_tbni()`](https://tbep-tech.github.io/tbepreport/reference/anlz_fw_tbni.md)
 defaults to rescaling the Nekton Index’s 0-100 score over its own 32-46
-grade breakpoints (`from = c(32, 46)`). Passing `from = c(0, 100)`
-instead spreads sensitivity evenly across the full range rather than
-concentrating it near the breakpoints.
+grade breakpoints (`from = c(32, 46)`). Values below 32 receive an
+outcome of 0 and those above 46 receive an outcome of 1. Passing
+`from = c(0, 100)` instead spreads sensitivity evenly across the full
+range rather than concentrating it near the breakpoints.
 
 ``` r
 

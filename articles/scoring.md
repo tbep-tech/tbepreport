@@ -330,11 +330,13 @@ transition of 10% of the actual threshold value.
 
 A third option for threshold scoring is `smooth = "ramp"` for targets
 that are fine to meet by any margin rather than ones where sitting right
-at the threshold should only count as halfway there. The plot below
-compares it to `"logistic"` for the same “meet or exceed 10” target. The
-logistic option only reaches an outcome of 1 well past the threshold
-(crossing 0.5 exactly at it, the dotted horizontal line), while ramp
-reaches exactly 1 the moment the threshold is met.
+at the threshold should only count as halfway there. This option is used
+for scoring seagrass coverage by bay segment, where meeting the target
+returns an outcome of 1 and values below the target decay toward 0. The
+plot below compares it to `"logistic"` for the same “meet or exceed 10”
+target. The logistic option only reaches an outcome of 1 well past the
+threshold (crossing 0.5 exactly at it, the dotted horizontal line),
+while ramp reaches exactly 1 the moment the threshold is met.
 
 ![](scoring_files/figure-html/unnamed-chunk-19-1.png)
 
